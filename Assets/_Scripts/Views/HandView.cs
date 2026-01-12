@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using System.Linq;
 
 
 public class HandView : MonoBehaviour
@@ -13,6 +14,18 @@ public class HandView : MonoBehaviour
     {
         cards.Add(cardView);
         yield return UpdateCardPositions(0.15f);
+    }
+    public CardView RemoveCard(Card card)
+    {
+        CardView cardView = GetCardView(card);
+        if (cardView == null) return null;
+        cards.Remove(cardView);
+        StartCoroutine(UpdateCardPositions(0.15f));
+        return cardView;
+    }
+    private CardView GetCardView(Card card)
+    {
+        return cards.Where(cardView => cardView.Card == card).FirstOrDefault();
     }
     private IEnumerator UpdateCardPositions(float duration)
     {

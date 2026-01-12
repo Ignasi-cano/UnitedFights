@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 9203151484607787903}
   - component: {fileID: 2586375173759902550}
   - component: {fileID: 5842271662696715849}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: mana
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -188,7 +188,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7394541749543760245}
   - component: {fileID: 5583570187341622112}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CardBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -276,7 +276,7 @@ GameObject:
   - component: {fileID: 4023806158296455830}
   - component: {fileID: 3052221688195019106}
   - component: {fileID: 3473318709076657868}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Description
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -396,15 +396,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -454,7 +454,7 @@ GameObject:
   - component: {fileID: 5649774827613381599}
   - component: {fileID: 8798571394701942518}
   - component: {fileID: 2214458821300491907}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -574,15 +574,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 30
+  m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
   m_HorizontalAlignment: 2
-  m_VerticalAlignment: 512
+  m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -631,7 +631,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1946228470056324145}
   - component: {fileID: 6073031882952871686}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -720,7 +720,7 @@ GameObject:
   - component: {fileID: 105022368098284997}
   - component: {fileID: 1581407151164205235}
   - component: {fileID: 5427258541448164241}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CardView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -760,6 +760,9 @@ MonoBehaviour:
   mana: {fileID: 5842271662696715849}
   imageSR: {fileID: 6073031882952871686}
   wrapper: {fileID: 8936950027221950896}
+  dropLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!210 &1581407151164205235
 SortingGroup:
   m_ObjectHideFlags: 0
@@ -802,7 +805,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7178075119947179731}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wrapper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
