@@ -19,18 +19,19 @@ MonoBehaviour:
     rid: -2
   <OtherEffects>k__BackingField:
   - <TargetMode>k__BackingField:
-      rid: 8156335846497452120
+      rid: 8156335878360793165
     <Effect>k__BackingField:
-      rid: 8156335846497452122
+      rid: 8156335878360793166
   references:
     version: 2
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 8156335846497452120
-      type: {class: NoTM, ns: , asm: Assembly-CSharp}
+    - rid: 8156335878360793165
+      type: {class: HeroTM, ns: , asm: Assembly-CSharp}
       data: 
-    - rid: 8156335846497452122
-      type: {class: GainArmorEffect, ns: , asm: Assembly-CSharp}
+    - rid: 8156335878360793166
+      type: {class: AddStatusEffectEffect, ns: , asm: Assembly-CSharp}
       data:
-        amount: 10
+        statusEffectType: 0
+        stackCount: 5
