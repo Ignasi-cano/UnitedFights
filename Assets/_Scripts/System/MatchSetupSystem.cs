@@ -9,11 +9,14 @@ public class MatchSeetupSystem : MonoBehaviour
     [SerializeField] private List<EnemyData> enemyDatas;
     private void Start()
     {
+        Debug.Log("Enviorement loaded");
         HeroSystem.Instance.Setup(heroData);
         EnemySystem.Instance.Setup(enemyDatas);
         CardSystem.Instance.Setup(heroData.Deck);
+        CardSystem.Instance.AddRandomCardToDeck();
         PerkSystem.Instance.AddPerk(new Perk(perkData));
         DrawCardsGA drawCardsGA = new(5);
         ActionSystem.Instance.Perform(drawCardsGA);
+
     }
 }

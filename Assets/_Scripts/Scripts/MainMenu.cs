@@ -15,8 +15,9 @@ public class MainMenu : MonoBehaviour
         mainMenu.SetActive(true);
         optionsMenu.SetActive(false);
     }
-    public void QuiteGame()
+    public void QuitGame()
     {
+        Debug.Log("Quit game action executed");
         Application.Quit();
     }
     public void PlayGame()

@@ -9,6 +9,7 @@ public class CardSystem : Singleton<CardSystem>
     [SerializeField] private HandView handView;
     [SerializeField] private Transform drawPilePoint;
     [SerializeField] private Transform discardPilePoint;
+    [SerializeField] private List<CardData> availableCards; // Lista de todas las cartas disponibles para elegir random
 
     private readonly List<Card> drawPile = new();
     private readonly List<Card> discardPile = new();
@@ -122,5 +123,27 @@ public class CardSystem : Singleton<CardSystem>
         Tween tween = cardView.transform.DOMove(discardPilePoint.position, 0.15f);
         yield return tween.WaitForCompletion();
         Destroy(cardView.gameObject);
+    }
+
+    // Método para añadir una carta al mazo del héroe
+    public void AddCardToDeck(CardData cardData)
+    {
+        Card card = new(cardData);
+        drawPile.Add(card);
+        Debug.Log(card + " added to the deck");
+    }
+
+    // Método para añadir una carta random al mazo del héroe
+    public void AddRandomCardToDeck()
+    {
+        if (availableCards != null && availableCards.Count > 0)
+        {
+            CardData randomCardData = availableCards[Random.Range(0, availableCards.Count)];
+            AddCardToDeck(randomCardData);
+        }
+        else
+        {
+            Debug.LogWarning("No available cards to add randomly.");
+        }
     }
 }

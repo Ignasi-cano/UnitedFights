@@ -12,12 +12,7 @@ public class HelpUI : MonoBehaviour
         // Check if the variable has been assigned in the Inspector
         if (helpPanel != null)
         {
-            // Make the HelpIMG GameObject visible
-            helpPanel.SetActive(true);
-            
-            // Optional: If you want the button to toggle the help window on and off, 
-            // use this line instead of the one above:
-            // helpPanel.SetActive(!helpPanel.activeSelf);
+            helpPanel.SetActive(!helpPanel.activeSelf);
         }
         else
         {

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EnemySystem : Singleton<EnemySystem>
 {
@@ -12,6 +13,7 @@ public class EnemySystem : Singleton<EnemySystem>
         ActionSystem.AttachPerformer<EnemyTurnGA>(EnemyTurnPerformer);
         ActionSystem.AttachPerformer<AttackHeroGA>(AttackHeroPerformer);
         ActionSystem.AttachPerformer<KillEnemyGA>(KillEnemyPerformer);
+        ActionSystem.SubscribeReaction<EnemyTurnGA>(CheckEnemiesAlivePostReaction, ReactionTiming.POST);
     }
 
     void OnDisable()
@@ -19,6 +21,7 @@ public class EnemySystem : Singleton<EnemySystem>
         ActionSystem.DetachPerformer<EnemyTurnGA>();
         ActionSystem.DetachPerformer<AttackHeroGA>();
         ActionSystem.DetachPerformer<KillEnemyGA>();
+        ActionSystem.UnsubscribeReaction<EnemyTurnGA>(CheckEnemiesAlivePostReaction, ReactionTiming.POST);
     }
     public void Setup(List<EnemyData> enemyDatas)
     {
@@ -73,5 +76,15 @@ public class EnemySystem : Singleton<EnemySystem>
     private IEnumerator KillEnemyPerformer(KillEnemyGA killEnemyGA)
     {
         yield return enemyBoardView.RemoveEnemy(killEnemyGA.EnemyView);
+    }
+
+    private void CheckEnemiesAlivePostReaction(EnemyTurnGA enemyTurnGA)
+    {
+        if (Enemies.Count == 0)
+        {
+            Debug.Log("No enemies i should die");
+            // Cargar la escena del menú principal (reemplaza "MainMenu" con el nombre exacto de tu escena)
+            SceneManager.LoadScene("MainMenu");
+        }
     }
 }
