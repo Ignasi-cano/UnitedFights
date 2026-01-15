@@ -29,8 +29,9 @@ public class DamageSystem : MonoBehaviour
                 }
                 else
                 {
-                    //do some game over logic
-                    //Open game over scene
+                    // Game Over - Guardar puntuación y cargar escena
+                    ScoreSystem.Instance.SaveFinalScore();
+                    UnityEngine.SceneManagement.SceneManager.LoadScene("GameOverScene");
                 }
                 
             }

@@ -22,6 +22,6 @@ public class MainMenu : MonoBehaviour
     }
     public void PlayGame()
     {
-        SceneManager.LoadScene("unitedfights");
+        SceneManager.LoadScene("LoginScene");
     }
 }
