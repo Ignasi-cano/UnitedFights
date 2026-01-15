@@ -1737,12 +1737,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -99
-  m_Sprite: {fileID: 21300000, guid: e2ee753008dc37643b45db7d12ca0e5e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b9d85e6c0b4568b4ba85a1c163d4d7ae, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 38.539997, y: 21.603476}
+  m_Size: {x: 1, y: 0.6666667}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -1757,8 +1757,8 @@ Transform:
   m_GameObject: {fileID: 749865726}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.0529, y: 0.0845, z: -3.7853062}
-  m_LocalScale: {x: 0.68, y: 0.51, z: 1}
+  m_LocalPosition: {x: -0.13, y: 0.0845, z: -3.7853062}
+  m_LocalScale: {x: 23.68, y: 16.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2132994738}
@@ -2092,6 +2092,58 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   helpPanel: {fileID: 1170267080}
+--- !u!1 &945892057
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 945892058}
+  - component: {fileID: 945892059}
+  m_Layer: 0
+  m_Name: WeatherSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &945892058
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 945892057}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1132198482}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &945892059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 945892057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a437fcece775444fa4058d89d6ce9bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  apiKey: f4a170886e491c42edb21d0d7fe64c7c
+  city: Barcelona
+  clearBackground: {fileID: 21300000, guid: 60747668c97210741872d0ee2f182511, type: 3}
+  cloudyBackground: {fileID: 21300000, guid: 37240b56835f5ed4997081e6f20c2e07, type: 3}
+  rainyBackground: {fileID: 21300000, guid: 86334bdcc29536f459dec61c56e81dca, type: 3}
+  snowyBackground: {fileID: 21300000, guid: d88c0c650fe809941922046580d6f4d1, type: 3}
+  defaultBackground: {fileID: 21300000, guid: e2ee753008dc37643b45db7d12ca0e5e, type: 3}
+  backgroundRenderer: {fileID: 749865727}
 --- !u!1 &956831487
 GameObject:
   m_ObjectHideFlags: 0
@@ -2434,6 +2486,7 @@ Transform:
   - {fileID: 2108757152}
   - {fileID: 442804227}
   - {fileID: 42469739}
+  - {fileID: 945892058}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1148969926
