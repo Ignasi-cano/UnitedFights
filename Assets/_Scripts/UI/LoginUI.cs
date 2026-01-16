@@ -48,8 +48,8 @@ public class LoginUI : MonoBehaviour
     private void HandleLoginSuccess(Firebase.Auth.FirebaseUser user)
     {
         SetStatus($"Login successful! Welcome {user.Email}");
-        // Navigate to Main Menu
-        UnityEngine.SceneManagement.SceneManager.LoadScene("unitedfights");
+        // Navigate to Character Selection
+        UnityEngine.SceneManagement.SceneManager.LoadScene("CharacterSelection");
     }
 
     private void HandleLoginFailed(string error)
@@ -60,8 +60,8 @@ public class LoginUI : MonoBehaviour
     private void HandleRegisterSuccess(Firebase.Auth.FirebaseUser user)
     {
         SetStatus($"Registration successful! Account created for {user.Email}");
-        // Navigate to Main Menu or stay for login
-        UnityEngine.SceneManagement.SceneManager.LoadScene("unitedfights");
+        // Navigate to Character Selection
+        UnityEngine.SceneManagement.SceneManager.LoadScene("CharacterSelection");
     }
 
     private void HandleRegisterFailed(string error)

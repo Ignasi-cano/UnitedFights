@@ -32,8 +32,7 @@ public class CombatantView : MonoBehaviour
 
     public void AddArmor(int armorAmount)
     {
-        Armor += armorAmount;
-        // SYNC FIX: Update the UI to show the Armor icon
+        // Delegate to AddStatusEffect to centralize logic
         AddStatusEffect(StatusEffectType.ARMOR, armorAmount); 
     }
 
@@ -79,10 +78,9 @@ public class CombatantView : MonoBehaviour
 
     public void AddStatusEffect(StatusEffectType type, int stackCount)
     {
-        // Special handling if you want Armor to only be controlled by AddArmor logic above,
-        // ignore this check if you want AddStatusEffect to be the master controller.
         if (type == StatusEffectType.ARMOR)
         {
+            Armor += stackCount;
             statusEffectsUI.UpdateStatusEffectUI(type, Armor);
             return;
         }

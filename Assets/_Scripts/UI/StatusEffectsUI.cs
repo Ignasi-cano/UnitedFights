@@ -8,9 +8,10 @@ public class StatusEffectsUI : MonoBehaviour
     private Dictionary<StatusEffectType, StatusEffectUI> statusEffectUIs = new();
     public void UpdateStatusEffectUI(StatusEffectType statusEffectType, int stackCount)
     {
+
         if (stackCount == 0)
         {
-            if(statusEffectUIs.ContainsKey(statusEffectType))
+             if(statusEffectUIs.ContainsKey(statusEffectType))
             {
                 StatusEffectUI statusEffectUI = statusEffectUIs[statusEffectType]; // Use a clear name
                 statusEffectUIs.Remove(statusEffectType);
@@ -31,11 +32,17 @@ public class StatusEffectsUI : MonoBehaviour
     }
     private Sprite GetSpriteByType(StatusEffectType statusEffectType)
     {
-        return statusEffectType switch
+        Sprite sprite = statusEffectType switch
         {
             StatusEffectType.ARMOR => armorSprite,
             StatusEffectType.BURN => burnSprite,
             _ => null,
         };
+
+        if (sprite == null)
+        {
+            Debug.LogWarning($"StatusEffectsUI: Sprite for {statusEffectType} is NULL! Check Inspector assignments.");
+        }
+        return sprite;
     }
 }
