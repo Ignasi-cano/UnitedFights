@@ -5,9 +5,13 @@ using System.Collections.Generic;
 
 public class HeroData : ScriptableObject
 {
-    [field: SerializeField] public Sprite Image { get; private set; }
-    [field: SerializeField] public int Health { get; private set; }
-    [field: SerializeField] public StatusEffectsUI StatusEffectUI { get; private set; }
-    [field: SerializeField] public List<CardData> Deck { get; private set; }
+    [SerializeField] private Sprite image;
+    [SerializeField] private int health;
+    [SerializeField] private StatusEffectsUI statusEffectUI;
+    [SerializeField] private List<CardData> deck;
 
+    public Sprite Image => image;
+    public int Health => health;
+    public StatusEffectsUI StatusEffectUI => statusEffectUI;
+    public List<CardData> Deck => deck;
 }

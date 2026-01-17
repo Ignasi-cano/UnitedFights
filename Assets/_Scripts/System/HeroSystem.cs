@@ -3,7 +3,7 @@ using UnityEngine;
 public class HeroSystem : Singleton<HeroSystem>
 {
     [field: SerializeField] public HeroView HeroView { get; private set; }
-    void Onable()
+    void OnEnable()
     {
         ActionSystem.SubscribeReaction<EnemyTurnGA>(EnemyTurnPreReaction,ReactionTiming.PRE);
         ActionSystem.SubscribeReaction<EnemyTurnGA>(EnemyTurnPostReaction,ReactionTiming.POST);

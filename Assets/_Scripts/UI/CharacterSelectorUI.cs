@@ -18,48 +18,74 @@ public class CharacterSelectorUI : MonoBehaviour
 
     private void GenerateHeroButtons()
     {
-        // Clear existing (if any)
-        foreach (Transform child in heroesContainer)
+        // AUTO-FIX: Ensure the container has a layout group and FORCE IT TO WORK
+        HorizontalLayoutGroup layoutGroup = heroesContainer.GetComponent<HorizontalLayoutGroup>();
+        if (layoutGroup == null)
         {
-            Destroy(child.gameObject);
+            Debug.Log("[UI AUTO-FIX] Adding missing HorizontalLayoutGroup to HeroesContainer.");
+            layoutGroup = heroesContainer.gameObject.AddComponent<HorizontalLayoutGroup>();
         }
 
-        if (GameManager.Instance == null)
-        {
-            Debug.LogError("GameManager is missing!");
-            return;
-        }
+        // Force settings: Disable "Control Child Size" so buttons keep their Prefab size (160x145)
+        layoutGroup.childAlignment = TextAnchor.MiddleCenter;
+        layoutGroup.spacing = 50;
+        layoutGroup.childControlWidth = false; 
+        layoutGroup.childControlHeight = false;
+        layoutGroup.childForceExpandWidth = false;
+        layoutGroup.childForceExpandHeight = false;
+        
+        // Force the layout to calculate immediately
+        LayoutRebuilder.ForceRebuildLayoutImmediate(heroesContainer.GetComponent<RectTransform>());
 
         foreach (var hero in GameManager.Instance.AvailableHeroes)
         {
             Button btn = Instantiate(heroButtonPrefab, heroesContainer);
             
-            // Try to find the Image component to update.
-            // 1. Check if the button itself has the target image (often the 'Target Graphic')
-            // 2. Or check if there's a child called "Image" or "Icon"
-            // 3. Fallback: Get the first Image component found.
+            // NEW LOGIC: improved targeting for the User's Prefab structure (HeroButton -> HeroSprite)
+            Image targetImage = null;
             
-            Image btnImage = btn.GetComponent<Image>();
+            // 1. Try to find specific child by name ("HeroSprite" or "Icon")
+            Transform spriteChild = btn.transform.Find("HeroSprite");
+            if (spriteChild == null) spriteChild = btn.transform.Find("Icon");
             
-            // If the button has an image but it's just a background (like a frame), checking children is safer if the hierarchy is Button -> Icon
-            // However, for a simple setup, usually the Button IS the Image.
+            if (spriteChild != null)
+            {
+                targetImage = spriteChild.GetComponent<Image>();
+            }
+
+            // 2. If no specific child, try to get the image on the button itself
+            if (targetImage == null)
+            {
+                targetImage = btn.GetComponent<Image>();
+            }
+
+            // 3. Last resort: Get ANY image in children
+            if (targetImage == null)
+            {
+                targetImage = btn.GetComponentInChildren<Image>();
+            }
             
             if (hero.Image != null)
             {
-               if (btnImage != null)
+               if (targetImage != null)
                {
-                   btnImage.sprite = hero.Image;
+                   Debug.Log($"[UI DEBUG] Setting Sprite for '{hero.name}' on Object: '{targetImage.gameObject.name}'.");
+                   targetImage.sprite = hero.Image;
+                   targetImage.color = Color.white; // Force opacity
+                   targetImage.preserveAspect = true; // Keep aspect ratio
                }
                else
                {
-                   // Try finding in children if the root has no image
-                   var childImage = btn.GetComponentInChildren<Image>();
-                   if (childImage != null) childImage.sprite = hero.Image;
+                    Debug.LogError($"[UI DEBUG] Could not find ANY Image component to set for hero '{hero.name}'!");
                }
+            }
+            else
+            {
+                Debug.LogWarning($"[UI DEBUG] Hero {hero.name} has NO IMAGE assigned in Data!");
             }
             
             // Add Debug loop to verify names
-            Debug.Log($"Generated button for {hero.name}, sprite: {hero.Image?.name}");
+            Debug.Log($"Generating Button for Hero: '{hero.name}' (InstanceID: {hero.GetInstanceID()}) - Sprite: {(hero.Image != null ? hero.Image.name : "NULL")}");
 
             btn.onClick.AddListener(() => OnHeroSelected(hero));
         }

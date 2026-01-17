@@ -53,9 +53,10 @@ public class CardSystem : Singleton<CardSystem>
         if(notDrawnAmount > 0)
         {
             RefillDeck();
-            for(int i = 0; i < notDrawnAmount; i++)
+            int remainingToDraw = Mathf.Min(notDrawnAmount, drawPile.Count);
+            for(int i = 0; i < remainingToDraw; i++)
             {
-                
+                yield return DrawCard();
             }
         }
     }
