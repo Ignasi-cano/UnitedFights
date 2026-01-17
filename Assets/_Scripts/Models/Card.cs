@@ -8,10 +8,10 @@ public class Card
     public Effect ManualTargetEffect => data.ManualTargetEffect;
     public List<AutoTargetEffect> OtherEffects => data.OtherEffects;
     public int Mana {get; private set; } 
-    private readonly CardData data;
+    public CardData Data { get; private set; }
     public Card(CardData cardData)
     {
-        data = cardData;
+        Data = cardData;
         Mana = cardData.Mana;
     }
 }

@@ -17,6 +17,7 @@ MonoBehaviour:
     rid: 8156335846497452123
   <AutoTargetEffect>k__BackingField:
     rid: 8156335846497452117
+  <Cost>k__BackingField: 1000
   <UseAutoTarget>k__BackingField: 0
   <UseActionCasterAsTarget>k__BackingField: 1
   references:

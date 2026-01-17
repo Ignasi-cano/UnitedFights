@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f847a30dd02701542a1f7ef760ca94e8, type: 3}
   m_Name: Bat
   m_EditorClassIdentifier: 
-  <Image>k__BackingField: {fileID: 0}
-  <Health>k__BackingField: 0
-  <AttackPower>k__BackingField: 0
+  <Image>k__BackingField: {fileID: 21300000, guid: 3596ea073656cd24b88af1dc48ba393a, type: 3}
+  <Health>k__BackingField: 20
+  <AttackPower>k__BackingField: 15

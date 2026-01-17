@@ -72,9 +72,10 @@ public class EnemySystem : Singleton<EnemySystem>
 
         // Aplicamos el daño
         // Nota: Asegúrate de que HeroView tampoco sea null, por si acaso.
-        if (HeroSystem.Instance.HeroView != null)
+        HeroView targetHero = HeroSystem.Instance.GetRandomHeroView();
+        if (targetHero != null)
         {
-            DealDamageGA dealDamageGA = new(attacker.AttackPower, new() { HeroSystem.Instance.HeroView }, attackHeroGA.Caster);
+            DealDamageGA dealDamageGA = new(attacker.AttackPower, new() { targetHero }, attackHeroGA.Caster);
             ActionSystem.Instance.AddReaction(dealDamageGA);
         }
     }

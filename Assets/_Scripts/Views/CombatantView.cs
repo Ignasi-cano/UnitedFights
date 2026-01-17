@@ -19,6 +19,7 @@ public class CombatantView : MonoBehaviour
 
     protected void SetupBase(int health, Sprite image)
     {
+        Debug.Log($"[CombatantView] {gameObject.name} SetupBase called with health: {health}");
         MaxHealth = CurrentHealth = health;
         spriteRenderer.sprite = image;
         UpdateHealthText();
@@ -26,8 +27,17 @@ public class CombatantView : MonoBehaviour
 
     private void UpdateHealthText()
     {
-        // Optimization: ToString() creates less garbage than "" + int
-        healthText.text = CurrentHealth.ToString(); 
+        if (statusEffectsUI != null)
+        {
+            statusEffectsUI.UpdateStatusEffectUI(StatusEffectType.HEALTH, CurrentHealth);
+            Debug.Log($"[CombatantView] {gameObject.name} Push health {CurrentHealth} to StatusEffectsUI.");
+        }
+        
+        // Keep old text update as optional fallback/secondary display
+        if (healthText != null)
+        {
+            healthText.text = CurrentHealth.ToString(); 
+        }
     }
 
     public void AddArmor(int armorAmount)
@@ -71,9 +81,29 @@ public class CombatantView : MonoBehaviour
         // Clamp Health
         if (CurrentHealth < 0) CurrentHealth = 0;
          
-        // Visual Feedback
-        transform.DOShakePosition(0.2f, 0.5f);
+        // Visual Feedback: Shake + Flash
+        transform.DOShakePosition(0.2f, 0.4f);
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.DOColor(Color.red, 0.1f).OnComplete(() => spriteRenderer.DOColor(Color.white, 0.1f));
+        }
+
         UpdateHealthText();
+
+        // KO Visual Feedback
+        if (CurrentHealth <= 0)
+        {
+            if (this is HeroView)
+            {
+                // Become semi-transparent instead of deactivating immediately
+                spriteRenderer.DOFade(0.4f, 0.3f);
+            }
+        }
+        else
+        {
+            // Reset opacity if healed
+            spriteRenderer.DOFade(1f, 0.1f);
+        }
     }
 
     public void AddStatusEffect(StatusEffectType type, int stackCount)

@@ -3016,11 +3016,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c81d8cd9937bb94d994cbf0489eb941, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <AvailableHeroes>k__BackingField:
+  availableHeroes:
   - {fileID: 11400000, guid: bab2422bb9eeb8f4b8d943cf30e9eb6a, type: 2}
   - {fileID: 11400000, guid: 1cf1edc961d0cb94e929ec2ccb86e299, type: 2}
   - {fileID: 11400000, guid: e882fa09d81bb584f9fcf6eaca9eb167, type: 2}
-  - {fileID: 11400000, guid: d6ee12d335cb07d41a27dd626f7ab9ca, type: 2}
+  activeHeroes: []
 --- !u!4 &2147416874
 Transform:
   m_ObjectHideFlags: 0

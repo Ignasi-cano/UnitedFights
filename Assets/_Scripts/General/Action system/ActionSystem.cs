@@ -17,8 +17,9 @@ public class ActionSystem : Singleton<ActionSystem>
     // Esto conecta tu función original 'reaction' con la 'wrapper' genérica para poder borrarla después.
     private static Dictionary<Delegate, Action<GameAction>> wrapperLookup = new();
 
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
+        base.OnDestroy();
         // Limpieza vital para evitar errores al reiniciar la escena o el juego
         preSubs.Clear();
         postSubs.Clear();

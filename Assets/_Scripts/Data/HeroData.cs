@@ -10,6 +10,7 @@ public class HeroData : ScriptableObject
     [SerializeField] private StatusEffectsUI statusEffectUI;
     [SerializeField] private List<CardData> deck;
 
+    [field: SerializeField] public int Cost { get; private set; }
     public Sprite Image => image;
     public int Health => health;
     public StatusEffectsUI StatusEffectUI => statusEffectUI;

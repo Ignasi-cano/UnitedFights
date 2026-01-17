@@ -19,8 +19,9 @@ public class ScoreSystem : Singleton<ScoreSystem>
         ActionSystem.SubscribeReaction<DealDamageGA>(OnDamageDealt, ReactionTiming.POST);
     }
 
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
+        base.OnDestroy();
         ActionSystem.UnsubscribeReaction<KillEnemyGA>(OnEnemyKilled, ReactionTiming.POST);
         ActionSystem.UnsubscribeReaction<PlayCardGA>(OnCardPlayed, ReactionTiming.POST);
         ActionSystem.UnsubscribeReaction<DealDamageGA>(OnDamageDealt, ReactionTiming.POST);
@@ -48,10 +49,16 @@ public class ScoreSystem : Singleton<ScoreSystem>
         }
     }
 
-    public void AddScore(int points)
+    public void AddScore(int amount)
     {
-        CurrentScore += points;
+        CurrentScore += amount;
         OnScoreChanged?.Invoke(CurrentScore);
+        
+        // Reward gold based on score (example: 1 gold per 10 score)
+        if (CurrencySystem.Instance != null)
+        {
+            CurrencySystem.Instance.AddGold(amount / 10);
+        }
     }
 
     public int CalculateFinalScore()

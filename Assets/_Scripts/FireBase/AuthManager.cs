@@ -100,8 +100,9 @@ public class AuthManager : Singleton<AuthManager>
             : "Unknown error: " + exception?.Message;
     }
 
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
+        base.OnDestroy();
         if (auth != null)
             auth.StateChanged -= OnAuthStateChanged;
     }

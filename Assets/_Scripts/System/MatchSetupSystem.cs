@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 
-public class MatchSeetupSystem : MonoBehaviour
+public class MatchSetupSystem : MonoBehaviour
 {
     [SerializeField] private HeroData heroData; // Re-added for fallback/testing
     [SerializeField] private PerkData perkData;
@@ -11,19 +11,25 @@ public class MatchSeetupSystem : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("Enviorement loaded");
-        
         // 1. Setup Hero
-        HeroData selectedHero = (GameManager.Instance != null && GameManager.Instance.SelectedHero != null) 
-            ? GameManager.Instance.SelectedHero 
-            : heroData;
+        List<HeroData> heroes = (GameManager.Instance != null) 
+            ? GameManager.Instance.ActiveHeroes 
+            : new List<HeroData> { heroData };
 
-        if (selectedHero == null)
+        if (heroes == null || heroes.Count == 0)
         {
-             Debug.LogError("No HeroData found! Ensure GameManager has a selected hero or Assign one in Inspector.");
+             Debug.LogError("[MatchSetupSystem] No HeroData found! Ensure GameManager has active heroes or Assign one in Inspector.");
              return;
         }
-        HeroSystem.Instance.Setup(selectedHero);
+
+        Debug.Log($"[MatchSetupSystem] Found {heroes.Count} active heroes to setup.");
+        foreach (var h in heroes)
+        {
+            if (h != null) Debug.Log($"[MatchSetupSystem] Hero found: {h.name} (HP: {h.Health})");
+            else Debug.LogError("[MatchSetupSystem] NULL HeroData found in heroes list!");
+        }
+
+        HeroSystem.Instance.Setup(heroes);
 
         // 2. Setup Enemies from Map Node
         List<EnemyData> activeEnemies = new List<EnemyData>();
@@ -53,8 +59,21 @@ public class MatchSeetupSystem : MonoBehaviour
         EnemySystem.Instance.Setup(activeEnemies);
 
         // 3. Setup Systems
-        CardSystem.Instance.Setup(selectedHero.Deck);
-        CardSystem.Instance.AddRandomCardToDeck();
+        List<CardData> combinedDeck = new List<CardData>(GameManager.Instance.MasterDeck);
+        
+        CardSystem.Instance.Setup(combinedDeck);
+        
+        // Example: Add a random card as a starting reward (Permanent)
+        if (CardSystem.Instance.AvailableCards != null && CardSystem.Instance.AvailableCards.Count > 0)
+        {
+            CardData randomCard = CardSystem.Instance.AvailableCards[UnityEngine.Random.Range(0, CardSystem.Instance.AvailableCards.Count)];
+            GameManager.Instance.AddCardToMasterDeck(randomCard);
+        }
+        
+        // Refresh combined deck from MasterDeck and Setup
+        combinedDeck = new List<CardData>(GameManager.Instance.MasterDeck);
+        CardSystem.Instance.Setup(combinedDeck);
+        
         PerkSystem.Instance.AddPerk(new Perk(perkData));
         DrawCardsGA drawCardsGA = new(5);
         ActionSystem.Instance.Perform(drawCardsGA);

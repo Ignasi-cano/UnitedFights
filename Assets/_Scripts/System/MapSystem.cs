@@ -39,6 +39,18 @@ public class MapSystem : PersistentSingleton<MapSystem>
             Debug.Log("[MapSystem] Loading 'unitedfights' for combat encounter.");
             UnityEngine.SceneManagement.SceneManager.LoadScene("unitedfights");
         }
+        else if (CurrentNode.NodeType == MapNodeType.SHOP)
+        {
+            Debug.Log("[MapSystem] Entering Shop.");
+            if (ShopView.Instance != null)
+            {
+                ShopView.Instance.OpenShop();
+            }
+            else
+            {
+                Debug.LogError("[MapSystem] ShopView instance not found in scene!");
+            }
+        }
         else
         {
             Debug.LogWarning($"[MapSystem] Node type {CurrentNode.NodeType} has no specific scene logic implemented yet! Staying on map.");

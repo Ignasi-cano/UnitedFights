@@ -5,10 +5,11 @@ public class HeroTM : TargetMode
 {
     public override List<CombatantView> GetTargets()
     {
-        List<CombatantView> targets = new()
+        List<CombatantView> targets = new();
+        foreach (var hv in HeroSystem.Instance.HeroViews)
         {
-            HeroSystem.Instance.HeroView
-        };
+            if (hv.gameObject.activeSelf && hv.CurrentHealth > 0) targets.Add(hv);
+        }
         return targets;
     }
 }

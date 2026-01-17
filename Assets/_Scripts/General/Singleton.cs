@@ -20,7 +20,7 @@ public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
                 if (_instance == null)
                 {
                     // Find including inactive to prevent creating duplicates if object is just disabled
-                    _instance = (T)FindObjectOfType(typeof(T), true);
+                    _instance = (T)FindAnyObjectByType(typeof(T), FindObjectsInactive.Include);
 
                     if (_instance == null)
                     {

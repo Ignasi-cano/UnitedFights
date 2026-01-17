@@ -15,6 +15,7 @@ MonoBehaviour:
   <Description>k__BackingField: Will-O-Wisp inflicts a burn on the target.
   <Mana>k__BackingField: 1
   <Image>k__BackingField: {fileID: 21300000, guid: 3acedfa7eda6a024ebd9c441690d4c31, type: 3}
+  <Cost>k__BackingField: 300
   <ManualTargetEffect>k__BackingField:
     rid: 8156335962280951886
   <OtherEffects>k__BackingField: []

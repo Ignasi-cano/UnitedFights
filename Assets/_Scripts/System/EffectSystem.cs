@@ -14,7 +14,7 @@ public class EffectSystem : MonoBehaviour
     //performers
     private IEnumerator PerformEffectPerformer(PerformEffectsGA performEffectsGA)
     {
-        GameAction effectAction = performEffectsGA.Effect.GetGameAction(performEffectsGA.Targets, HeroSystem.Instance.HeroView);
+        GameAction effectAction = performEffectsGA.Effect.GetGameAction(performEffectsGA.Targets, HeroSystem.Instance.MainHeroView);
         ActionSystem.Instance.AddReaction(effectAction);
         yield return null;
     }

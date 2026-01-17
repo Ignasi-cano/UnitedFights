@@ -10,6 +10,7 @@ public class CardSystem : Singleton<CardSystem>
     [SerializeField] private Transform drawPilePoint;
     [SerializeField] private Transform discardPilePoint;
     [SerializeField] private List<CardData> availableCards; // Lista de todas las cartas disponibles para elegir random
+    public List<CardData> AvailableCards => availableCards;
 
     private readonly List<Card> drawPile = new();
     private readonly List<Card> discardPile = new();
@@ -121,17 +122,33 @@ public class CardSystem : Singleton<CardSystem>
         Debug.Log(card + " added to the deck");
     }
 
-    // Método para añadir una carta random al mazo del héroe
-    public void AddRandomCardToDeck()
+    // NEW: Get the current list of cards in the deck (draw pile + discard pile)
+    public List<CardData> GetDeckData()
     {
-        if (availableCards != null && availableCards.Count > 0)
+        List<CardData> deck = new();
+        foreach (var card in drawPile) deck.Add(card.Data);
+        foreach (var card in discardPile) deck.Add(card.Data);
+        return deck;
+    }
+
+    // NEW: Remove a specific card from the deck
+    public void RemoveCard(CardData cardData)
+    {
+        // Try to remove from draw pile first
+        Card toRemove = drawPile.Find(c => c.Data == cardData);
+        if (toRemove != null)
         {
-            CardData randomCardData = availableCards[Random.Range(0, availableCards.Count)];
-            AddCardToDeck(randomCardData);
+            drawPile.Remove(toRemove);
+            Debug.Log($"[CardSystem] Removed {cardData.name} from draw pile.");
+            return;
         }
-        else
+
+        // Then check discard pile
+        toRemove = discardPile.Find(c => c.Data == cardData);
+        if (toRemove != null)
         {
-            Debug.LogWarning("No available cards to add randomly.");
+            discardPile.Remove(toRemove);
+            Debug.Log($"[CardSystem] Removed {cardData.name} from discard pile.");
         }
     }
 }

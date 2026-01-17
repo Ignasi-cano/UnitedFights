@@ -222,6 +222,7 @@ MonoBehaviour:
   statusEffectUIPrefab: {fileID: 0}
   armorSprite: {fileID: 0}
   burnSprite: {fileID: 0}
+  healthSprite: {fileID: 0}
 --- !u!1 &42469738
 GameObject:
   m_ObjectHideFlags: 0
@@ -3025,17 +3026,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8501405734582882597, guid: 4fd28bb4f97e7c541803f424eab4ea6b, type: 3}
   m_PrefabInstance: {fileID: 3520643349629330304}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1190575141 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6712431820190326282, guid: 4fd28bb4f97e7c541803f424eab4ea6b, type: 3}
-  m_PrefabInstance: {fileID: 3520643349629330304}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eccce29d0e68ee34e8dfb1c572c1619d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1215654410
 GameObject:
   m_ObjectHideFlags: 0
@@ -3829,7 +3819,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -8.799988, y: 4}
+  m_AnchoredPosition: {x: -8.799988, y: 11.96}
   m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!212 &1732886193
@@ -4574,7 +4564,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87c0eb564c0ff13449275825544abe2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <HeroView>k__BackingField: {fileID: 1190575141}
+  <HeroViews>k__BackingField: []
 --- !u!1 &2132994737
 GameObject:
   m_ObjectHideFlags: 0
@@ -4670,6 +4660,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7985190935012068916, guid: 4fd28bb4f97e7c541803f424eab4ea6b, type: 3}
+      propertyPath: healthSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 751232011bf9c244c91ce629964898c6, type: 3}
     - target: {fileID: 8501405734582882597, guid: 4fd28bb4f97e7c541803f424eab4ea6b, type: 3}
       propertyPath: m_LocalPosition.x
       value: -8.48
