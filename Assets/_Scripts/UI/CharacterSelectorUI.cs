@@ -37,6 +37,20 @@ public class CharacterSelectorUI : MonoBehaviour
         // Force the layout to calculate immediately
         LayoutRebuilder.ForceRebuildLayoutImmediate(heroesContainer.GetComponent<RectTransform>());
 
+        if (GameManager.Instance == null)
+        {
+            Debug.LogError("[UI] GameManager.Instance is null! This should not happen due to Singleton lazy-loading.");
+            return;
+        }
+
+        if (GameManager.Instance.AvailableHeroes == null || GameManager.Instance.AvailableHeroes.Count == 0)
+        {
+            Debug.LogWarning("[UI] GameManager has NO HEROES in AvailableHeroes! Did you start from the Login scene? Make sure your configured GameManager is in the first scene of the game.");
+            return;
+        }
+
+        Debug.Log($"[UI] Found {GameManager.Instance.AvailableHeroes.Count} heroes in GameManager.");
+
         foreach (var hero in GameManager.Instance.AvailableHeroes)
         {
             Button btn = Instantiate(heroButtonPrefab, heroesContainer);
@@ -99,6 +113,6 @@ public class CharacterSelectorUI : MonoBehaviour
 
     private void OnStartGame()
     {
-        SceneManager.LoadScene("unitedfights");
+        SceneManager.LoadScene("MapScene");
     }
 }

@@ -1,8 +1,9 @@
 using UnityEngine;
 
-public class MapSystem : Singleton<MapSystem>
+public class MapSystem : PersistentSingleton<MapSystem>
 {
     public MapData CurrentMap { get; private set; }
+    public MapNode CurrentNode { get; private set; }
 
     public void GenerateNewMap()
     {
@@ -12,9 +13,35 @@ public class MapSystem : Singleton<MapSystem>
 
     public void SelectNode(string nodeID)
     {
+        if (CurrentMap == null)
+        {
+            Debug.LogError("[MapSystem] Cannot select node because CurrentMap is null!");
+            return;
+        }
+
+        MapNode node = CurrentMap.Nodes.Find(n => n.ID == nodeID);
+        if (node == null)
+        {
+            Debug.LogError($"[MapSystem] Could not find node with ID: {nodeID}");
+            return;
+        }
+
         CurrentMap.CurrentNodeID = nodeID;
+        CurrentNode = node;
+        
+        Debug.Log($"[MapSystem] Successfully selected node: {nodeID} ({node.NodeType}). Loading scene...");
+
         // Logic to load scene based on node type
-        var node = CurrentMap.Nodes.Find(n => n.ID == nodeID);
-        Debug.Log($"Moving to node: {nodeID} of type {node.NodeType}");
+        if (CurrentNode.NodeType == MapNodeType.COMBAT || 
+            CurrentNode.NodeType == MapNodeType.ELITE || 
+            CurrentNode.NodeType == MapNodeType.BOSS)
+        {
+            Debug.Log("[MapSystem] Loading 'unitedfights' for combat encounter.");
+            UnityEngine.SceneManagement.SceneManager.LoadScene("unitedfights");
+        }
+        else
+        {
+            Debug.LogWarning($"[MapSystem] Node type {CurrentNode.NodeType} has no specific scene logic implemented yet! Staying on map.");
+        }
     }
 }

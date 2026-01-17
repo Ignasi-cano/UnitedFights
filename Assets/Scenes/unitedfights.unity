@@ -1751,6 +1751,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: de40b1cd87fef924abe42368beec2b20, type: 2}
   - {fileID: 11400000, guid: 928e45c15d4ab6f4ba1415d1db76d0a5, type: 2}
   - {fileID: 11400000, guid: 27484dd51e1ffc044a8e9dfc056d43c9, type: 2}
+  encounterDatabase: {fileID: 11400000, guid: f9452a35708939e4c8473096df35b4ce, type: 2}
 --- !u!1 &709236500
 GameObject:
   m_ObjectHideFlags: 0

@@ -87,9 +87,8 @@ public class EnemySystem : Singleton<EnemySystem>
     {
         if (Enemies.Count == 0)
         {
-            Debug.Log("No enemies i should die");
-            // Cargar la escena del menú principal (reemplaza "MainMenu" con el nombre exacto de tu escena)
-            SceneManager.LoadScene("MainMenu");
+            Debug.Log("No enemies! Victory! Returning to Map.");
+            SceneManager.LoadScene("MapScene");
         }
     }
 }

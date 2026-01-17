@@ -1,20 +1,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : Singleton<GameManager>
+public class GameManager : PersistentSingleton<GameManager>
 {
-    [field: SerializeField] public List<HeroData> AvailableHeroes { get; private set; }
+    [SerializeField] private List<HeroData> availableHeroes = new List<HeroData>();
+    public List<HeroData> AvailableHeroes => availableHeroes;
     public HeroData SelectedHero { get; private set; }
 
     protected override void Awake()
     {
         base.Awake();
-        DontDestroyOnLoad(gameObject);
         
+        // If we were destroyed by the Singleton pattern, don't continue
+        if (Instance != this) return;
+
+        Debug.Log($"[GameManager] Awake on {gameObject.name}. Hero count: {(availableHeroes != null ? availableHeroes.Count : 0)}");
+
         // Ensure we have a default hero if none selected (for testing)
-        if (SelectedHero == null && AvailableHeroes.Count > 0)
+        if (SelectedHero == null && availableHeroes != null && availableHeroes.Count > 0)
         {
-            SelectedHero = AvailableHeroes[0];
+            SelectedHero = availableHeroes[0];
+            Debug.Log($"[GameManager] Set default hero: {SelectedHero.name}");
         }
     }
 
