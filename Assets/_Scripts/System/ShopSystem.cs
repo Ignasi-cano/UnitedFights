@@ -36,10 +36,30 @@ public class ShopSystem : Singleton<ShopSystem>
 
     public bool BuyPerk(PerkData perkData)
     {
+        if (GameManager.Instance.MasterPerks.Count >= GameManager.MAX_PERKS)
+        {
+            Debug.LogWarning("[ShopSystem] Cannot buy perk: Maximum perk limit reached (10).");
+            return false;
+        }
+
         if (CurrencySystem.Instance.TrySpendGold(perkData.Cost))
         {
-            PerkSystem.Instance.AddPerk(new Perk(perkData));
-            Debug.Log($"Shop: Successfully bought perk {perkData.name}");
+            // 1. Persist it globally
+            GameManager.Instance.MasterPerks.Add(perkData);
+
+            // 2. If it's an "Instant" perk (like HP), apply it immediately to HeroInstance data
+            if (perkData.PerkCondition is InstantPerkCondition)
+            {
+                perkData.AutoTargetEffect.Effect.ApplyToInstances(GameManager.Instance.ActiveHeroes);
+            }
+
+            // 3. Add to live system if we are in a scene that has one (optional/safety)
+            if (PerkSystem.HasInstance)
+            {
+                PerkSystem.Instance.AddPerk(new Perk(perkData));
+            }
+
+            Debug.Log($"Shop: Successfully bought perk {perkData.name} and applied persistent effects.");
             return true;
         }
         return false;

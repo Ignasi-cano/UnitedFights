@@ -15,10 +15,14 @@ public class BurnSystem : MonoBehaviour
     private IEnumerator ApplyBurnPerformer(ApplyBurnGA applyBurnGA)
     {
         CombatantView target = applyBurnGA.Target;
-        Instantiate(burnVFX, target.transform.position, Quaternion.identity);
-        target.Damage(applyBurnGA.BurnDamage);
+        if (target == null || target.IsDying) yield break;
+
+        // Use DealDamageGA to ensure death logic is checked correctly in DamageSystem
+        DealDamageGA dealDamageGA = new DealDamageGA(applyBurnGA.BurnDamage, new() { target }, null);
+        ActionSystem.Instance.AddReaction(dealDamageGA);
+
         target.RemoveStatusEffect(StatusEffectType.BURN, 1);
-        yield return new WaitForSeconds(1f);
+        yield return null; 
     }
 
 }

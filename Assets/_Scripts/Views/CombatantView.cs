@@ -102,14 +102,37 @@ public class CombatantView : MonoBehaviour
             IsDying = true;
             if (this is HeroView)
             {
-                // Become semi-transparent instead of deactivating immediately
+                spriteRenderer.DOFade(0.4f, 0.3f);
+            }
+        }
+    }
+
+    public void SetHealth(int health)
+    {
+        CurrentHealth = Mathf.Clamp(health, 0, MaxHealth);
+        UpdateHealthText();
+        UpdateStatusEffectIcons(); // Ensure visuals match
+        
+        if (CurrentHealth <= 0)
+        {
+            IsDying = true;
+            if (this is HeroView)
+            {
                 spriteRenderer.DOFade(0.4f, 0.3f);
             }
         }
         else
         {
-            // Reset opacity if healed
+            IsDying = false; 
             spriteRenderer.DOFade(1f, 0.1f);
+        }
+    }
+
+    private void UpdateStatusEffectIcons()
+    {
+        if (statusEffectsUI != null)
+        {
+            statusEffectsUI.UpdateStatusEffectUI(StatusEffectType.HEALTH, CurrentHealth);
         }
     }
 
@@ -158,5 +181,18 @@ public class CombatantView : MonoBehaviour
     {
         if (statusEffects.ContainsKey(type)) return statusEffects[type];
         return 0;
+    }
+
+    public void Heal(int amount)
+    {
+        if (IsDying && CurrentHealth <= 0) return; 
+        SetHealth(CurrentHealth + amount);
+    }
+
+    public void ChangeMaxHealth(int delta)
+    {
+        MaxHealth += delta;
+        CurrentHealth += delta; 
+        SetHealth(CurrentHealth);
     }
 }

@@ -2,9 +2,17 @@ using UnityEngine;
 
 public class HeroView : CombatantView
 {
-    public void Setup(HeroData heroData)
+    public HeroInstance HeroInstance { get; private set; }
+    public void Setup(HeroInstance instance)
     {
-        Debug.Log($"[HeroView] Setting up {heroData.name} with {heroData.Health} health.");
-        SetupBase(heroData.Health, heroData.Image);
+        HeroInstance = instance;
+        Debug.Log($"[HeroView] Setting up {instance.Data.name} with {instance.CurrentHealth}/{instance.GetMaxHealth()} health.");
+        SetupBase(instance.GetMaxHealth(), instance.Data.Image);
+        
+        // Restore saved health
+        if (instance.CurrentHealth < instance.GetMaxHealth())
+        {
+            SetHealth(instance.CurrentHealth);
+        }
     }
 }

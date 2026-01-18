@@ -52,6 +52,18 @@ public class MapSystem : PersistentSingleton<MapSystem>
                 Debug.LogError("[MapSystem] ShopView instance not found in scene!");
             }
         }
+        else if (CurrentNode.NodeType == MapNodeType.REST)
+        {
+            Debug.Log("[MapSystem] Entering Rest Node.");
+            if (RestView.Instance != null)
+            {
+                RestView.Instance.OpenRest();
+            }
+            else
+            {
+                Debug.LogError("[MapSystem] RestView instance not found in scene!");
+            }
+        }
         else
         {
             Debug.LogWarning($"[MapSystem] Node type {CurrentNode.NodeType} has no specific scene logic implemented yet! Staying on map.");

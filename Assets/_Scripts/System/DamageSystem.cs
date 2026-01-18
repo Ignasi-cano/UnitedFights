@@ -7,10 +7,14 @@ public class DamageSystem : MonoBehaviour
     void OnEnable()
     {
         ActionSystem.AttachPerformer<DealDamageGA>(DealDamagePerformer);
+        ActionSystem.AttachPerformer<HealGA>(HealPerformer);
+        ActionSystem.AttachPerformer<ChangeMaxHealthGA>(ChangeMaxHealthPerformer);
     }
     void OnDisable()
     {
         ActionSystem.DetachPerformer<DealDamageGA>();
+        ActionSystem.DetachPerformer<HealGA>();
+        ActionSystem.DetachPerformer<ChangeMaxHealthGA>();
     }
     private IEnumerator DealDamagePerformer(DealDamageGA dealDamageGA)
     {
@@ -52,6 +56,25 @@ public class DamageSystem : MonoBehaviour
                 }
                 
             }
+        }
+    }
+    private IEnumerator HealPerformer(HealGA healGA)
+    {
+        foreach (var target in healGA.Targets)
+        {
+            if (target == null) continue;
+            target.Heal(healGA.Amount);
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+    private IEnumerator ChangeMaxHealthPerformer(ChangeMaxHealthGA changeMaxHealthGA)
+    {
+        foreach (var target in changeMaxHealthGA.Targets)
+        {
+            if (target == null) continue;
+            target.ChangeMaxHealth(changeMaxHealthGA.Amount);
+            yield return new WaitForSeconds(0.1f);
         }
     }
 }

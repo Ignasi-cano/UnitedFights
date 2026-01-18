@@ -12,11 +12,17 @@ public class MatchSetupSystem : MonoBehaviour
     private void Start()
     {
         // 1. Setup Hero
-        List<HeroData> heroes = (GameManager.Instance != null) 
-            ? GameManager.Instance.ActiveHeroes 
-            : new List<HeroData> { heroData };
+        List<HeroInstance> heroes = new List<HeroInstance>();
+        if (GameManager.Instance != null && GameManager.Instance.ActiveHeroes.Count > 0)
+        {
+            heroes = GameManager.Instance.ActiveHeroes;
+        }
+        else if (heroData != null)
+        {
+            heroes.Add(new HeroInstance(heroData));
+        }
 
-        if (heroes == null || heroes.Count == 0)
+        if (heroes.Count == 0)
         {
              Debug.LogError("[MatchSetupSystem] No HeroData found! Ensure GameManager has active heroes or Assign one in Inspector.");
              return;
@@ -68,7 +74,19 @@ public class MatchSetupSystem : MonoBehaviour
         combinedDeck = new List<CardData>(GameManager.Instance.MasterDeck);
         CardSystem.Instance.Setup(combinedDeck);
         
-        PerkSystem.Instance.AddPerk(new Perk(perkData));
+        // 4. Setup Perks
+        if (GameManager.Instance != null)
+        {
+            foreach (var perkData in GameManager.Instance.MasterPerks)
+            {
+                PerkSystem.Instance.AddPerk(new Perk(perkData));
+            }
+        }
+        else
+        {
+            PerkSystem.Instance.AddPerk(new Perk(perkData));
+        }
+        
         DrawCardsGA drawCardsGA = new(5);
         ActionSystem.Instance.Perform(drawCardsGA);
     }

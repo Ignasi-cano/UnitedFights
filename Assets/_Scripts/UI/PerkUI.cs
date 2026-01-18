@@ -8,6 +8,7 @@ public class PerkUI : MonoBehaviour
     public void Setup(Perk perk)
     {
         Perk = perk;
-        image.sprite = perk.Image;
+        if (image != null) image.sprite = perk.Image;
+        else Debug.LogError($"[PerkUI] Image component not assigned on {gameObject.name}!");
     }
 }

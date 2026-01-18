@@ -31,7 +31,7 @@ public class HeroSystem : Singleton<HeroSystem>
     }
     
     
-    public void Setup(List<HeroData> heroesData)
+    public void Setup(List<HeroInstance> heroesData)
     {
         Debug.Log($"[HeroSystem] Setup called with {heroesData.Count} HeroData objects.");
         
@@ -73,7 +73,20 @@ public class HeroSystem : Singleton<HeroSystem>
             }
         }
     }
-        //reacciones 
+
+    public void SaveHeroesHealth()
+    {
+        foreach (var hv in HeroViews)
+        {
+            if (hv.gameObject.activeSelf && hv.HeroInstance != null)
+            {
+                hv.HeroInstance.CurrentHealth = hv.CurrentHealth;
+                Debug.Log($"[HeroSystem] Saved {hv.HeroInstance.Data.name} health: {hv.CurrentHealth}");
+            }
+        }
+    }
+
+    //reacciones 
     private void EnemyTurnPreReaction(EnemyTurnGA enemyTurnGA)
     {
         DiscardAllCardsGA discardAllCardsGA = new();

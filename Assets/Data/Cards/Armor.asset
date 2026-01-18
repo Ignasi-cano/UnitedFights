@@ -17,22 +17,12 @@ MonoBehaviour:
   <Image>k__BackingField: {fileID: 21300000, guid: 5d973116ad3cb4a48913634d2357a84f, type: 3}
   <Cost>k__BackingField: 300
   <ManualTargetEffect>k__BackingField:
-    rid: -2
-  <OtherEffects>k__BackingField:
-  - <TargetMode>k__BackingField:
-      rid: 8156335878360793165
-    <Effect>k__BackingField:
-      rid: 8156335878360793166
+    rid: 8156335990739304532
+  <OtherEffects>k__BackingField: []
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 8156335878360793165
-      type: {class: HeroTM, ns: , asm: Assembly-CSharp}
-      data: 
-    - rid: 8156335878360793166
-      type: {class: AddStatusEffectEffect, ns: , asm: Assembly-CSharp}
+    - rid: 8156335990739304532
+      type: {class: GainArmorEffect, ns: , asm: Assembly-CSharp}
       data:
-        statusEffectType: 0
-        stackCount: 100
+        amount: 100

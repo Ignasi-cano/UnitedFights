@@ -115,7 +115,7 @@ public class ScoreSystem : Singleton<ScoreSystem>
             // 3. Update Hero Stats (assuming we can get the active hero)
             if (GameManager.Instance != null && GameManager.Instance.ActiveHeroes.Count > 0)
             {
-                string heroName = GameManager.Instance.ActiveHeroes[0].name;
+                string heroName = GameManager.Instance.ActiveHeroes[0].Data.name;
                 ScoreManager.Instance.UpdateHeroStats(userId, heroName, true);
             }
             

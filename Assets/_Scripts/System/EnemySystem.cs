@@ -90,7 +90,9 @@ public class EnemySystem : Singleton<EnemySystem>
     {
         if (Enemies.Count == 0)
         {
-            Debug.Log("No enemies! Victory! Showing Victory Screen.");
+            Debug.Log("No enemies! Victory! Saving Heroes Health and Showing Victory Screen.");
+            HeroSystem.Instance.SaveHeroesHealth();
+
             if (VictoryUI.Instance != null)
             {
                 VictoryUI.Instance.Show();

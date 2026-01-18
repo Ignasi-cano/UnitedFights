@@ -8,6 +8,18 @@ public class PerksUI : MonoBehaviour
     private readonly List<PerkUI> perkUIs = new();
     public void AddPerkUI(Perk perk)
     {
+        if (perkUIPrefab == null)
+        {
+            Debug.LogError("[PerksUI] perkUIPrefab is null! Cannot add Perk UI.");
+            return;
+        }
+
+        // Layout Check
+        if (GetComponent<UnityEngine.UI.LayoutGroup>() == null)
+        {
+            Debug.LogWarning($"[PerksUI] {gameObject.name} has no LayoutGroup! Perks will overlap. Please add a Horizontal Layout Group.");
+        }
+
         PerkUI perkUI = Instantiate(perkUIPrefab, transform);
         perkUI.Setup(perk);
         perkUIs.Add(perkUI);
