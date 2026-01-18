@@ -15,6 +15,9 @@ public class AuthManager : Singleton<AuthManager>
     public event Action<FirebaseUser> OnRegisterSuccess;
     public event Action<string> OnRegisterFailed;
     public event Action OnLogout;
+    public event Action OnInitialized;
+
+    public bool IsInitialized { get; private set; } = false;
 
     private void Start()
     {
@@ -32,6 +35,9 @@ public class AuthManager : Singleton<AuthManager>
     {
         auth = FirebaseAuth.DefaultInstance;
         auth.StateChanged += OnAuthStateChanged;
+        IsInitialized = true;
+        OnInitialized?.Invoke();
+        Debug.Log("[AuthManager] Initialized and ready.");
     }
 
     private void OnAuthStateChanged(object sender, EventArgs e)

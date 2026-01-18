@@ -13,6 +13,8 @@ public class CurrencySystem : PersistentSingleton<CurrencySystem>
         gold += amount;
         OnGoldChanged?.Invoke();
         Debug.Log($"[CurrencySystem] Added {amount} gold. Total: {gold}");
+        
+        SyncGoldToFirebase();
     }
 
     public bool TrySpendGold(int amount)
@@ -22,6 +24,8 @@ public class CurrencySystem : PersistentSingleton<CurrencySystem>
             gold -= amount;
             OnGoldChanged?.Invoke();
             Debug.Log($"[CurrencySystem] Spent {amount} gold. Remaining: {gold}");
+            
+            SyncGoldToFirebase();
             return true;
         }
         
@@ -33,5 +37,15 @@ public class CurrencySystem : PersistentSingleton<CurrencySystem>
     {
         gold = amount;
         OnGoldChanged?.Invoke();
+        SyncGoldToFirebase();
+    }
+
+    private void SyncGoldToFirebase()
+    {
+        if (ScoreManager.Instance != null && AuthManager.Instance.IsLoggedIn)
+        {
+            string userId = AuthManager.Instance.CurrentUser.UserId;
+            ScoreManager.Instance.AddToInventory(userId, "Currency", "Gold", gold);
+        }
     }
 }

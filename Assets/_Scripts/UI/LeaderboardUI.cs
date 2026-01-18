@@ -38,21 +38,18 @@ public class LeaderboardUI : MonoBehaviour
         foreach (var score in scores)
         {
             GameObject entry = Instantiate(scoreEntryPrefab, contentContainer);
-            
-            // Assuming the prefab has a component or we find text components
-            // For simplicity, finding TMP_Text components in children
-            // Ideally, create a LeaderboardEntry script
             TextMeshProUGUI[] texts = entry.GetComponentsInChildren<TextMeshProUGUI>();
             
             if (texts.Length >= 2)
             {
-                // Format: 1. Email: Score
-                texts[0].text = score.Email; // Suggest masking email for privacy in real app
-                texts[1].text = score.HighScore.ToString();
+                // Slot 0: Name + Tier
+                texts[0].text = $"{score.Email} [{score.Tier}]"; 
+                // Slot 1: Score + Elo
+                texts[1].text = $"Score: {score.HighScore} | Elo: {score.Elo}";
             }
             else if (texts.Length == 1)
             {
-                texts[0].text = $"{score.Email} : {score.HighScore}";
+                texts[0].text = $"{score.Email} ({score.Tier}) - Puntos: {score.HighScore}";
             }
         }
     }

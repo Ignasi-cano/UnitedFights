@@ -10,6 +10,7 @@ public class LoginUI : MonoBehaviour
     [SerializeField] private Button loginButton;
     [SerializeField] private Button registerButton;
     [SerializeField] private TextMeshProUGUI statusText;
+    [SerializeField] private bool loadSceneOnSuccess = true;
 
     private void Start()
     {
@@ -25,6 +26,11 @@ public class LoginUI : MonoBehaviour
             AuthManager.Instance.OnRegisterSuccess += HandleRegisterSuccess;
             AuthManager.Instance.OnRegisterFailed += HandleRegisterFailed;
         }
+    }
+
+    private void OnEnable()
+    {
+        SetStatus("");
     }
 
     private void OnLoginClicked()
@@ -48,8 +54,10 @@ public class LoginUI : MonoBehaviour
     private void HandleLoginSuccess(Firebase.Auth.FirebaseUser user)
     {
         SetStatus($"Login successful! Welcome {user.Email}");
-        // Navigate to Character Selection
-        UnityEngine.SceneManagement.SceneManager.LoadScene("CharacterSelection");
+        if (loadSceneOnSuccess)
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene("CharacterSelection");
+        }
     }
 
     private void HandleLoginFailed(string error)
@@ -60,8 +68,10 @@ public class LoginUI : MonoBehaviour
     private void HandleRegisterSuccess(Firebase.Auth.FirebaseUser user)
     {
         SetStatus($"Registration successful! Account created for {user.Email}");
-        // Navigate to Character Selection
-        UnityEngine.SceneManagement.SceneManager.LoadScene("CharacterSelection");
+        if (loadSceneOnSuccess)
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene("CharacterSelection");
+        }
     }
 
     private void HandleRegisterFailed(string error)

@@ -80,13 +80,34 @@ public class ScoreSystem : Singleton<ScoreSystem>
     public void SaveFinalScore()
     {
         int finalScore = CalculateFinalScore();
-        if (ScoreManager.Instance != null)
+        if (ScoreManager.Instance != null && AuthManager.Instance.IsLoggedIn)
         {
+            string userId = AuthManager.Instance.CurrentUser.UserId;
+            
+            // 1. Save HighScore and update Elo
             ScoreManager.Instance.SaveScore(finalScore);
+            
+            // 2. Save Match History
+            MatchRecord record = new MatchRecord
+            {
+                WinnerId = userId, // In this version, we assume player won if they reach here
+                LoserId = "CPU",
+                DamageDealt = finalScore // Using score as damage metric for now
+            };
+            ScoreManager.Instance.AddMatchRecord(record);
+            
+            // 3. Update Hero Stats (assuming we can get the active hero)
+            if (GameManager.Instance != null && GameManager.Instance.ActiveHeroes.Count > 0)
+            {
+                string heroName = GameManager.Instance.ActiveHeroes[0].name;
+                ScoreManager.Instance.UpdateHeroStats(userId, heroName, true);
+            }
+            
+            Debug.Log($"[ScoreSystem] Final score {finalScore} and match data saved to Firebase.");
         }
         else
         {
-            Debug.LogError("ScoreManager instance is missing, cannot save score!");
+            Debug.LogWarning("[ScoreSystem] Cannot save score: ScoreManager missing or user not logged in.");
         }
     }
 }
