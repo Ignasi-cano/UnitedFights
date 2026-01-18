@@ -13,6 +13,7 @@ public class EnemySystem : Singleton<EnemySystem>
         ActionSystem.AttachPerformer<EnemyTurnGA>(EnemyTurnPerformer);
         ActionSystem.AttachPerformer<AttackHeroGA>(AttackHeroPerformer);
         ActionSystem.AttachPerformer<KillEnemyGA>(KillEnemyPerformer);
+        ActionSystem.SubscribeReaction<KillEnemyGA>(CheckEnemiesAlivePostReaction, ReactionTiming.POST);
         ActionSystem.SubscribeReaction<EnemyTurnGA>(CheckEnemiesAlivePostReaction, ReactionTiming.POST);
     }
 
@@ -21,6 +22,7 @@ public class EnemySystem : Singleton<EnemySystem>
         ActionSystem.DetachPerformer<EnemyTurnGA>();
         ActionSystem.DetachPerformer<AttackHeroGA>();
         ActionSystem.DetachPerformer<KillEnemyGA>();
+        ActionSystem.UnsubscribeReaction<KillEnemyGA>(CheckEnemiesAlivePostReaction, ReactionTiming.POST);
         ActionSystem.UnsubscribeReaction<EnemyTurnGA>(CheckEnemiesAlivePostReaction, ReactionTiming.POST);
     }
     public void Setup(List<EnemyData> enemyDatas)
@@ -84,12 +86,20 @@ public class EnemySystem : Singleton<EnemySystem>
         yield return enemyBoardView.RemoveEnemy(killEnemyGA.EnemyView);
     }
 
-    private void CheckEnemiesAlivePostReaction(EnemyTurnGA enemyTurnGA)
+    private void CheckEnemiesAlivePostReaction(GameAction action)
     {
         if (Enemies.Count == 0)
         {
-            Debug.Log("No enemies! Victory! Returning to Map.");
-            SceneManager.LoadScene("MapScene");
+            Debug.Log("No enemies! Victory! Showing Victory Screen.");
+            if (VictoryUI.Instance != null)
+            {
+                VictoryUI.Instance.Show();
+            }
+            else
+            {
+                Debug.LogWarning("VictoryUI instance not found! Returning to Map directly.");
+                SceneManager.LoadScene("MapScene");
+            }
         }
     }
 }

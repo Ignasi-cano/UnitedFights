@@ -35,21 +35,24 @@ public class LeaderboardUI : MonoBehaviour
         }
 
         // Create new items
-        foreach (var score in scores)
+        for (int i = 0; i < scores.Count; i++)
         {
+            var score = scores[i];
             GameObject entry = Instantiate(scoreEntryPrefab, contentContainer);
             TextMeshProUGUI[] texts = entry.GetComponentsInChildren<TextMeshProUGUI>();
             
+            string position = (i + 1).ToString();
+            
             if (texts.Length >= 2)
             {
-                // Slot 0: Name + Tier
-                texts[0].text = $"{score.Email} [{score.Tier}]"; 
-                // Slot 1: Score + Elo
+                // Slot 0: #Pos - Email [Tier]
+                texts[0].text = $"#{position} - {score.Email} [{score.Tier}]"; 
+                // Slot 1: Score | Elo
                 texts[1].text = $"Score: {score.HighScore} | Elo: {score.Elo}";
             }
             else if (texts.Length == 1)
             {
-                texts[0].text = $"{score.Email} ({score.Tier}) - Puntos: {score.HighScore}";
+                texts[0].text = $"#{position}. {score.Email} ({score.Tier}) - Puntos: {score.HighScore}";
             }
         }
     }

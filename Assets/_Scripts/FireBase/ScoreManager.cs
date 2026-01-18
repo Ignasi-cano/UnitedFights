@@ -4,7 +4,7 @@ using UnityEngine;
 using Firebase.Firestore;
 using Firebase.Extensions;
 
-public class ScoreManager : Singleton<ScoreManager>
+public class ScoreManager : PersistentSingleton<ScoreManager>
 {
     private FirebaseFirestore db;
    
@@ -12,6 +12,7 @@ public class ScoreManager : Singleton<ScoreManager>
 
     private void Start()
     {
+        Debug.Log($"[ScoreManager] Start called on {gameObject.name}. IsInitialized: {FirebaseManager.Instance.IsInitialized}");
         if (FirebaseManager.Instance.IsInitialized)
         {
             InitializeFirestore();
@@ -24,6 +25,7 @@ public class ScoreManager : Singleton<ScoreManager>
 
     private void InitializeFirestore()
     {
+        Debug.Log("[ScoreManager] Initializing Firestore...");
         db = FirebaseFirestore.DefaultInstance;
         
         // Listen for logins to ensure legacy users get a document
@@ -54,8 +56,9 @@ public class ScoreManager : Singleton<ScoreManager>
         });
     }
 
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
+        base.OnDestroy();
         if (AuthManager.HasInstance)
         {
             AuthManager.Instance.OnLoginSuccess -= EnsureUserDocumentExists;
@@ -77,6 +80,28 @@ public class ScoreManager : Singleton<ScoreManager>
         };
 
         db.Collection("users").Document(userId).SetAsync(userData);
+    }
+
+    public void GetUserProfile(string userId, Action<PlayerScore> callback)
+    {
+        if (db == null) return;
+        
+        db.Collection("users").Document(userId).GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsCompleted && task.Result.Exists)
+            {
+                var doc = task.Result;
+                PlayerScore profile = new PlayerScore
+                {
+                    Email = doc.ContainsField("email") ? doc.GetValue<string>("email") : "Unknown",
+                    HighScore = doc.ContainsField("highScore") ? doc.GetValue<int>("highScore") : 0,
+                    GamesPlayed = doc.ContainsField("gamesPlayed") ? doc.GetValue<int>("gamesPlayed") : 0,
+                    Elo = doc.ContainsField("elo") ? doc.GetValue<int>("elo") : 1000,
+                    Tier = doc.ContainsField("tier") ? doc.GetValue<string>("tier") : "Bronze"
+                };
+                callback?.Invoke(profile);
+            }
+        });
     }
 
     public void SaveScore(int score)
@@ -121,12 +146,14 @@ public class ScoreManager : Singleton<ScoreManager>
                     updates["highScore"] = score;
                 }
 
-                userRef.UpdateAsync(updates);
+                userRef.UpdateAsync(updates).ContinueWithOnMainThread(t => {
+                    if (t.IsCompleted) Debug.Log($"[ScoreManager] Database updated! New Elo: {newElo} ({newTier})");
+                });
             }
         });
     }
 
-    public void LoadLeaderboard(int limit = 10)
+    public void LoadLeaderboard(int limit = 25)
     {
         if (db == null) return;
 
@@ -176,7 +203,9 @@ public class ScoreManager : Singleton<ScoreManager>
     public void AddMatchRecord(MatchRecord record)
     {
         if (db == null) return;
-        db.Collection("matchHistory").AddAsync(record);
+        db.Collection("matchHistory").AddAsync(record).ContinueWithOnMainThread(t => {
+            if (t.IsCompleted) Debug.Log("[ScoreManager] Match history record added to cloud.");
+        });
     }
 
     public void UpdateHeroStats(string userId, string heroName, bool won)

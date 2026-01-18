@@ -9,6 +9,9 @@ public class ScoreSystem : Singleton<ScoreSystem>
     [SerializeField] private int pointsPerCardPlayed = 10;
     [SerializeField] private int bonusForNoHeroDamage = 500;
 
+    public int MaxDamageDealt { get; private set; }
+    public int TotalGoldSpent { get; private set; }
+
     private bool heroTookDamage = false;
 
     private void Start()
@@ -39,13 +42,19 @@ public class ScoreSystem : Singleton<ScoreSystem>
 
     private void OnDamageDealt(DealDamageGA action)
     {
+        int totalDamageInAction = action.Amount; // The base damage of the action
+        
+        // Track max damage dealt to ENEMIES
+        bool hittingEnemy = false;
         foreach(var target in action.Targets)
         {
-            // Assuming HeroView is the class name for the player character
-            if (target is HeroView)
-            {
-                heroTookDamage = true;
-            }
+            if (target is EnemyView) hittingEnemy = true;
+            if (target is HeroView) heroTookDamage = true;
+        }
+
+        if (hittingEnemy && totalDamageInAction > MaxDamageDealt)
+        {
+            MaxDamageDealt = totalDamageInAction;
         }
     }
 
@@ -74,7 +83,14 @@ public class ScoreSystem : Singleton<ScoreSystem>
     public void ResetScore()
     {
         CurrentScore = 0;
+        MaxDamageDealt = 0;
+        TotalGoldSpent = 0;
         heroTookDamage = false;
+    }
+
+    public void AddGoldSpent(int amount)
+    {
+        TotalGoldSpent += amount;
     }
 
     public void SaveFinalScore()

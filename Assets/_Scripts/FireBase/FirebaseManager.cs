@@ -23,6 +23,9 @@ public class FirebaseManager : PersistentSingleton<FirebaseManager>
                 IsInitialized = true;
                 OnFirebaseInitialized?.Invoke();
                 Debug.Log("Firebase initialized successfully");
+                
+                // Wake up ScoreManager so it starts listening for events
+                var sm = ScoreManager.Instance; 
             }
             else
             {

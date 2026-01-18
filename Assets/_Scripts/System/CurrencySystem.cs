@@ -25,6 +25,8 @@ public class CurrencySystem : PersistentSingleton<CurrencySystem>
             OnGoldChanged?.Invoke();
             Debug.Log($"[CurrencySystem] Spent {amount} gold. Remaining: {gold}");
             
+            if (ScoreSystem.HasInstance) ScoreSystem.Instance.AddGoldSpent(amount);
+            
             SyncGoldToFirebase();
             return true;
         }

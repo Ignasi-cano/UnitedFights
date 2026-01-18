@@ -49,6 +49,11 @@ public class HeroSystem : Singleton<HeroSystem>
 
         Debug.Log($"[HeroSystem] Found {HeroViews.Count} HeroView slots in scene.");
 
+        if (heroesData.Count > HeroViews.Count)
+        {
+            Debug.LogWarning($"[HeroSystem] WARNING: You have {heroesData.Count} active heroes but only {HeroViews.Count} slots (HeroView objects) in the scene! Only the first {HeroViews.Count} will be shown.");
+        }
+
         for (int i = 0; i < HeroViews.Count; i++)
         {
             if (i < heroesData.Count)

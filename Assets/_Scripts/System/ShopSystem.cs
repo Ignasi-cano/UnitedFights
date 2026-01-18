@@ -16,6 +16,13 @@ public class ShopSystem : Singleton<ShopSystem>
             if (GameManager.Instance.TryAddHero(hero))
             {
                 Debug.Log($"Shop: Successfully bought hero {hero.name}");
+                
+                // NEW: Sync hero to Firebase Inventory
+                if (AuthManager.Instance != null && AuthManager.Instance.IsLoggedIn)
+                {
+                    ScoreManager.Instance.AddToInventory(AuthManager.Instance.CurrentUser.UserId, "Hero", hero.name);
+                }
+                
                 return true;
             }
         }

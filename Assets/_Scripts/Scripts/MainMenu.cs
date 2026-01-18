@@ -9,6 +9,7 @@ public class MainMenu : MonoBehaviour
     public GameObject optionsMenu;
     public GameObject mainMenu;
     public GameObject loginPanel;
+    public GameObject accountPanel;
 
     [Header("Buttons")]
     public Button playButton;
@@ -66,6 +67,7 @@ public class MainMenu : MonoBehaviour
         OpenMainMenuPanel();
     }
 
+
     private void HandleLogout()
     {
         UpdatePlayButton();
@@ -106,7 +108,21 @@ public class MainMenu : MonoBehaviour
         
         if (optionsMenu != null) optionsMenu.SetActive(false);
         if (loginPanel != null) loginPanel.SetActive(false);
+        if (accountPanel != null) accountPanel.SetActive(false);
         Debug.Log($"[MainMenu on {GetPath(gameObject)}] Main Menu panel shown.");
+    }
+
+    public void OpenAccountPanel()
+    {
+        if (accountPanel != null)
+        {
+            accountPanel.SetActive(true);
+            if (mainMenu != null) mainMenu.SetActive(false);
+        }
+        else
+        {
+            Debug.LogError("[MainMenu] Account Panel not assigned in Inspector!");
+        }
     }
 
     private string GetPath(GameObject obj)

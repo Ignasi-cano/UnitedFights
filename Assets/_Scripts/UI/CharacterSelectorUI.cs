@@ -10,6 +10,7 @@ public class CharacterSelectorUI : MonoBehaviour
     
     private void Start()
     {
+        Debug.Log("[UI] CharacterSelectorUI Start. searching for GameManager...");
         startButton.interactable = false;
         startButton.onClick.AddListener(OnStartGame);
         

@@ -747,7 +747,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1999523346}
   m_Father: {fileID: 1584423528}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -948,6 +949,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   optionsMenu: {fileID: 0}
   mainMenu: {fileID: 0}
+  loginPanel: {fileID: 0}
+  accountPanel: {fileID: 0}
+  playButton: {fileID: 0}
+  loginButton: {fileID: 0}
+  loginButtonText: {fileID: 0}
 --- !u!114 &1584423525
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1027,7 +1033,6 @@ RectTransform:
   - {fileID: 813948869}
   - {fileID: 915952033}
   - {fileID: 341972521}
-  - {fileID: 1999523346}
   - {fileID: 753923653}
   m_Father: {fileID: 1900834009}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1228,17 +1233,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1999523345}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1584423528}
+  m_Father: {fileID: 915952033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1000, y: 300}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1999523347
 MonoBehaviour:
