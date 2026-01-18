@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Squirtle
   m_EditorClassIdentifier: 
   image: {fileID: 21300000, guid: 089dc0b80e4fa61418a0b86ae7ff12ac, type: 3}
-  health: 0
+  health: 40
   statusEffectUI: {fileID: 0}
   deck:
   - {fileID: 11400000, guid: 8c786ef41fecbf24aa47c4b3e7057da6, type: 2}
@@ -22,8 +22,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0b8f8d8208932eb438b316ab8c2b8163, type: 2}
   - {fileID: 11400000, guid: 0b8f8d8208932eb438b316ab8c2b8163, type: 2}
   - {fileID: 11400000, guid: 0b8f8d8208932eb438b316ab8c2b8163, type: 2}
-  - {fileID: 11400000, guid: 550bb47f9ee028c469ae6779d557f4a2, type: 2}
-  - {fileID: 11400000, guid: 550bb47f9ee028c469ae6779d557f4a2, type: 2}
-  - {fileID: 11400000, guid: 550bb47f9ee028c469ae6779d557f4a2, type: 2}
-  - {fileID: 11400000, guid: 550bb47f9ee028c469ae6779d557f4a2, type: 2}
+  - {fileID: 11400000, guid: 355ec2a7ac050a548993acec3fb70a3f, type: 2}
+  - {fileID: 11400000, guid: 355ec2a7ac050a548993acec3fb70a3f, type: 2}
+  - {fileID: 11400000, guid: 355ec2a7ac050a548993acec3fb70a3f, type: 2}
   <Cost>k__BackingField: 50

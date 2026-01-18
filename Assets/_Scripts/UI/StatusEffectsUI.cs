@@ -8,6 +8,7 @@ public class StatusEffectsUI : MonoBehaviour
     private Dictionary<StatusEffectType, StatusEffectUI> statusEffectUIs = new();
     public void UpdateStatusEffectUI(StatusEffectType statusEffectType, int stackCount)
     {
+        if (this == null) return; // Safety check for destroyed UI components
 
         if (stackCount == 0)
         {

@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e85c6d01e82d8fd4db728c611fdc9ffc, type: 3}
+  m_Name: Pay Day
+  m_EditorClassIdentifier: 
+  <Description>k__BackingField: dels damage and gives you money
+  <Mana>k__BackingField: 2
+  <Image>k__BackingField: {fileID: 21300000, guid: 694966f0f8b54c74db31b5a6eca4bccc, type: 3}
+  <Cost>k__BackingField: 0
+  <ManualTargetEffect>k__BackingField:
+    rid: 8156335990739304526
+  <OtherEffects>k__BackingField: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 8156335990739304526
+      type: {class: MultiEffect, ns: , asm: Assembly-CSharp}
+      data:
+        effects:
+        - rid: 8156335990739304527
+        - rid: 8156335990739304528
+    - rid: 8156335990739304527
+      type: {class: DealDamageEffect, ns: , asm: Assembly-CSharp}
+      data:
+        damageAmount: 5
+    - rid: 8156335990739304528
+      type: {class: GiveGoldEffect, ns: , asm: Assembly-CSharp}
+      data:
+        amount: 100

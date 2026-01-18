@@ -17,10 +17,19 @@ public class DamageSystem : MonoBehaviour
         Debug.Log("daño x1");
         foreach (var target in dealDamageGA.Targets)
         {
+            if (target == null || target.IsDying) continue;
+
             target.Damage(dealDamageGA.Amount);
-            Instantiate(damageVFX, target.transform.position, Quaternion.identity);
+            
+            if (damageVFX != null)
+            {
+                Instantiate(damageVFX, target.transform.position, Quaternion.identity);
+            }
+
             yield return new WaitForSeconds(0.15f);
-            if (target.CurrentHealth <= 0)
+            
+            // Re-check target because damage might have triggered death
+            if (target != null && target.CurrentHealth <= 0)
             {
                 if (target is EnemyView enemyView)
                 {

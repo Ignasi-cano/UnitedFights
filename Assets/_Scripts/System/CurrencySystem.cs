@@ -42,6 +42,39 @@ public class CurrencySystem : PersistentSingleton<CurrencySystem>
         SyncGoldToFirebase();
     }
 
+    private void OnEnable()
+    {
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
+        RegisterPerformer();
+    }
+
+    private void OnDisable()
+    {
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnSceneLoaded;
+        // CRITICAL FIX: Do NOT detach performer here.
+        // Since this is a PersistentSingleton, duplicate instances (Impostors) will run OnDisable when destroyed.
+        // If they detach the performer, the main surviving instance loses its connection.
+        // We simply leave it attached. It's static, so it overwrites safely in OnEnable.
+    }
+
+    private void OnSceneLoaded(UnityEngine.SceneManagement.Scene color, UnityEngine.SceneManagement.LoadSceneMode mode)
+    {
+        RegisterPerformer();
+    }
+
+    private void RegisterPerformer()
+    {
+        Debug.Log("[CurrencySystem] Registering GiveGoldGA performer...");
+        ActionSystem.AttachPerformer<GiveGoldGA>(GiveGoldPerformer);
+    }
+
+    private System.Collections.IEnumerator GiveGoldPerformer(GiveGoldGA action)
+    {
+        Debug.Log($"[CurrencySystem] GiveGoldPerformer triggered for {action.Amount} gold.");
+        AddGold(action.Amount);
+        yield return null;
+    }
+
     private void SyncGoldToFirebase()
     {
         if (ScoreManager.Instance != null && AuthManager.Instance.IsLoggedIn)

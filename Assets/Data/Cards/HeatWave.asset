@@ -23,7 +23,7 @@ MonoBehaviour:
   - <TargetMode>k__BackingField:
       rid: 8156335865886146841
     <Effect>k__BackingField:
-      rid: 8156335865886146842
+      rid: 8156335990739304529
   references:
     version: 2
     RefIds:
@@ -32,7 +32,18 @@ MonoBehaviour:
     - rid: 8156335865886146841
       type: {class: AllEnemiesTM, ns: , asm: Assembly-CSharp}
       data: 
-    - rid: 8156335865886146842
+    - rid: 8156335990739304529
+      type: {class: MultiEffect, ns: , asm: Assembly-CSharp}
+      data:
+        effects:
+        - rid: 8156335990739304530
+        - rid: 8156335990739304531
+    - rid: 8156335990739304530
       type: {class: DealDamageEffect, ns: , asm: Assembly-CSharp}
       data:
         damageAmount: 50
+    - rid: 8156335990739304531
+      type: {class: AddStatusEffectEffect, ns: , asm: Assembly-CSharp}
+      data:
+        statusEffectType: 1
+        stackCount: 3

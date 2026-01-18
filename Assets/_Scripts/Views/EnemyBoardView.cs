@@ -16,6 +16,8 @@ public class EnemyBoardView : MonoBehaviour
     }
     public IEnumerator RemoveEnemy(EnemyView enemyView)
     {
+        if (enemyView == null) yield break;
+        
         EnemyViews.Remove(enemyView);
         Tween tween = enemyView.transform.DOScale(Vector3.zero, 0.25f);
         yield return tween.WaitForCompletion();

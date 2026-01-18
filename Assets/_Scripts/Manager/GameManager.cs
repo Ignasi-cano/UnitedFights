@@ -34,20 +34,23 @@ public class GameManager : PersistentSingleton<GameManager>
 
     public bool TryAddHero(HeroData hero)
     {
-        if (activeHeroes.Count >= MAX_HEROES)
-        {
-            Debug.LogWarning("[GameManager] Max heroes reached!");
-            return false;
-        }
+        // Check if we already have this hero type to avoid duplicate decks
+        bool alreadyOwned = activeHeroes.Exists(h => h != null && h.name == hero.name);
 
         activeHeroes.Add(hero);
-        Debug.Log($"[GameManager] Hero added: {hero.name}. Total: {activeHeroes.Count}");
+        Debug.Log($"[GameManager] Hero added to collection: {hero.name}. Total owned: {activeHeroes.Count}");
         
-        // Add hero cards to the master deck
-        if (hero.Deck != null)
+        // Add hero cards to the master deck ONLY if it's the first one of its kind
+        if (!alreadyOwned && hero.Deck != null)
         {
             masterDeck.AddRange(hero.Deck);
+            Debug.Log($"[GameManager] First time owning {hero.name}. Cards added to Master Deck.");
         }
+        else if (alreadyOwned)
+        {
+            Debug.Log($"[GameManager] Already owned {hero.name}. Cards NOT added to Master Deck.");
+        }
+        
         return true;
     }
 

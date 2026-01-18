@@ -5,12 +5,6 @@ public class ShopSystem : Singleton<ShopSystem>
 {
     public bool BuyHero(HeroData hero)
     {
-        if (GameManager.Instance.ActiveHeroes.Count >= GameManager.MAX_HEROES)
-        {
-            Debug.LogWarning("Shop: Already at max heroes!");
-            return false;
-        }
-
         if (CurrencySystem.Instance.TrySpendGold(hero.Cost))
         {
             if (GameManager.Instance.TryAddHero(hero))

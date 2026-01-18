@@ -22,13 +22,7 @@ public class MatchSetupSystem : MonoBehaviour
              return;
         }
 
-        Debug.Log($"[MatchSetupSystem] Found {heroes.Count} active heroes to setup.");
-        foreach (var h in heroes)
-        {
-            if (h != null) Debug.Log($"[MatchSetupSystem] Hero found: {h.name} (HP: {h.Health})");
-            else Debug.LogError("[MatchSetupSystem] NULL HeroData found in heroes list!");
-        }
-
+        Debug.Log($"[MatchSetupSystem] Total heroes in battle: {heroes.Count}");
         HeroSystem.Instance.Setup(heroes);
 
         // 2. Setup Enemies from Map Node

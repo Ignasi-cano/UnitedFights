@@ -13,6 +13,7 @@ public class CombatantView : MonoBehaviour
     public int MaxHealth { get; private set; }
     public int CurrentHealth { get; private set; }
     public int Armor { get; private set; }
+    public bool IsDying { get; protected set; }
 
     // Internal tracker for other statuses
     private Dictionary<StatusEffectType, int> statusEffects = new();
@@ -22,6 +23,7 @@ public class CombatantView : MonoBehaviour
         Debug.Log($"[CombatantView] {gameObject.name} SetupBase called with health: {health}");
         MaxHealth = CurrentHealth = health;
         spriteRenderer.sprite = image;
+        IsDying = false; 
         UpdateHealthText();
     }
 
@@ -30,7 +32,10 @@ public class CombatantView : MonoBehaviour
         if (statusEffectsUI != null)
         {
             statusEffectsUI.UpdateStatusEffectUI(StatusEffectType.HEALTH, CurrentHealth);
-            Debug.Log($"[CombatantView] {gameObject.name} Push health {CurrentHealth} to StatusEffectsUI.");
+        }
+        else
+        {
+            Debug.LogWarning($"[CombatantView] {gameObject.name} has NO StatusEffectsUI assigned!");
         }
         
         // Keep old text update as optional fallback/secondary display
@@ -48,6 +53,7 @@ public class CombatantView : MonoBehaviour
 
     public void Damage(int damageAmount)
     {
+        if (IsDying) return;
         if (Armor > 0)
         {
             // Case 1: Armor absorbs all damage
@@ -93,6 +99,7 @@ public class CombatantView : MonoBehaviour
         // KO Visual Feedback
         if (CurrentHealth <= 0)
         {
+            IsDying = true;
             if (this is HeroView)
             {
                 // Become semi-transparent instead of deactivating immediately

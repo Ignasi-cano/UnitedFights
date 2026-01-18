@@ -1,31 +1,30 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine; // Necesario para MonoBehaviour y OnDestroy
+using UnityEngine;
 
 public class ActionSystem : Singleton<ActionSystem>
 {
     private List<GameAction> reactions = null;
     public bool IsPerforming { get; private set; } = false;
 
-    // Listas de suscriptores
     private static Dictionary<Type, List<Action<GameAction>>> preSubs = new();
     private static Dictionary<Type, List<Action<GameAction>>> postSubs = new();
     private static Dictionary<Type, Func<GameAction, IEnumerator>> performers = new();
-
-    // --- NUEVO: Diccionario para rastrear las envolturas (wrappers) ---
-    // Esto conecta tu función original 'reaction' con la 'wrapper' genérica para poder borrarla después.
     private static Dictionary<Delegate, Action<GameAction>> wrapperLookup = new();
 
     protected override void OnDestroy()
     {
         base.OnDestroy();
-        // Limpieza vital para evitar errores al reiniciar la escena o el juego
-        preSubs.Clear();
-        postSubs.Clear();
-        performers.Clear();
-        wrapperLookup.Clear();
+        // FIXED: Do NOT clear static dictionaries (performers/subs) here.
+        // This was causing persistent systems like CurrencySystem to lose their registration.
+        // preSubs.Clear();
+        // postSubs.Clear();
+        // performers.Clear();
+        // wrapperLookup.Clear();
+        
         IsPerforming = false;
+        reactions = null;
     }
 
     public void Perform(GameAction action, System.Action OnPerformFinished = null)
@@ -44,8 +43,20 @@ public class ActionSystem : Singleton<ActionSystem>
         reactions?.Add(gameAction);
     }
 
+    private void Start()
+    {
+        // FORCE INITIALIZATION of persistent systems that need to register performers.
+        // If testing in a scene where CurrencySystem isn't referenced, it won't wake up 
+        // and won't register GiveGoldGA, causing "No performer found".
+        var ensureCurrency = CurrencySystem.Instance;
+        
+        // Add other critical systems here if needed
+    }
+
     private IEnumerator Flow(GameAction action, Action OnFlowFinished = null)
     {
+        Debug.Log($"[ActionSystem] Processing {action.GetType().Name}");
+
         reactions = action.PreReactions;
         PerformSubscribers(action, preSubs);
         yield return PerformReactions();
@@ -66,7 +77,19 @@ public class ActionSystem : Singleton<ActionSystem>
         Type type = action.GetType();
         if (performers.ContainsKey(type))
         {
+            Debug.Log($"[ActionSystem] Invoking performer for {type.Name}");
             yield return performers[type](action);
+        }
+        else
+        {
+            Debug.LogWarning($"[ActionSystem] No performer found for {type.Name}!");
+            Debug.Log($"[ActionSystem] Registered performers: {string.Join(", ", performers.Keys)}");
+            
+            // Allow debugging of empty actions
+            if (action.PreReactions.Count == 0 && action.PerformReactions.Count == 0 && action.PostReactions.Count == 0)
+            {
+               // Just silent if it's truly empty?
+            }
         }
     }
 
@@ -75,9 +98,6 @@ public class ActionSystem : Singleton<ActionSystem>
         Type type = action.GetType();
         if (subs.ContainsKey(type))
         {
-            // Importante: Usamos una copia de la lista para iterar.
-            // Si una reacción se desuscribe a sí misma durante la ejecución,
-            // iterar sobre la lista original daría error.
             var subsCopy = new List<Action<GameAction>>(subs[type]);
             foreach (var sub in subsCopy)
             {
@@ -88,16 +108,13 @@ public class ActionSystem : Singleton<ActionSystem>
 
     private IEnumerator PerformReactions()
     {
-        // Igual que arriba, iterar sobre una lista que puede cambiar es peligroso.
-        // Si reactions es null, no hacemos nada.
         if (reactions != null && reactions.Count > 0)
         {
-            // Procesamos las reacciones en orden (FIFO)
-            // Nota: Si una reacción añade nuevas reacciones a ESTA misma lista,
-            // necesitarías un bucle while o for inverso. Por ahora lo dejo como estaba.
             var reactionsCopy = new List<GameAction>(reactions);
             foreach (var reaction in reactionsCopy)
             {
+                // NOTE: This recursion technically overwrites the global 'reactions' field,
+                // but this represents the legacy behavior that worked for the project.
                 yield return Flow(reaction);
             }
         }
@@ -110,24 +127,25 @@ public class ActionSystem : Singleton<ActionSystem>
         
         if (performers.ContainsKey(type)) performers[type] = wrappedPerformer;
         else performers.Add(type, wrappedPerformer);
+        
+        Debug.Log($"[ActionSystem] Attached performer for {type.Name}");
     }
 
     public static void DetachPerformer<T>() where T : GameAction
     {
         Type type = typeof(T);
-        if (performers.ContainsKey(type)) performers.Remove(type);
+        if (performers.ContainsKey(type))
+        {
+            performers.Remove(type);
+        }
     }
-
-    // --- MÉTODOS DE SUSCRIPCIÓN CORREGIDOS ---
 
     public static void SubscribeReaction<T>(Action<T> reaction, ReactionTiming timing) where T : GameAction
     {
-        // Evitar doble suscripción
         if (wrapperLookup.ContainsKey(reaction)) return;
 
         Dictionary<Type, List<Action<GameAction>>> subs = timing == ReactionTiming.PRE ? preSubs : postSubs;
         
-        // Creamos el wrapper y lo guardamos en el diccionario de lookup
         Action<GameAction> wrappedReaction = (GameAction action) => reaction((T)action);
         wrapperLookup.Add(reaction, wrappedReaction);
 
@@ -141,18 +159,15 @@ public class ActionSystem : Singleton<ActionSystem>
 
     public static void UnsubscribeReaction<T>(Action<T> reaction, ReactionTiming timing) where T : GameAction
     {
-        // 1. Buscamos si existe un wrapper para esta función original
         if (wrapperLookup.TryGetValue(reaction, out Action<GameAction> wrappedReaction))
         {
             Dictionary<Type, List<Action<GameAction>>> subs = timing == ReactionTiming.PRE ? preSubs : postSubs;
 
-            // 2. Si existe la lista de suscriptores para ese tipo, borramos el wrapper
             if (subs.ContainsKey(typeof(T)))
             {
                 subs[typeof(T)].Remove(wrappedReaction);
             }
 
-            // 3. Borramos la referencia del lookup para mantener limpio el diccionario
             wrapperLookup.Remove(reaction);
         }
     }

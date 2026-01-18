@@ -47,7 +47,13 @@ public class HeroSystem : Singleton<HeroSystem>
             return;
         }
 
-        Debug.Log($"[HeroSystem] Found {HeroViews.Count} HeroView slots in scene.");
+        Debug.Log($"[HeroSystem] BATTLE DATA: Have {heroesData.Count} heroes to place. Found {HeroViews.Count} slots (HeroView scripts) in the scene.");
+
+        if (HeroViews.Count == 0)
+        {
+            Debug.LogError("[HeroSystem] CRITICAL: No HeroView objects found! Heroes will not be visible.");
+            return;
+        }
 
         if (heroesData.Count > HeroViews.Count)
         {
