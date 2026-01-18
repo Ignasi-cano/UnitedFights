@@ -57,38 +57,70 @@ public class ShopView : MonoBehaviour
         gameObject.SetActive(true);
     }
 
+    [ContextMenu("Force Populate Shop")]
     public void PopulateShop()
     {
-        // Clear existing items
-        ClearContainer(heroContainer);
-        ClearContainer(cardContainer);
-        ClearContainer(perkContainer);
+        // 1. Clear ALL containers first
+        HashSet<Transform> uniqueContainers = new HashSet<Transform>();
+        if (heroContainer != null) uniqueContainers.Add(heroContainer);
+        if (cardContainer != null) uniqueContainers.Add(cardContainer);
+        if (perkContainer != null) uniqueContainers.Add(perkContainer);
 
-        // Populate Heroes
-        foreach (var hero in heroPool)
+        foreach (var container in uniqueContainers)
+        {
+            ClearContainer(container);
+        }
+
+        if (heroPool == null || cardPool == null || perkPool == null) return;
+
+        // 2. Perform Random Selection
+        // Pick 3 Random Heroes (if available)
+        List<HeroData> selectedHeroes = GetRandomSubset(heroPool, 3);
+        foreach (var hero in selectedHeroes)
         {
             CreateShopItem(cardPrefab, hero.Image, hero.name, hero.Cost, heroContainer, () => ShopSystem.Instance.BuyHero(hero));
         }
 
-        // Populate Cards
-        foreach (var card in cardPool)
+        // Pick 5 Random Cards
+        List<CardData> selectedCards = GetRandomSubset(cardPool, 5);
+        foreach (var card in selectedCards)
         {
             CreateShopItem(cardPrefab, card.Image, card.name, card.Cost, cardContainer, () => ShopSystem.Instance.BuyCard(card));
         }
 
-        // Populate Perks
-        foreach (var perk in perkPool)
+        // Pick 2 Random Perks
+        List<PerkData> selectedPerks = GetRandomSubset(perkPool, 2);
+        foreach (var perk in selectedPerks)
         {
             CreateShopItem(itemPrefab, perk.Image, perk.name, perk.Cost, perkContainer, () => ShopSystem.Instance.BuyPerk(perk));
         }
     }
 
+    private List<T> GetRandomSubset<T>(List<T> source, int count)
+    {
+        if (source == null || source.Count == 0) return new List<T>();
+        
+        List<T> copy = new List<T>(source);
+        List<T> result = new List<T>();
+        
+        int actualCount = Mathf.Min(count, copy.Count);
+        for (int i = 0; i < actualCount; i++)
+        {
+            int randomIndex = UnityEngine.Random.Range(0, copy.Count);
+            result.Add(copy[randomIndex]);
+            copy.RemoveAt(randomIndex);
+        }
+        
+        return result;
+    }
+
     private void ClearContainer(Transform container)
     {
         if (container == null) return;
-        foreach (Transform child in container)
+        // Use a reverse loop with DestroyImmediate to ensure they are gone RIGHT NOW
+        for (int i = container.childCount - 1; i >= 0; i--)
         {
-            Destroy(child.gameObject);
+            DestroyImmediate(container.GetChild(i).gameObject);
         }
     }
 
@@ -96,9 +128,13 @@ public class ShopView : MonoBehaviour
     {
         if (parent == null || prefab == null) return;
         GameObject itemObj = Instantiate(prefab, parent);
-        ShopItemUI itemUI = itemObj.GetComponent<ShopItemUI>();
+        
+        // Use GetComponentInChildren to be more resilient to different prefab structures
+        ShopItemUI itemUI = itemObj.GetComponentInChildren<ShopItemUI>();
+        
         if (itemUI != null)
         {
+            Debug.Log($"[ShopView] Spawning item: {name}");
             itemUI.Setup(icon, name, cost, () =>
             {
                 if (onBuy.Invoke())
@@ -107,10 +143,18 @@ public class ShopView : MonoBehaviour
                 }
             });
         }
+        else
+        {
+            Debug.LogError($"[ShopView] Prefab {prefab.name} is missing ShopItemUI component!");
+        }
     }
 
     public void CloseShop()
     {
         gameObject.SetActive(false);
+        if (MapSystem.HasInstance)
+        {
+            MapSystem.Instance.RefreshMap();
+        }
     }
 }

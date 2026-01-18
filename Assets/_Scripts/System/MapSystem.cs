@@ -4,6 +4,7 @@ public class MapSystem : PersistentSingleton<MapSystem>
 {
     public MapData CurrentMap { get; private set; }
     public MapNode CurrentNode { get; private set; }
+    public event System.Action OnMapUpdated;
 
     public void GenerateNewMap()
     {
@@ -55,5 +56,10 @@ public class MapSystem : PersistentSingleton<MapSystem>
         {
             Debug.LogWarning($"[MapSystem] Node type {CurrentNode.NodeType} has no specific scene logic implemented yet! Staying on map.");
         }
+    }
+
+    public void RefreshMap()
+    {
+        OnMapUpdated?.Invoke();
     }
 }

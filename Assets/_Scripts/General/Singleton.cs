@@ -28,15 +28,13 @@ public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
                         _instance = go.AddComponent<T>();
                         Debug.Log($"[Singleton] Lazy-loaded new instance of {typeof(T).Name}");
                     }
-                    else
-                    {
-                        Debug.Log($"[Singleton] Found existing instance of {typeof(T).Name} in scene.");
-                    }
                 }
                 return _instance;
             }
         }
     }
+
+    public static bool HasInstance => _instance != null;
 
     protected virtual void Awake()
     {

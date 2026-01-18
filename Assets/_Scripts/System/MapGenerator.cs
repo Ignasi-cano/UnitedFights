@@ -75,9 +75,9 @@ public static class MapGenerator
         if (layer == totalLayers - 1) return MapNodeType.BOSS;
 
         float r = Random.value;
-        if (r < 0.6f) return MapNodeType.COMBAT;
-        if (r < 0.75f) return MapNodeType.ELITE;
-        if (r < 0.85f) return MapNodeType.REST;
+        if (r < 0.5f) return MapNodeType.COMBAT;
+        if (r < 0.65f) return MapNodeType.ELITE;
+        if (r < 0.75f) return MapNodeType.REST;
         if (r < 0.95f) return MapNodeType.SHOP;
         return MapNodeType.TREASURE;
     }

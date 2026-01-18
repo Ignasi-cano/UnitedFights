@@ -78,7 +78,7 @@ public class LoginUI : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (AuthManager.Instance != null)
+        if (AuthManager.HasInstance)
         {
             AuthManager.Instance.OnLoginSuccess -= HandleLoginSuccess;
             AuthManager.Instance.OnLoginFailed -= HandleLoginFailed;

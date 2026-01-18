@@ -59,7 +59,7 @@ public class LeaderboardUI : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (ScoreManager.Instance != null)
+        if (ScoreManager.HasInstance)
         {
             ScoreManager.Instance.OnLeaderboardLoaded -= DisplayLeaderboard;
         }

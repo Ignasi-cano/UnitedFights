@@ -24,7 +24,7 @@ public class GameScoreUI : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (ScoreSystem.Instance != null)
+        if (ScoreSystem.HasInstance)
         {
             ScoreSystem.Instance.OnScoreChanged -= UpdateScoreText;
         }

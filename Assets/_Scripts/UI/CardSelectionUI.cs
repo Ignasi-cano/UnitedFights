@@ -13,8 +13,9 @@ public class CardSelectionUI : Singleton<CardSelectionUI>
 
     private System.Action<CardData> onCardSelected;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         if (panel != null) panel.SetActive(false);
         if (closeButton != null) closeButton.onClick.AddListener(() => panel.SetActive(false));
     }

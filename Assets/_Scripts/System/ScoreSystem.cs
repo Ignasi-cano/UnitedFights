@@ -55,7 +55,7 @@ public class ScoreSystem : Singleton<ScoreSystem>
         OnScoreChanged?.Invoke(CurrentScore);
         
         // Reward gold based on score (example: 1 gold per 10 score)
-        if (CurrencySystem.Instance != null)
+        if (CurrencySystem.HasInstance)
         {
             CurrencySystem.Instance.AddGold(amount / 10);
         }

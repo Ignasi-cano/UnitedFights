@@ -35,6 +35,16 @@ public class MapView : MonoBehaviour
         {
             RenderMap(MapSystem.Instance.CurrentMap);
         }
+
+        MapSystem.Instance.OnMapUpdated += RefreshNodeInteractivity;
+    }
+
+    private void OnDestroy()
+    {
+        if (MapSystem.HasInstance)
+        {
+            MapSystem.Instance.OnMapUpdated -= RefreshNodeInteractivity;
+        }
     }
 
     // Updated MapView.cs logic for better scrolling and positioning
@@ -114,32 +124,7 @@ public class MapView : MonoBehaviour
             }
         }
 
-        // 4.5 Update Node Reachability visuals
-        string currentID = MapSystem.Instance.CurrentMap?.CurrentNodeID;
-        MapNode currentNode = null;
-        if (!string.IsNullOrEmpty(currentID))
-        {
-            currentNode = map.Nodes.Find(n => n.ID == currentID);
-        }
-
-        foreach (var kvp in nodeViews)
-        {
-            MapNode node = kvp.Value.Node;
-            bool isSelectable = false;
-
-            if (string.IsNullOrEmpty(currentID))
-            {
-                // First layer is selectable if we haven't started
-                isSelectable = node.Position.x == 0;
-            }
-            else if (currentNode != null)
-            {
-                // Reachable if it's an outgoing connection from our current node
-                isSelectable = currentNode.OutgoingConnections.Contains(node.ID);
-            }
-
-            kvp.Value.SetSelectable(isSelectable);
-        }
+        RefreshNodeInteractivity();
 
         // 5. Draw Connections
         foreach (var node in map.Nodes)
@@ -200,5 +185,35 @@ public class MapView : MonoBehaviour
             MapNodeType.BOSS => bossIcon,
             _ => combatIcon
         };
+    }
+    public void RefreshNodeInteractivity()
+    {
+        if (MapSystem.Instance.CurrentMap == null) return;
+        
+        string currentID = MapSystem.Instance.CurrentMap.CurrentNodeID;
+        MapNode currentNode = null;
+        if (!string.IsNullOrEmpty(currentID))
+        {
+            currentNode = MapSystem.Instance.CurrentMap.Nodes.Find(n => n.ID == currentID);
+        }
+
+        foreach (var kvp in nodeViews)
+        {
+            MapNode node = kvp.Value.Node;
+            bool isSelectable = false;
+
+            if (string.IsNullOrEmpty(currentID))
+            {
+                // First layer is selectable if we haven't started
+                isSelectable = node.Position.x == 0;
+            }
+            else if (currentNode != null)
+            {
+                // Reachable if it's an outgoing connection from our current node
+                isSelectable = currentNode.OutgoingConnections.Contains(node.ID);
+            }
+
+            kvp.Value.SetSelectable(isSelectable);
+        }
     }
 }
