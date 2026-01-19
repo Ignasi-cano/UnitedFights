@@ -23,11 +23,22 @@ public class HeroSystem : Singleton<HeroSystem>
     {
         ActionSystem.SubscribeReaction<EnemyTurnGA>(EnemyTurnPreReaction,ReactionTiming.PRE);
         ActionSystem.SubscribeReaction<EnemyTurnGA>(EnemyTurnPostReaction,ReactionTiming.POST);
+        ActionSystem.SubscribeReaction<DealDamageGA>(OnDealDamagePostReaction, ReactionTiming.POST);
     }
     void OnDisable()
     {
         ActionSystem.UnsubscribeReaction<EnemyTurnGA>(EnemyTurnPreReaction,ReactionTiming.PRE);
         ActionSystem.UnsubscribeReaction<EnemyTurnGA>(EnemyTurnPostReaction,ReactionTiming.POST);
+        ActionSystem.UnsubscribeReaction<DealDamageGA>(OnDealDamagePostReaction, ReactionTiming.POST);
+    }
+
+    private void OnDealDamagePostReaction(DealDamageGA dealDamageGA)
+    {
+        if (!IsAnyHeroAlive)
+        {
+            Debug.Log("[HeroSystem] All heroes are dead! Game Over.");
+            UnityEngine.SceneManagement.SceneManager.LoadScene("GameOver");
+        }
     }
     
     

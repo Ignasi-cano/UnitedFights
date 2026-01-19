@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class ArmorSystem : MonoBehaviour
+public class ArmorSystem : Singleton<ArmorSystem>
 {
     [SerializeField] private GameObject ArmorVFX;
     void OnEnable()
@@ -14,11 +14,12 @@ public class ArmorSystem : MonoBehaviour
     }
     private IEnumerator GainArmorPerformer(GainArmorGA gainArmorGA)
     {
-        Debug.Log("escudo x1");
+        Debug.Log($"[ArmorSystem] Adding {gainArmorGA.Amount} armor to targets.");
         foreach (var target in gainArmorGA.Target)
         {
+            if (target == null) continue;
+            
             target.AddArmor(gainArmorGA.Amount);
-            Instantiate(ArmorVFX, target.transform.position, Quaternion.identity);
             yield return new WaitForSeconds(0.15f);
         }
     }

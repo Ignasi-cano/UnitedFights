@@ -195,4 +195,13 @@ public class CombatantView : MonoBehaviour
         CurrentHealth += delta; 
         SetHealth(CurrentHealth);
     }
+
+    protected virtual void OnDestroy()
+    {
+        transform.DOKill();
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.DOKill();
+        }
+    }
 }

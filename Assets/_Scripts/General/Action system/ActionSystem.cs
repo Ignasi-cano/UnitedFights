@@ -49,6 +49,7 @@ public class ActionSystem : Singleton<ActionSystem>
         // If testing in a scene where CurrencySystem isn't referenced, it won't wake up 
         // and won't register GiveGoldGA, causing "No performer found".
         var ensureCurrency = CurrencySystem.Instance;
+        var ensureArmor = ArmorSystem.Instance;
         
         // Add other critical systems here if needed
     }
