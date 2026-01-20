@@ -23,6 +23,14 @@ public class DamageSystem : MonoBehaviour
         {
             if (target == null || target.IsDying) continue;
 
+            if (dealDamageGA.Caster != null && dealDamageGA.Caster.GetStatusEffectStacks(StatusEffectType.BURN) > 0)
+            {
+                // Burn reduces damage by half
+                dealDamageGA.Amount = Mathf.FloorToInt(dealDamageGA.Amount * 0.5f);
+                // Ensure at least 1 damage if original was > 0 ??? OR allow 0?
+                // Typically floor fits "integer math". 1/2 = 0.
+            }
+
             target.Damage(dealDamageGA.Amount);
             
             if (damageVFX != null)

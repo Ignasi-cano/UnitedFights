@@ -21,6 +21,11 @@ public class BurnSystem : MonoBehaviour
         DealDamageGA dealDamageGA = new DealDamageGA(applyBurnGA.BurnDamage, new() { target }, null);
         ActionSystem.Instance.AddReaction(dealDamageGA);
 
+        if (burnVFX != null)
+        {
+            Instantiate(burnVFX, target.transform.position, Quaternion.identity);
+        }
+
         target.RemoveStatusEffect(StatusEffectType.BURN, 1);
         yield return null; 
     }

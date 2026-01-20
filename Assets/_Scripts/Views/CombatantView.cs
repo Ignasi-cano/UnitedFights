@@ -13,6 +13,7 @@ public class CombatantView : MonoBehaviour
     public int MaxHealth { get; private set; }
     public int CurrentHealth { get; private set; }
     public int Armor { get; private set; }
+    public int PoisonIntensity { get; private set; }
     public bool IsDying { get; protected set; }
 
     // Internal tracker for other statuses
@@ -145,6 +146,15 @@ public class CombatantView : MonoBehaviour
             return;
         }
 
+        // Initialize Poison Intensity if applying new poison
+        if (type == StatusEffectType.POISON)
+        {
+             if (GetStatusEffectStacks(StatusEffectType.POISON) <= 0)
+             {
+                 PoisonIntensity = 2; // Default starting damage
+             }
+        }
+
         if (statusEffects.ContainsKey(type))
         {
             statusEffects[type] += stackCount;
@@ -163,6 +173,7 @@ public class CombatantView : MonoBehaviour
         {
              statusEffects.Remove(type);
              statusEffectsUI.UpdateStatusEffectUI(type, 0);
+             if (type == StatusEffectType.POISON) PoisonIntensity = 0; // Reset
              return;
         }
 
@@ -172,9 +183,15 @@ public class CombatantView : MonoBehaviour
             if (statusEffects[type] <= 0)
             {
                 statusEffects.Remove(type);
+                if (type == StatusEffectType.POISON) PoisonIntensity = 0; // Reset
             }
         }
         statusEffectsUI.UpdateStatusEffectUI(type, GetStatusEffectStacks(type));
+    }
+
+    public void MultiplyPoisonIntensity(int multiplier)
+    {
+        PoisonIntensity *= multiplier;
     }
 
     public int GetStatusEffectStacks(StatusEffectType type)

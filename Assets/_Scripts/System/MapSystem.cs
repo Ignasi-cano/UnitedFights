@@ -74,4 +74,11 @@ public class MapSystem : PersistentSingleton<MapSystem>
     {
         OnMapUpdated?.Invoke();
     }
+
+    public void ResetMap()
+    {
+        CurrentMap = null;
+        CurrentNode = null;
+        Debug.Log("[MapSystem] Map state reset.");
+    }
 }

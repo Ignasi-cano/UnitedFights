@@ -115,6 +115,13 @@ public class HeroSystem : Singleton<HeroSystem>
                 ApplyBurnGA applyBurnGA = new(burnStacks, heroView);
                 ActionSystem.Instance.AddReaction(applyBurnGA);
             }
+
+            int poisonStacks = heroView.GetStatusEffectStacks(StatusEffectType.POISON);
+            if (poisonStacks > 0)
+            {
+                ApplyPoisonGA applyPoisonGA = new(heroView);
+                ActionSystem.Instance.AddReaction(applyPoisonGA);
+            }
         }
         
         DrawCardsGA drawCardsGA = new(5);

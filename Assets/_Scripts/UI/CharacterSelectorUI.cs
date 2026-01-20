@@ -114,6 +114,11 @@ public class CharacterSelectorUI : MonoBehaviour
 
     private void OnStartGame()
     {
+        // Reset the map state before starting a new run
+        if (MapSystem.Instance != null)
+        {
+            MapSystem.Instance.ResetMap();
+        }
         SceneManager.LoadScene("MapScene");
     }
 }

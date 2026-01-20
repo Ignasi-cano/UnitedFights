@@ -33,7 +33,8 @@ public class GameManager : PersistentSingleton<GameManager>
             HeroInstance defaultHero = new HeroInstance(defaultHeroData);
             activeHeroes.Add(defaultHero);
             if (defaultHeroData.Deck != null) masterDeck.AddRange(defaultHeroData.Deck);
-            Debug.Log($"[GameManager] Added default hero: {defaultHeroData.name} and their cards to Master Deck.");
+            if (defaultHeroData.StartingPerks != null) masterPerks.AddRange(defaultHeroData.StartingPerks);
+            Debug.Log($"[GameManager] Added default hero: {defaultHeroData.name} and their cards/perks to Master Deck.");
         }
     }
 
@@ -47,14 +48,23 @@ public class GameManager : PersistentSingleton<GameManager>
         Debug.Log($"[GameManager] Hero added to collection: {heroData.name}. Total owned: {activeHeroes.Count}");
         
         // Add hero cards to the master deck ONLY if it's the first one of its kind
-        if (!alreadyOwned && heroData.Deck != null)
+        // Add hero cards and perks to the master lists ONLY if it's the first one of its kind
+        if (!alreadyOwned)
         {
-            masterDeck.AddRange(heroData.Deck);
-            Debug.Log($"[GameManager] First time owning {heroData.name}. Cards added to Master Deck.");
+            if (heroData.Deck != null)
+            {
+                masterDeck.AddRange(heroData.Deck);
+                Debug.Log($"[GameManager] First time owning {heroData.name}. Cards added to Master Deck.");
+            }
+             if (heroData.StartingPerks != null)
+            {
+                masterPerks.AddRange(heroData.StartingPerks);
+                Debug.Log($"[GameManager] First time owning {heroData.name}. Perks added to Master Perks.");
+            }
         }
         else if (alreadyOwned)
         {
-            Debug.Log($"[GameManager] Already owned {heroData.name}. Cards NOT added to Master Deck.");
+            Debug.Log($"[GameManager] Already owned {heroData.name}. Cards/Perks NOT added to Master lists.");
         }
         
         return true;
@@ -76,11 +86,13 @@ public class GameManager : PersistentSingleton<GameManager>
     {
         activeHeroes.Clear();
         masterDeck.Clear();
+        masterPerks.Clear();
         
         HeroInstance heroInstance = new HeroInstance(heroData);
         activeHeroes.Add(heroInstance);
         if (heroData.Deck != null) masterDeck.AddRange(heroData.Deck);
+        if (heroData.StartingPerks != null) masterPerks.AddRange(heroData.StartingPerks);
         
-        Debug.Log($"Hero selected and set as active: {heroData.name}. Initial cards added to Master Deck.");
+        Debug.Log($"Hero selected and set as active: {heroData.name}. Initial cards and perks added to Master lists.");
     }
 }

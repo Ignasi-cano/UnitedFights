@@ -9,10 +9,12 @@ public class HeroData : ScriptableObject
     [SerializeField] private int health;
     [SerializeField] private StatusEffectsUI statusEffectUI;
     [SerializeField] private List<CardData> deck;
+    [SerializeField] private List<PerkData> startingPerks;
 
     [field: SerializeField] public int Cost { get; private set; }
     public Sprite Image => image;
     public int Health => health;
     public StatusEffectsUI StatusEffectUI => statusEffectUI;
     public List<CardData> Deck => deck;
+    public List<PerkData> StartingPerks => startingPerks;
 }

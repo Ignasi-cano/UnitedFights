@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class LeaderboardUI : MonoBehaviour
@@ -32,6 +33,30 @@ public class LeaderboardUI : MonoBehaviour
         foreach (Transform child in contentContainer)
         {
             Destroy(child.gameObject);
+        }
+
+        // AUTO-FIX: Ensure Layout Group Exists
+        // AUTO-FIX: Ensure Layout Group Exists and is Configured correctly
+        VerticalLayoutGroup layout = contentContainer.GetComponent<VerticalLayoutGroup>();
+        if (layout == null)
+        {
+            layout = contentContainer.gameObject.AddComponent<VerticalLayoutGroup>();
+        }
+        
+        // Force settings even if it already existed
+        layout.childForceExpandHeight = false;
+        layout.childControlHeight = false; // RESPECT PREFAB HEIGHT
+        layout.childControlWidth = false; // RESPECT PREFAB WIDTH - Fixes "text separated" and horizontal scroll issues
+        layout.childForceExpandWidth = false;
+        layout.spacing = 50; // Increased spacing as requested
+        layout.childAlignment = TextAnchor.UpperCenter;
+
+        // AUTO-FIX: Ensure Content Size Fitter Exists for Scrolling
+        ContentSizeFitter csf = contentContainer.GetComponent<ContentSizeFitter>();
+        if (csf == null)
+        {
+            csf = contentContainer.gameObject.AddComponent<ContentSizeFitter>();
+            csf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
         }
 
         // Create new items
