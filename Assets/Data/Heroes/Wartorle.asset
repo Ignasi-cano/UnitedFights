@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93bc059d4aa60194e8559e7a416487f8, type: 3}
+  m_Name: Wartorle
+  m_EditorClassIdentifier: 
+  image: {fileID: 21300000, guid: cbf348954861d2842b87cdf81388b3e1, type: 3}
+  health: 60
+  statusEffectUI: {fileID: 0}
+  deck:
+  - {fileID: 11400000, guid: 8c786ef41fecbf24aa47c4b3e7057da6, type: 2}
+  - {fileID: 11400000, guid: 8c786ef41fecbf24aa47c4b3e7057da6, type: 2}
+  - {fileID: 11400000, guid: 8c786ef41fecbf24aa47c4b3e7057da6, type: 2}
+  - {fileID: 11400000, guid: 0b8f8d8208932eb438b316ab8c2b8163, type: 2}
+  - {fileID: 11400000, guid: 0b8f8d8208932eb438b316ab8c2b8163, type: 2}
+  - {fileID: 11400000, guid: 0b8f8d8208932eb438b316ab8c2b8163, type: 2}
+  - {fileID: 11400000, guid: 7f2901155a571fe47bc4559a80a62208, type: 2}
+  startingPerks:
+  - {fileID: 11400000, guid: dda7c2c36ede1c443b77b5adb57ab2a5, type: 2}
+  nextEvolution: {fileID: 11400000, guid: cf9290ad1e6af8949b7db0aff479970d, type: 2}
+  <Cost>k__BackingField: 0

@@ -73,6 +73,9 @@ public static class MapGenerator
     {
         if (layer == 0) return MapNodeType.COMBAT;
         if (layer == totalLayers - 1) return MapNodeType.BOSS;
+        
+        // NEW: Force AUGMENT on the third row (layer 2)
+        if (layer == 2) return MapNodeType.AUGMENT;
 
         float r = Random.value;
         if (r < 0.5f) return MapNodeType.COMBAT;

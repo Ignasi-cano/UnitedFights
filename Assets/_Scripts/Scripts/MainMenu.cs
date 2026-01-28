@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
+using System.Collections;
 
 public class MainMenu : MonoBehaviour
 {
@@ -11,13 +13,33 @@ public class MainMenu : MonoBehaviour
     public GameObject loginPanel;
     public GameObject accountPanel;
 
+    [Header("Fancy Settings")]
+    [SerializeField] private float fadeDuration = 0.3f;
+
     [Header("Buttons")]
     public Button playButton;
     public Button loginButton;
-    public TMP_Text loginButtonText; // Optional: To change "Login" to "Switch Account"
+    public TMP_Text loginButtonText; 
+
+    [Header("Audio")]
+    [SerializeField] private AudioClip backgroundMusic;
 
     private void Start()
     {
+        // Debug Music Reference
+        string path = GetPath(gameObject);
+        if (backgroundMusic == null) Debug.LogWarning($"[MainMenu at {path}] Background Music is NOT assigned in the Inspector!");
+        else Debug.Log($"[MainMenu at {path}] Background Music assigned: {backgroundMusic.name}");
+
+        // Start Music
+        if (MusicManager.Instance != null && backgroundMusic != null)
+        {
+            MusicManager.Instance.PlayMusic(backgroundMusic);
+        }
+
+        // NEW: Apply fancy effects to all existing buttons
+        ApplyFancyEffects();
+
         // Subscribe to Auth events
         if (AuthManager.Instance != null)
         {
@@ -43,6 +65,29 @@ public class MainMenu : MonoBehaviour
         else
         {
             Debug.LogError("[MainMenu] AuthManager.Instance not found!");
+        }
+    }
+
+    private void ApplyFancyEffects()
+    {
+        // Add floating effect to title if it exists (searching text in parent or nearby)
+        TMP_Text title = GetComponentInChildren<TMP_Text>();
+        if (title != null && title.gameObject.name.ToLower().Contains("title"))
+        {
+            if (title.gameObject.GetComponent<UITitleFancy>() == null)
+            {
+                title.gameObject.AddComponent<UITitleFancy>();
+            }
+        }
+
+        // Add button effects to all buttons in the canvas
+        Button[] allButtons = GetComponentsInChildren<Button>(true);
+        foreach (var btn in allButtons)
+        {
+            if (btn.gameObject.GetComponent<UIButtonFancy>() == null)
+            {
+                btn.gameObject.AddComponent<UIButtonFancy>();
+            }
         }
     }
 
@@ -97,32 +142,61 @@ public class MainMenu : MonoBehaviour
 
     public void OpenOptionsPanel()
     {
-        mainMenu.SetActive(false);
-        optionsMenu.SetActive(true);
+        gameObject.SetActive(true);
+        StartCoroutine(SmoothPanelTransition(mainMenu, optionsMenu));
     }
 
     public void OpenMainMenuPanel()
     {
-        if (mainMenu != null) mainMenu.SetActive(true);
-        else gameObject.SetActive(true);
-        
-        if (optionsMenu != null) optionsMenu.SetActive(false);
-        if (loginPanel != null) loginPanel.SetActive(false);
-        if (accountPanel != null) accountPanel.SetActive(false);
-        Debug.Log($"[MainMenu on {GetPath(gameObject)}] Main Menu panel shown.");
+        gameObject.SetActive(true);
+        GameObject currentPanel = null;
+        if (optionsMenu != null && optionsMenu.activeSelf) currentPanel = optionsMenu;
+        else if (loginPanel != null && loginPanel.activeSelf) currentPanel = loginPanel;
+        else if (accountPanel != null && accountPanel.activeSelf) currentPanel = accountPanel;
+
+        if (mainMenu != null) StartCoroutine(SmoothPanelTransition(currentPanel, mainMenu));
+        else if (mainMenu != null) mainMenu.SetActive(true);
     }
 
     public void OpenAccountPanel()
     {
         if (accountPanel != null)
         {
-            accountPanel.SetActive(true);
-            if (mainMenu != null) mainMenu.SetActive(false);
+            gameObject.SetActive(true);
+            StartCoroutine(SmoothPanelTransition(mainMenu, accountPanel));
         }
         else
         {
             Debug.LogError("[MainMenu] Account Panel not assigned in Inspector!");
         }
+    }
+
+    private IEnumerator SmoothPanelTransition(GameObject from, GameObject to)
+    {
+        if (from == to) yield break;
+
+        // Ensure "to" has a CanvasGroup for fading
+        CanvasGroup toGroup = to.GetComponent<CanvasGroup>();
+        if (toGroup == null) toGroup = to.AddComponent<CanvasGroup>();
+
+        // Prep "to" panel (hidden but active)
+        toGroup.alpha = 0;
+        to.SetActive(true);
+
+        // Fade out "from" panel
+        if (from != null && from.activeSelf)
+        {
+            CanvasGroup fromGroup = from.GetComponent<CanvasGroup>();
+            if (fromGroup == null) fromGroup = from.AddComponent<CanvasGroup>();
+            
+            yield return fromGroup.DOFade(0, fadeDuration).SetUpdate(true).WaitForCompletion();
+            
+            // CRITICAL: Don't disable the script host itself or transitions will stop!
+            if (from != gameObject) from.SetActive(false);
+        }
+
+        // Fade in "to" panel
+        yield return toGroup.DOFade(1, fadeDuration).SetUpdate(true).WaitForCompletion();
     }
 
     private string GetPath(GameObject obj)
@@ -173,28 +247,22 @@ public class MainMenu : MonoBehaviour
         GameObject menuToHide = mainMenu != null ? mainMenu : gameObject;
         
         // CRITICAL CHECK: If the login panel is a child of the object we are about to hide, 
-        // it will also be hidden! We need to warn the user or move it.
+        // it will also be hidden! 
         if (loginPanel.transform.IsChildOf(menuToHide.transform))
         {
-            Debug.LogError($"[MainMenu] CRITICAL ERROR: The Login Panel '{loginPanel.name}' is a CHILD of '{menuToHide.name}'. " +
-                "When we hide the menu, the login panel disappears too! " +
-                "FIX: In the Hierarchy, drag '{loginPanel.name}' OUT of '{menuToHide.name}' so they are siblings.");
-            
-            // Temporary fix: just hide the components instead of the whole object
-            // or just don't hide the parent if we want it to work immediately
+            Debug.LogError($"[MainMenu] CRITICAL ERROR: The Login Panel '{loginPanel.name}' is a CHILD of '{menuToHide.name}'.");
+            // Fallback to basic SetActive to avoid infinite loop or errors in hierarchy
+            menuToHide.SetActive(false);
+            loginPanel.SetActive(true);
         }
         else
         {
-            menuToHide.SetActive(false);
+            StartCoroutine(SmoothPanelTransition(menuToHide, loginPanel));
         }
 
-        if (optionsMenu != null) optionsMenu.SetActive(false);
+        if (optionsMenu != null && optionsMenu != loginPanel) optionsMenu.SetActive(false);
         
-        loginPanel.SetActive(true);
-        
-        // Ensure it's in front of other UI elements in the same parent
         loginPanel.transform.SetAsLastSibling();
-        
         Debug.Log($"[MainMenu on {GetPath(gameObject)}] Successfully switched to Login Panel: {GetPath(loginPanel)}");
     }
 

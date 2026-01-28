@@ -9,27 +9,30 @@ public class CardSystem : Singleton<CardSystem>
     [SerializeField] private HandView handView;
     [SerializeField] private Transform drawPilePoint;
     [SerializeField] private Transform discardPilePoint;
-    [SerializeField] private List<CardData> availableCards; // Lista de todas las cartas disponibles para elegir random
+    [SerializeField] private List<CardData> availableCards;
     public List<CardData> AvailableCards => availableCards;
 
     private readonly List<Card> drawPile = new();
     private readonly List<Card> discardPile = new();
-    private readonly List<Card> hand =new();
+    private readonly List<Card> hand = new();
 
     void OnEnable()
     {
         ActionSystem.AttachPerformer<DrawCardsGA>(DrawCardsPerformer);
         ActionSystem.AttachPerformer<DiscardAllCardsGA>(DiscardAllCardsPerformer);
         ActionSystem.AttachPerformer<PlayCardGA>(PlayCardPerformer);
+        ActionSystem.AttachPerformer<DiscardCardGA>(DiscardCardPerformer);
+        ActionSystem.AttachPerformer<DiscardRandomCardGA>(DiscardRandomCardPerformer);
     }
+
     void OnDisable()
     {
         ActionSystem.DetachPerformer<DrawCardsGA>();
         ActionSystem.DetachPerformer<DiscardAllCardsGA>();
         ActionSystem.DetachPerformer<PlayCardGA>();
-
+        ActionSystem.DetachPerformer<DiscardCardGA>();
+        ActionSystem.DetachPerformer<DiscardRandomCardGA>();
     }
-    //Publics
 
     public void Setup(List<CardData> deckData)
     {
@@ -39,8 +42,6 @@ public class CardSystem : Singleton<CardSystem>
             drawPile.Add(card);
         }
     }
-
-    //performers
 
     private IEnumerator DrawCardsPerformer(DrawCardsGA drawCardsGA)
     {
@@ -92,12 +93,43 @@ public class CardSystem : Singleton<CardSystem>
         }
     }
 
-    //helpers
+    private IEnumerator DiscardCardPerformer(DiscardCardGA action)
+    {
+        if (hand.Contains(action.Card))
+        {
+            CardView cv = handView.RemoveCard(action.Card);
+            hand.Remove(action.Card);
+            if (cv != null) yield return DiscardCard(cv);
+        }
+    }
+
+    private IEnumerator DiscardRandomCardPerformer(DiscardRandomCardGA action)
+    {
+        if (hand.Count > 0)
+        {
+            Card randomCard = hand[Random.Range(0, hand.Count)];
+            CardView cv = handView.RemoveCard(randomCard);
+            hand.Remove(randomCard);
+            if (cv != null) yield return DiscardCard(cv);
+        }
+    }
+
     private IEnumerator DrawCard()
     {
         Card card = drawPile.Draw();
         hand.Add(card);
         CardView cardView = CardViewCreator.Instance.CreateCardView(card, drawPilePoint.position, drawPilePoint.rotation);
+        
+        ActionSystem.Instance.AddReaction(new CardDrawnGA(card));
+
+        if (card.Data.PassiveEffects != null)
+        {
+            foreach (var passive in card.Data.PassiveEffects)
+            {
+                passive.OnDraw(card);
+            }
+        }
+
         yield return handView.AddCard(cardView);
     }
     private void RefillDeck()
@@ -113,16 +145,12 @@ public class CardSystem : Singleton<CardSystem>
         yield return tween.WaitForCompletion();
         Destroy(cardView.gameObject);
     }
-
-    // Método para añadir una carta al mazo del héroe
     public void AddCardToDeck(CardData cardData)
     {
         Card card = new(cardData);
         drawPile.Add(card);
         Debug.Log(card + " added to the deck");
     }
-
-    // NEW: Get the current list of cards in the deck (draw pile + discard pile)
     public List<CardData> GetDeckData()
     {
         List<CardData> deck = new();
@@ -130,11 +158,8 @@ public class CardSystem : Singleton<CardSystem>
         foreach (var card in discardPile) deck.Add(card.Data);
         return deck;
     }
-
-    // NEW: Remove a specific card from the deck
     public void RemoveCard(CardData cardData)
     {
-        // Try to remove from draw pile first
         Card toRemove = drawPile.Find(c => c.Data == cardData);
         if (toRemove != null)
         {
@@ -150,5 +175,19 @@ public class CardSystem : Singleton<CardSystem>
             discardPile.Remove(toRemove);
             Debug.Log($"[CardSystem] Removed {cardData.name} from discard pile.");
         }
+    }
+    public int GetTotalHandSizeModifier()
+    {
+        int total = 0;
+        List<CardData> deck = GetDeckData();
+        foreach (var cardData in deck)
+        {
+            if (cardData.PassiveEffects == null) continue;
+            foreach (var passive in cardData.PassiveEffects)
+            {
+                total += passive.GetHandSizeModifier();
+            }
+        }
+        return total;
     }
 }

@@ -21,6 +21,7 @@ public class MapView : MonoBehaviour
     [SerializeField] private Sprite shopIcon;
     [SerializeField] private Sprite treasureIcon;
     [SerializeField] private Sprite bossIcon;
+    [SerializeField] private Sprite augmentIcon;
 
     private Dictionary<string, MapNodeView> nodeViews = new();
 
@@ -183,6 +184,7 @@ public class MapView : MonoBehaviour
             MapNodeType.SHOP => shopIcon,
             MapNodeType.TREASURE => treasureIcon,
             MapNodeType.BOSS => bossIcon,
+            MapNodeType.AUGMENT => augmentIcon,
             _ => combatIcon
         };
     }

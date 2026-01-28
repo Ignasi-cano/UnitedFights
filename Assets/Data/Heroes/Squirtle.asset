@@ -25,4 +25,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 355ec2a7ac050a548993acec3fb70a3f, type: 2}
   - {fileID: 11400000, guid: 355ec2a7ac050a548993acec3fb70a3f, type: 2}
   - {fileID: 11400000, guid: 355ec2a7ac050a548993acec3fb70a3f, type: 2}
+  startingPerks:
+  - {fileID: 11400000, guid: dda7c2c36ede1c443b77b5adb57ab2a5, type: 2}
+  nextEvolution: {fileID: 11400000, guid: e4961568863f0cf46aa66b9c099d81ee, type: 2}
   <Cost>k__BackingField: 50

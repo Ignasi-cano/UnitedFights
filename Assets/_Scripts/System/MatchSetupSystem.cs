@@ -9,13 +9,29 @@ public class MatchSetupSystem : MonoBehaviour
     [SerializeField] private List<EnemyData> enemyDatas;
     [SerializeField] private MapEncounterDatabase encounterDatabase;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip normalBattleMusic;
+    [SerializeField] private AudioClip bossMusic;
+
     private void Start()
     {
+        // 0. Setup Music
+        if (MusicManager.HasInstance && MapSystem.HasInstance && MapSystem.Instance.CurrentNode != null)
+        {
+            if (MapSystem.Instance.CurrentNode.NodeType == MapNodeType.BOSS)
+            {
+                if (bossMusic != null) MusicManager.Instance.PlayMusic(bossMusic);
+            }
+            else
+            {
+                if (normalBattleMusic != null) MusicManager.Instance.PlayMusic(normalBattleMusic);
+            }
+        }
         // 1. Setup Hero
         List<HeroInstance> heroes = new List<HeroInstance>();
         if (GameManager.Instance != null && GameManager.Instance.ActiveHeroes.Count > 0)
         {
-            heroes = GameManager.Instance.ActiveHeroes;
+            heroes = GameManager.Instance.GetUniqueActiveHeroes();
         }
         else if (heroData != null)
         {
@@ -63,17 +79,6 @@ public class MatchSetupSystem : MonoBehaviour
         
         CardSystem.Instance.Setup(combinedDeck);
         
-        // Example: Add a random card as a starting reward (Permanent)
-        if (CardSystem.Instance.AvailableCards != null && CardSystem.Instance.AvailableCards.Count > 0)
-        {
-            CardData randomCard = CardSystem.Instance.AvailableCards[UnityEngine.Random.Range(0, CardSystem.Instance.AvailableCards.Count)];
-            GameManager.Instance.AddCardToMasterDeck(randomCard);
-        }
-        
-        // Refresh combined deck from MasterDeck and Setup
-        combinedDeck = new List<CardData>(GameManager.Instance.MasterDeck);
-        CardSystem.Instance.Setup(combinedDeck);
-        
         // 4. Setup Perks
         if (GameManager.Instance != null)
         {
@@ -87,7 +92,7 @@ public class MatchSetupSystem : MonoBehaviour
             PerkSystem.Instance.AddPerk(new Perk(perkData));
         }
         
-        DrawCardsGA drawCardsGA = new(5);
-        ActionSystem.Instance.Perform(drawCardsGA);
+        HeroTurnStartGA heroTurnStartGA = new();
+        ActionSystem.Instance.Perform(heroTurnStartGA);
     }
 }

@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 831430b8fb16e7946b6bc4e8d923c605, type: 3}
+  m_Name: Charmander
+  m_EditorClassIdentifier: 
+  <Name>k__BackingField: Hell's Fire
+  <Description>k__BackingField: Execute on 25 burn stacks
+  <Image>k__BackingField: {fileID: 21300000, guid: 847bd707a64f626449095b53ebdb64a5, type: 3}
+  <PerkCondition>k__BackingField:
+    rid: 8156336055530291281
+  <AutoTargetEffect>k__BackingField:
+    rid: 8156336055530291278
+  <Cost>k__BackingField: 0
+  <UseAutoTarget>k__BackingField: 1
+  <UseActionCasterAsTarget>k__BackingField: 0
+  <UseActionTargets>k__BackingField: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 8156336055530291278
+      type: {class: AutoTargetEffect, ns: , asm: Assembly-CSharp}
+      data:
+        <TargetMode>k__BackingField:
+          rid: -2
+        <Effect>k__BackingField:
+          rid: 8156336055530291279
+    - rid: 8156336055530291279
+      type: {class: InstaKillEffect, ns: , asm: Assembly-CSharp}
+      data:
+        massiveDamage: 99999
+    - rid: 8156336055530291281
+      type: {class: StatusEffectStackCondition, ns: , asm: Assembly-CSharp}
+      data:
+        <ReactionTiming>k__BackingField: 0
+        <Type>k__BackingField: 1
+        <Threshold>k__BackingField: 25

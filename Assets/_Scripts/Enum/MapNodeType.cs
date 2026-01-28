@@ -5,5 +5,6 @@ public enum MapNodeType
     REST,
     SHOP,
     TREASURE,
-    BOSS
+    BOSS,
+    AUGMENT
 }

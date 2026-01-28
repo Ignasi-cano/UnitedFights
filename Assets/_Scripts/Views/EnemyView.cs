@@ -13,6 +13,6 @@ public class EnemyView : CombatantView
     }
     private void UpdateAttackText()
     {
-        attackText.text = "ATK: " + AttackPower;
+        attackText.text = $"<color=#FFD700>Atk:</color>{AttackPower}";
     }
 }

@@ -10,6 +10,7 @@ public class HeroData : ScriptableObject
     [SerializeField] private StatusEffectsUI statusEffectUI;
     [SerializeField] private List<CardData> deck;
     [SerializeField] private List<PerkData> startingPerks;
+    [SerializeField] private HeroData nextEvolution;
 
     [field: SerializeField] public int Cost { get; private set; }
     public Sprite Image => image;
@@ -17,4 +18,5 @@ public class HeroData : ScriptableObject
     public StatusEffectsUI StatusEffectUI => statusEffectUI;
     public List<CardData> Deck => deck;
     public List<PerkData> StartingPerks => startingPerks;
+    public HeroData NextEvolution => nextEvolution;
 }

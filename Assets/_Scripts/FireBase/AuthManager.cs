@@ -63,8 +63,6 @@ public class AuthManager : Singleton<AuthManager>
                 FirebaseUser newUser = task.Result.User;
                 OnRegisterSuccess?.Invoke(newUser);
                
-                // Create user document in Firestore
-                // Ensure ScoreManager is ready or handle this dependency carefully
                 if (ScoreManager.Instance != null)
                 {
                     ScoreManager.Instance.CreateUserDocument(newUser.UserId, email);

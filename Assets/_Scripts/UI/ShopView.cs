@@ -16,6 +16,11 @@ public class ShopView : MonoBehaviour
         {
             closeButton.onClick.AddListener(CloseShop);
         }
+
+        if (refreshButton != null)
+        {
+            refreshButton.onClick.AddListener(RefreshShop);
+        }
     }
 
     [Header("Pools / Templates")]
@@ -34,11 +39,33 @@ public class ShopView : MonoBehaviour
     [SerializeField] private List<CardData> cardPool;
     [SerializeField] private List<PerkData> perkPool;
 
+    [Header("Refresh Settings")]
+    [SerializeField] private Button refreshButton;
+    [SerializeField] private TMP_Text refreshCostText;
+    [SerializeField] private int refreshCost = 2;
+
     private void OnEnable()
     {
         CurrencySystem.OnGoldChanged += UpdateGoldUI;
         UpdateGoldUI();
+        
+        if (refreshCostText != null)
+            refreshCostText.text = $"{refreshCost} Gold";
+            
         PopulateShop();
+    }
+
+    private void RefreshShop()
+    {
+        if (CurrencySystem.Instance.TrySpendGold(refreshCost))
+        {
+            Debug.Log("[ShopView] Refreshing shop...");
+            PopulateShop();
+        }
+        else
+        {
+            Debug.LogWarning("[ShopView] Not enough gold to refresh shop!");
+        }
     }
 
     private void OnDisable()
@@ -51,6 +78,10 @@ public class ShopView : MonoBehaviour
         if (goldText != null)
             goldText.text = $"Gold: {CurrencySystem.Instance.Gold}";
     }
+
+    [Header("Special Services")]
+    [SerializeField] private Sprite removalServiceIcon;
+    [SerializeField] private int removalServiceCost = 25;
 
     public void OpenShop()
     {
@@ -94,6 +125,19 @@ public class ShopView : MonoBehaviour
         {
             CreateShopItem(itemPrefab, perk.Image, perk.name, perk.Cost, perkContainer, () => ShopSystem.Instance.BuyPerk(perk));
         }
+
+        // 3. Add Fixed Services (Card Removal)
+        if (removalServiceIcon != null)
+        {
+            ShopItemUI serviceUI = null;
+            serviceUI = CreateShopItem(itemPrefab, removalServiceIcon, "Remove Card", removalServiceCost, perkContainer, () => 
+            {
+                ShopSystem.Instance.BuyCardRemoval(removalServiceCost, () => {
+                    if (serviceUI != null) serviceUI.SetSold();
+                });
+                return false; // Deferred purchase
+            });
+        }
     }
 
     private List<T> GetRandomSubset<T>(List<T> source, int count)
@@ -124,9 +168,9 @@ public class ShopView : MonoBehaviour
         }
     }
 
-    private void CreateShopItem(GameObject prefab, Sprite icon, string name, int cost, Transform parent, System.Func<bool> onBuy)
+    private ShopItemUI CreateShopItem(GameObject prefab, Sprite icon, string name, int cost, Transform parent, System.Func<bool> onBuy)
     {
-        if (parent == null || prefab == null) return;
+        if (parent == null || prefab == null) return null;
         GameObject itemObj = Instantiate(prefab, parent);
         
         // Use GetComponentInChildren to be more resilient to different prefab structures
@@ -147,6 +191,8 @@ public class ShopView : MonoBehaviour
         {
             Debug.LogError($"[ShopView] Prefab {prefab.name} is missing ShopItemUI component!");
         }
+
+        return itemUI;
     }
 
     public void CloseShop()

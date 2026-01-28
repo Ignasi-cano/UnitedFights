@@ -27,8 +27,22 @@ public class DamageSystem : MonoBehaviour
             {
                 // Burn reduces damage by half
                 dealDamageGA.Amount = Mathf.FloorToInt(dealDamageGA.Amount * 0.5f);
-                // Ensure at least 1 damage if original was > 0 ??? OR allow 0?
-                // Typically floor fits "integer math". 1/2 = 0.
+            }
+
+            // --- BLACK CANDLE PENALTY ---
+            // If the map node is ELITE or BOSS, and HERO is taking damage, increase it by 50%
+            if (target is HeroView && HeroSystem.Instance.HasBlackCandle)
+            {
+                if (MapSystem.Instance.CurrentNode != null)
+                {
+                    var type = MapSystem.Instance.CurrentNode.NodeType;
+                    if (type == MapNodeType.ELITE || type == MapNodeType.BOSS)
+                    {
+                        int extra = Mathf.FloorToInt(dealDamageGA.Amount * 0.5f);
+                        dealDamageGA.Amount += extra;
+                        Debug.Log($"[Black Candle] Penalty applied! +{extra} extra damage.");
+                    }
+                }
             }
 
             target.Damage(dealDamageGA.Amount);

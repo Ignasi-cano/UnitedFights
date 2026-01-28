@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e85c6d01e82d8fd4db728c611fdc9ffc, type: 3}
+  m_Name: astonish
+  m_EditorClassIdentifier: 
+  <Description>k__BackingField: Dels 5 dmg and heal
+  <Mana>k__BackingField: 1
+  <Image>k__BackingField: {fileID: 21300000, guid: 3f23f2f674e997b4180a992155c42598, type: 3}
+  <IsCursed>k__BackingField: 0
+  <Cost>k__BackingField: 300
+  <ManualTargetEffect>k__BackingField:
+    rid: 8156336231121944657
+  <OtherEffects>k__BackingField: []
+  <PassiveEffects>k__BackingField: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 8156336231121944657
+      type: {class: MultiEffect, ns: , asm: Assembly-CSharp}
+      data:
+        effects:
+        - rid: 8156336231121944658
+        - rid: 8156336231121944660
+    - rid: 8156336231121944658
+      type: {class: DealDamageEffect, ns: , asm: Assembly-CSharp}
+      data:
+        damageAmount: 5
+    - rid: 8156336231121944660
+      type: {class: HealEffect, ns: , asm: Assembly-CSharp}
+      data:
+        amount: 3

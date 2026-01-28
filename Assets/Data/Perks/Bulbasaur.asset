@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 831430b8fb16e7946b6bc4e8d923c605, type: 3}
+  m_Name: Bulbasaur
+  m_EditorClassIdentifier: 
+  <Image>k__BackingField: {fileID: 0}
+  <PerkCondition>k__BackingField:
+    rid: 8156336055530291286
+  <AutoTargetEffect>k__BackingField:
+    rid: 8156336055530291287
+  <Cost>k__BackingField: 0
+  <UseAutoTarget>k__BackingField: 1
+  <UseActionCasterAsTarget>k__BackingField: 0
+  <UseActionTargets>k__BackingField: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 8156336055530291286
+      type: {class: OnActionCondition, ns: , asm: Assembly-CSharp}
+      data:
+        <ReactionTiming>k__BackingField: 1
+        actionTypeName: HeroTurnStartGA
+    - rid: 8156336055530291287
+      type: {class: AutoTargetEffect, ns: , asm: Assembly-CSharp}
+      data:
+        <TargetMode>k__BackingField:
+          rid: 8156336055530291289
+        <Effect>k__BackingField:
+          rid: 8156336055530291288
+    - rid: 8156336055530291288
+      type: {class: HealPoisonDamageEffect, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 8156336055530291289
+      type: {class: SpecificHeroTM, ns: , asm: Assembly-CSharp}
+      data:
+        heroName: Bulbasaur

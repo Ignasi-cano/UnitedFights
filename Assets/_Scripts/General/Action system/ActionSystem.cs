@@ -16,12 +16,6 @@ public class ActionSystem : Singleton<ActionSystem>
     protected override void OnDestroy()
     {
         base.OnDestroy();
-        // FIXED: Do NOT clear static dictionaries (performers/subs) here.
-        // This was causing persistent systems like CurrencySystem to lose their registration.
-        // preSubs.Clear();
-        // postSubs.Clear();
-        // performers.Clear();
-        // wrapperLookup.Clear();
         
         IsPerforming = false;
         reactions = null;
@@ -45,13 +39,8 @@ public class ActionSystem : Singleton<ActionSystem>
 
     private void Start()
     {
-        // FORCE INITIALIZATION of persistent systems that need to register performers.
-        // If testing in a scene where CurrencySystem isn't referenced, it won't wake up 
-        // and won't register GiveGoldGA, causing "No performer found".
         var ensureCurrency = CurrencySystem.Instance;
         var ensureArmor = ArmorSystem.Instance;
-        
-        // Add other critical systems here if needed
     }
 
     private IEnumerator Flow(GameAction action, Action OnFlowFinished = null)
@@ -85,12 +74,6 @@ public class ActionSystem : Singleton<ActionSystem>
         {
             Debug.LogWarning($"[ActionSystem] No performer found for {type.Name}!");
             Debug.Log($"[ActionSystem] Registered performers: {string.Join(", ", performers.Keys)}");
-            
-            // Allow debugging of empty actions
-            if (action.PreReactions.Count == 0 && action.PerformReactions.Count == 0 && action.PostReactions.Count == 0)
-            {
-               // Just silent if it's truly empty?
-            }
         }
     }
 
@@ -170,6 +153,26 @@ public class ActionSystem : Singleton<ActionSystem>
             }
 
             wrapperLookup.Remove(reaction);
+        }
+    }
+
+    // Non-generic overloads for PerkConditions that already use Action<GameAction>
+    public static void SubscribeReaction(Type type, Action<GameAction> reaction, ReactionTiming timing)
+    {
+        Dictionary<Type, List<Action<GameAction>>> subs = timing == ReactionTiming.PRE ? preSubs : postSubs;
+        if (!subs.ContainsKey(type))
+        {
+            subs.Add(type, new List<Action<GameAction>>());
+        }
+        subs[type].Add(reaction);
+    }
+
+    public static void UnsubscribeReaction(Type type, Action<GameAction> reaction, ReactionTiming timing)
+    {
+        Dictionary<Type, List<Action<GameAction>>> subs = timing == ReactionTiming.PRE ? preSubs : postSubs;
+        if (subs.ContainsKey(type))
+        {
+            subs[type].Remove(reaction);
         }
     }
 }

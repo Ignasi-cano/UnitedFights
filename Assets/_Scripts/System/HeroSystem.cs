@@ -21,15 +21,55 @@ public class HeroSystem : Singleton<HeroSystem>
     }
     void OnEnable()
     {
-        ActionSystem.SubscribeReaction<EnemyTurnGA>(EnemyTurnPreReaction,ReactionTiming.PRE);
-        ActionSystem.SubscribeReaction<EnemyTurnGA>(EnemyTurnPostReaction,ReactionTiming.POST);
+        ActionSystem.SubscribeReaction<HeroTurnStartGA>(OnHeroTurnStartReaction, ReactionTiming.POST);
         ActionSystem.SubscribeReaction<DealDamageGA>(OnDealDamagePostReaction, ReactionTiming.POST);
     }
     void OnDisable()
     {
-        ActionSystem.UnsubscribeReaction<EnemyTurnGA>(EnemyTurnPreReaction,ReactionTiming.PRE);
-        ActionSystem.UnsubscribeReaction<EnemyTurnGA>(EnemyTurnPostReaction,ReactionTiming.POST);
+        ActionSystem.UnsubscribeReaction<HeroTurnStartGA>(OnHeroTurnStartReaction, ReactionTiming.POST);
         ActionSystem.UnsubscribeReaction<DealDamageGA>(OnDealDamagePostReaction, ReactionTiming.POST);
+    }
+
+    [field: SerializeField] public int MaxHandSize { get; set; } = 5;
+    public bool HasBlackCandle { get; set; }
+
+    private void OnHeroTurnStartReaction(HeroTurnStartGA action)
+    {
+        // 1. Discard old hand
+        DiscardAllCardsGA discardAllCardsGA = new();
+        ActionSystem.Instance.AddReaction(discardAllCardsGA);
+
+        // 2. Clear Armor
+        ClearArmorGA clearArmorGA = new(new List<CombatantView>(GetAliveHeroViews()));
+        ActionSystem.Instance.AddReaction(clearArmorGA);
+
+        foreach (var heroView in HeroViews)
+        {
+            if (!heroView.gameObject.activeSelf) continue;
+
+            int burnStacks = heroView.GetStatusEffectStacks(StatusEffectType.BURN);
+            if (burnStacks > 0)
+            {
+                ApplyBurnGA applyBurnGA = new(burnStacks, heroView);
+                ActionSystem.Instance.AddReaction(applyBurnGA);
+            }
+
+            int poisonStacks = heroView.GetStatusEffectStacks(StatusEffectType.POISON);
+            if (poisonStacks > 0)
+            {
+                ApplyPoisonGA applyPoisonGA = new(heroView);
+                ActionSystem.Instance.AddReaction(applyPoisonGA);
+            }
+        }
+        
+        int finalHandSize = MaxHandSize;
+        if (CardSystem.Instance != null)
+        {
+            finalHandSize += CardSystem.Instance.GetTotalHandSizeModifier();
+        }
+        
+        DrawCardsGA drawCardsGA = new(Mathf.Max(1, finalHandSize));
+        ActionSystem.Instance.AddReaction(drawCardsGA);
     }
 
     private void OnDealDamagePostReaction(DealDamageGA dealDamageGA)
@@ -40,7 +80,6 @@ public class HeroSystem : Singleton<HeroSystem>
             UnityEngine.SceneManagement.SceneManager.LoadScene("GameOver");
         }
     }
-    
     
     public void Setup(List<HeroInstance> heroesData)
     {
@@ -56,19 +95,6 @@ public class HeroSystem : Singleton<HeroSystem>
         {
             Debug.LogError("[HeroSystem] No HeroView components found in scene! Please create a Hero object with the HeroView script.");
             return;
-        }
-
-        Debug.Log($"[HeroSystem] BATTLE DATA: Have {heroesData.Count} heroes to place. Found {HeroViews.Count} slots (HeroView scripts) in the scene.");
-
-        if (HeroViews.Count == 0)
-        {
-            Debug.LogError("[HeroSystem] CRITICAL: No HeroView objects found! Heroes will not be visible.");
-            return;
-        }
-
-        if (heroesData.Count > HeroViews.Count)
-        {
-            Debug.LogWarning($"[HeroSystem] WARNING: You have {heroesData.Count} active heroes but only {HeroViews.Count} slots (HeroView objects) in the scene! Only the first {HeroViews.Count} will be shown.");
         }
 
         for (int i = 0; i < HeroViews.Count; i++)
@@ -95,36 +121,5 @@ public class HeroSystem : Singleton<HeroSystem>
                 Debug.Log($"[HeroSystem] Saved {hv.HeroInstance.Data.name} health: {hv.CurrentHealth}");
             }
         }
-    }
-
-    //reacciones 
-    private void EnemyTurnPreReaction(EnemyTurnGA enemyTurnGA)
-    {
-        DiscardAllCardsGA discardAllCardsGA = new();
-        ActionSystem.Instance.AddReaction(discardAllCardsGA);
-    }
-    private void EnemyTurnPostReaction(EnemyTurnGA enemyTurnGA)
-    {
-        foreach (var heroView in HeroViews)
-        {
-            if (!heroView.gameObject.activeSelf) continue;
-
-            int burnStacks = heroView.GetStatusEffectStacks(StatusEffectType.BURN);
-            if (burnStacks > 0)
-            {
-                ApplyBurnGA applyBurnGA = new(burnStacks, heroView);
-                ActionSystem.Instance.AddReaction(applyBurnGA);
-            }
-
-            int poisonStacks = heroView.GetStatusEffectStacks(StatusEffectType.POISON);
-            if (poisonStacks > 0)
-            {
-                ApplyPoisonGA applyPoisonGA = new(heroView);
-                ActionSystem.Instance.AddReaction(applyPoisonGA);
-            }
-        }
-        
-        DrawCardsGA drawCardsGA = new(5);
-        ActionSystem.Instance.AddReaction(drawCardsGA);
     }
 }

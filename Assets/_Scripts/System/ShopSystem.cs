@@ -7,7 +7,7 @@ public class ShopSystem : Singleton<ShopSystem>
     {
         if (CurrencySystem.Instance.TrySpendGold(hero.Cost))
         {
-            if (GameManager.Instance.TryAddHero(hero))
+            if (GameManager.Instance.TryAddHero(hero, false))
             {
                 Debug.Log($"Shop: Successfully bought hero {hero.name}");
                 
@@ -65,18 +65,25 @@ public class ShopSystem : Singleton<ShopSystem>
         return false;
     }
 
-    public bool BuyCardRemoval(int cost)
+    public bool BuyCardRemoval(int cost, System.Action onSuccess = null)
     {
-        if (CurrencySystem.Instance.TrySpendGold(cost))
+        if (CurrencySystem.Instance.Gold < cost)
         {
-            if (CardSelectionUI.Instance != null)
-            {
-                List<CardData> deck = GameManager.Instance.MasterDeck;
-                CardSelectionUI.Instance.Open("Select Card to Remove", deck, (cardToRemove) => {
+            Debug.LogWarning("[ShopSystem] Not enough gold for card removal.");
+            return false;
+        }
+
+        if (CardSelectionUI.Instance != null)
+        {
+            List<CardData> deck = GameManager.Instance.MasterDeck;
+            CardSelectionUI.Instance.Open("Select Card to Remove", deck, (cardToRemove) => {
+                if (CurrencySystem.Instance.TrySpendGold(cost))
+                {
                     GameManager.Instance.RemoveCardFromMasterDeck(cardToRemove);
-                });
-                return true;
-            }
+                    onSuccess?.Invoke();
+                }
+            });
+            return false; // Return false so the shop doesn't mark it as sold immediately
         }
         return false;
     }

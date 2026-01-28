@@ -33,10 +33,11 @@ public class EnemySystem : Singleton<EnemySystem>
         }
     }
 
-    //performs
-
     private IEnumerator EnemyTurnPerformer(EnemyTurnGA enemyTurnGA)
     {
+        ClearArmorGA clearArmorGA = new(new List<CombatantView>(Enemies));
+        ActionSystem.Instance.AddReaction(clearArmorGA);
+
         foreach (var enemy in enemyBoardView.EnemyViews)
         {
             int burnStacks = enemy.GetStatusEffectStacks(StatusEffectType.BURN);
@@ -56,32 +57,23 @@ public class EnemySystem : Singleton<EnemySystem>
             AttackHeroGA attackHeroGA = new(enemy);
             ActionSystem.Instance.AddReaction(attackHeroGA);
         }
-            yield return null;
+        
+        HeroTurnStartGA heroTurnStartGA = new();
+        ActionSystem.Instance.AddReaction(heroTurnStartGA);
+
+        yield return null;
     }
     private IEnumerator AttackHeroPerformer(AttackHeroGA attackHeroGA)
     {
         EnemyView attacker = attackHeroGA.Attacker;
-
-        // CHECK DE SEGURIDAD 1: 
-        // Si el enemigo murió antes de que le tocara atacar (ej. por veneno o espinas), salimos.
         if (attacker == null) yield break;
 
-        // Animación de ida (Hacia el héroe)
-        // Guardamos el tween para poder verificar si sigue activo
         Tween tween = attacker.transform.DOMoveX(attacker.transform.position.x - 1f, 0.15f);
-        
-        // Esperamos a que llegue al frente
         yield return tween.WaitForCompletion();
 
-        // CHECK DE SEGURIDAD 2 (EL MÁS IMPORTANTE):
-        // Mientras esperábamos arriba, ¿el enemigo murió?
         if (attacker == null) yield break; 
 
-        // Si sigue vivo, volvemos a la posición original
         attacker.transform.DOMoveX(attacker.transform.position.x + 1f, 0.25f);
-
-        // Aplicamos el daño
-        // Nota: Asegúrate de que HeroView tampoco sea null, por si acaso.
         HeroView targetHero = HeroSystem.Instance.GetRandomHeroView();
         if (targetHero != null)
         {
@@ -98,18 +90,11 @@ public class EnemySystem : Singleton<EnemySystem>
     {
         if (Enemies.Count == 0)
         {
-            Debug.Log("No enemies! Victory! Saving Heroes Health and Showing Victory Screen.");
+            Debug.Log("No enemies! Victory! Loading Reward Scene.");
             HeroSystem.Instance.SaveHeroesHealth();
 
-            if (VictoryUI.Instance != null)
-            {
-                VictoryUI.Instance.Show();
-            }
-            else
-            {
-                Debug.LogWarning("VictoryUI instance not found! Returning to Map directly.");
-                SceneManager.LoadScene("MapScene");
-            }
+            // Load the Reward Scene after winning a battle
+            SceneManager.LoadScene("RewardScene");
         }
     }
 }

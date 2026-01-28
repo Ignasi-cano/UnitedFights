@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DealDamageGA : GameAction, IHaveCaster
+public class DealDamageGA : GameAction, IHaveCaster, IHaveTargets
 {
     public int Amount { get; set; }
     public List<CombatantView> Targets { get; set; }

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AddStatusEffectGa : GameAction
+public class AddStatusEffectGa : GameAction, IHaveTargets
 {
     public StatusEffectType StatusEffectType { get; private set;}
     public int StackCount { get; private set; }

@@ -19,7 +19,6 @@ public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
             {
                 if (_instance == null)
                 {
-                    // Find including inactive to prevent creating duplicates if object is just disabled
                     _instance = (T)FindAnyObjectByType(typeof(T), FindObjectsInactive.Include);
 
                     if (_instance == null)
@@ -40,13 +39,15 @@ public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     {
         if (_instance != null && _instance != this)
         {
-            // NEW: If the existing instance was auto-created but THIS one is in the scene (has data)
-            // we should let the scene one override it.
             if (_instance.gameObject.name.Contains("(Auto)"))
             {
                 Debug.Log($"[Singleton] Scene instance of {typeof(T).Name} on {gameObject.name} is overriding the (Auto) instance.");
-                Destroy(_instance.gameObject);
+                
+                T oldInstance = _instance;
                 _instance = this as T;
+                Destroy(oldInstance.gameObject);
+                
+                Debug.Log($"[Singleton] {typeof(T).Name} successfully replaced (Auto) instance.");
             }
             else
             {

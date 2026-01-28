@@ -7,14 +7,20 @@ public class PerkSystem : Singleton<PerkSystem>
     private readonly List<Perk> perks = new();
     public void AddPerk(Perk perk)
     {
+        Debug.Log($"[PerkSystem] Adding perk: {perk.Name}");
         perks.Add(perk);
-        perksUI.AddPerkUI(perk);
+        if (perksUI != null) perksUI.AddPerkUI(perk);
         perk.OnAdd();
     }
-    public void RemoveEnemy(Perk perk)
+    public void RemovePerk(Perk perk)
     {
         perks.Remove(perk);
-        perksUI.RemovePerkUI(perk);
+        if (perksUI != null) perksUI.RemovePerkUI(perk);
         perk.OnRemove();
+    }
+
+    public Perk GetPerk(PerkData data)
+    {
+        return perks.Find(p => p.Data == data);
     }
 }

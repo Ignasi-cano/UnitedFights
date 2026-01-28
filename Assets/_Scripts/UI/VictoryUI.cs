@@ -22,6 +22,11 @@ public class VictoryUI : Singleton<VictoryUI>
         {
             continueButton.onClick.AddListener(OnContinuePressed);
         }
+
+        if (SceneManager.GetActiveScene().name == "Victory")
+        {
+            Show();
+        }
     }
 
     public void Show()

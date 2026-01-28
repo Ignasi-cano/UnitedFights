@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Firebase.Firestore;
@@ -7,6 +8,7 @@ using Firebase.Extensions;
 public class ScoreManager : PersistentSingleton<ScoreManager>
 {
     private FirebaseFirestore db;
+    private Action<Firebase.Auth.FirebaseUser> loginHandler;
    
     public event Action<List<PlayerScore>> OnLeaderboardLoaded;
 
@@ -25,43 +27,126 @@ public class ScoreManager : PersistentSingleton<ScoreManager>
 
     private void InitializeFirestore()
     {
-        Debug.Log("[ScoreManager] Initializing Firestore...");
-        db = FirebaseFirestore.DefaultInstance;
-        
-        // Listen for logins to ensure legacy users get a document
-        if (AuthManager.Instance != null)
+        try
         {
-            AuthManager.Instance.OnLoginSuccess += EnsureUserDocumentExists;
+            Debug.Log("[ScoreManager] Initializing Firestore...");
             
-            // If already logged in when initialized
-            if (AuthManager.Instance.IsLoggedIn)
+            if (Firebase.FirebaseApp.DefaultInstance == null)
             {
-                EnsureUserDocumentExists(AuthManager.Instance.CurrentUser);
+                Debug.LogError("[ScoreManager] Cannot initialize Firestore: FirebaseApp.DefaultInstance is null.");
+                return;
+            }
+
+            var app = Firebase.FirebaseApp.DefaultInstance;
+            Debug.Log($"[ScoreManager] FirebaseApp ProjectID: {app.Options.ProjectId}");
+            
+            if (string.IsNullOrEmpty(app.Options.ProjectId))
+            {
+                Debug.LogError("[ScoreManager] Firebase Project ID is EMPTY! Firestore will fail.");
+                return;
+            }
+
+            db = FirebaseFirestore.DefaultInstance;
+            if (db == null)
+            {
+                Debug.LogError("[ScoreManager] FirebaseFirestore.DefaultInstance returned null!");
+                return;
+            }
+            Debug.Log("[ScoreManager] Firestore (DefaultInstance) reference obtained.");
+            
+            if (AuthManager.Instance != null && AuthManager.Instance.IsInitialized)
+            {
+                Debug.Log("[ScoreManager] AuthManager ready, checking login status...");
+                if (AuthManager.Instance.IsLoggedIn)
+                {
+                    Debug.Log("[ScoreManager] User already logged in, starting verification coroutine...");
+                    StartCoroutine(DelayedEnsureUserDocumentExists(AuthManager.Instance.CurrentUser));
+                }
+
+                loginHandler = (user) => 
+                {
+                    Debug.Log($"[ScoreManager] Login success event received for: {user.UserId}");
+                    StartCoroutine(DelayedEnsureUserDocumentExists(user));
+                };
+                AuthManager.Instance.OnLoginSuccess += loginHandler;
             }
         }
+        catch (Exception ex)
+        {
+            Debug.LogError($"[ScoreManager] CRITICAL ERROR during Firestore initialization: {ex.Message}\n{ex.StackTrace}");
+        }
+    }
+
+    private IEnumerator DelayedEnsureUserDocumentExists(Firebase.Auth.FirebaseUser user)
+    {
+        Debug.Log("[ScoreManager] Waiting 1 second for Firestore stability...");
+        yield return new WaitForSeconds(1f);
+        EnsureUserDocumentExists(user);
     }
 
     private void EnsureUserDocumentExists(Firebase.Auth.FirebaseUser user)
     {
-        if (db == null || user == null) return;
-
-        DocumentReference userRef = db.Collection("users").Document(user.UserId);
-        userRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        if (db == null)
         {
-            if (task.IsCompleted && !task.Result.Exists)
+            Debug.LogError("[ScoreManager] EnsureUserDocumentExists called but db is null.");
+            return;
+        }
+        if (user == null)
+        {
+            Debug.LogError("[ScoreManager] EnsureUserDocumentExists called but user is null.");
+            return;
+        }
+
+        try
+        {
+            Debug.Log($"[ScoreManager] Requesting snapshot for user: {user.UserId}...");
+            DocumentReference userRef = db.Collection("users").Document(user.UserId);
+            
+            // Using a more explicit continuation to handle errors and potential deadlocks better in Unity builds
+            userRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
             {
-                Debug.Log($"[ScoreManager] Legacy user detected ({user.Email}). Creating Firestore document...");
-                CreateUserDocument(user.UserId, user.Email);
-            }
-        });
+                Debug.Log($"[ScoreManager] Snapshot task completed. Status: {task.Status}");
+                
+                if (task.IsFaulted)
+                {
+                    Debug.LogError($"[ScoreManager] Error getting user document snapshot: {task.Exception}");
+                    return;
+                }
+
+                if (task.IsCanceled)
+                {
+                    Debug.LogWarning("[ScoreManager] Snapshot request was canceled.");
+                    return;
+                }
+
+                if (task.IsCompleted)
+                {
+                    DocumentSnapshot snapshot = task.Result;
+                    if (!snapshot.Exists)
+                    {
+                        Debug.Log($"[ScoreManager] Legacy user detected ({user.Email}). Creating Firestore document...");
+                        CreateUserDocument(user.UserId, user.Email);
+                    }
+                    else
+                    {
+                        Debug.Log($"[ScoreManager] User document verified for {user.Email}.");
+                    }
+                }
+            });
+            Debug.Log("[ScoreManager] Verification request sent successfully.");
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"[ScoreManager] Exception in EnsureUserDocumentExists: {ex.Message}\n{ex.StackTrace}");
+        }
     }
 
     protected override void OnDestroy()
     {
         base.OnDestroy();
-        if (AuthManager.HasInstance)
+        if (AuthManager.HasInstance && loginHandler != null)
         {
-            AuthManager.Instance.OnLoginSuccess -= EnsureUserDocumentExists;
+            AuthManager.Instance.OnLoginSuccess -= loginHandler;
         }
     }
 
@@ -127,7 +212,6 @@ public class ScoreManager : PersistentSingleton<ScoreManager>
                 if (task.Result.ContainsField("elo"))
                     currentElo = task.Result.GetValue<int>("elo");
 
-                // Simple progression: +20 per game
                 int newElo = currentElo + 20;
                 string newTier = GetTierFromElo(newElo);
 
@@ -293,7 +377,7 @@ public class HeroStat
 public class InventoryItem
 {
     [FirestoreProperty] public string UserId { get; set; }
-    [FirestoreProperty] public string ItemType { get; set; } // "Card", "Skin", "Currency"
+    [FirestoreProperty] public string ItemType { get; set; }
     [FirestoreProperty] public string ItemId { get; set; }
     [FirestoreProperty] public int Amount { get; set; }
 }

@@ -8,6 +8,8 @@ public class CharacterSelectorUI : MonoBehaviour
     [SerializeField] private Transform heroesContainer;
     [SerializeField] private Button heroButtonPrefab; // Prefab with an Image component
     
+    private System.Collections.Generic.Dictionary<HeroData, Image> heroButtonBackgrounds = new System.Collections.Generic.Dictionary<HeroData, Image>();
+    
     private void Start()
     {
         Debug.Log("[UI] CharacterSelectorUI Start. searching for GameManager...");
@@ -56,6 +58,13 @@ public class CharacterSelectorUI : MonoBehaviour
         {
             Button btn = Instantiate(heroButtonPrefab, heroesContainer);
             
+            // Track the background image (the one on the button prefab itself)
+            Image buttonBg = btn.GetComponent<Image>();
+            if (buttonBg != null)
+            {
+                heroButtonBackgrounds[hero] = buttonBg;
+            }
+
             // NEW LOGIC: improved targeting for the User's Prefab structure (HeroButton -> HeroSprite)
             Image targetImage = null;
             
@@ -108,11 +117,22 @@ public class CharacterSelectorUI : MonoBehaviour
 
     private void OnHeroSelected(HeroData hero)
     {
+        // Reset all backgrounds and highlight the selected one
+        foreach (var kvp in heroButtonBackgrounds)
+        {
+            if (kvp.Value != null)
+                kvp.Value.color = Color.white;
+        }
+
+        if (heroButtonBackgrounds.ContainsKey(hero) && heroButtonBackgrounds[hero] != null)
+        {
+            heroButtonBackgrounds[hero].color = Color.green;
+        }
+
         GameManager.Instance.SelectHero(hero);
         startButton.interactable = true;
     }
-
-    private void OnStartGame()
+      private void OnStartGame()
     {
         // Reset the map state before starting a new run
         if (MapSystem.Instance != null)

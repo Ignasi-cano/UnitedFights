@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93bc059d4aa60194e8559e7a416487f8, type: 3}
+  m_Name: Venusaur
+  m_EditorClassIdentifier: 
+  image: {fileID: 21300000, guid: d0b4d46e0e668fa41874cdda335d606a, type: 3}
+  health: 70
+  statusEffectUI: {fileID: 0}
+  deck:
+  - {fileID: 11400000, guid: a9b9cc2806988b54d9b3f6b4e33e6dad, type: 2}
+  - {fileID: 11400000, guid: a9b9cc2806988b54d9b3f6b4e33e6dad, type: 2}
+  - {fileID: 11400000, guid: a9b9cc2806988b54d9b3f6b4e33e6dad, type: 2}
+  - {fileID: 11400000, guid: d652ffcf4ea65ac4ab1dd0abb5a63786, type: 2}
+  - {fileID: 11400000, guid: d652ffcf4ea65ac4ab1dd0abb5a63786, type: 2}
+  - {fileID: 11400000, guid: 32b92a0b77fb7af4ea9bac1163d03b79, type: 2}
+  - {fileID: 11400000, guid: 32b92a0b77fb7af4ea9bac1163d03b79, type: 2}
+  - {fileID: 11400000, guid: 0b8f8d8208932eb438b316ab8c2b8163, type: 2}
+  - {fileID: 11400000, guid: 0b8f8d8208932eb438b316ab8c2b8163, type: 2}
+  startingPerks:
+  - {fileID: 11400000, guid: c127b16752d05a64ead2c5143d83d9d7, type: 2}
+  nextEvolution: {fileID: 0}
+  <Cost>k__BackingField: 0

@@ -33,16 +33,19 @@ public class CombatantView : MonoBehaviour
         if (statusEffectsUI != null)
         {
             statusEffectsUI.UpdateStatusEffectUI(StatusEffectType.HEALTH, CurrentHealth);
+            // Hide redundant health text when the icon-based UI is active
+            if (healthText != null) healthText.gameObject.SetActive(false);
         }
         else
         {
             Debug.LogWarning($"[CombatantView] {gameObject.name} has NO StatusEffectsUI assigned!");
-        }
-        
-        // Keep old text update as optional fallback/secondary display
-        if (healthText != null)
-        {
-            healthText.text = CurrentHealth.ToString(); 
+            
+            // Fallback: Show the text if no icon UI is available
+            if (healthText != null)
+            {
+                healthText.gameObject.SetActive(true);
+                healthText.text = $"{CurrentHealth}/{MaxHealth}";
+            }
         }
     }
 
@@ -50,6 +53,20 @@ public class CombatantView : MonoBehaviour
     {
         // Delegate to AddStatusEffect to centralize logic
         AddStatusEffect(StatusEffectType.ARMOR, armorAmount); 
+        
+        if (DamageNumbersSystem.HasInstance)
+        {
+            DamageNumbersSystem.Instance.Show(transform.position, $"+{armorAmount}", new Color(0.2f, 0.6f, 1f)); // Blue-ish for armor
+        }
+    }
+
+    public void ResetArmor()
+    {
+        Armor = 0;
+        if (statusEffectsUI != null)
+        {
+            statusEffectsUI.UpdateStatusEffectUI(StatusEffectType.ARMOR, 0);
+        }
     }
 
     public void Damage(int damageAmount)
@@ -83,6 +100,19 @@ public class CombatantView : MonoBehaviour
         {
             // Case 3: No Armor, direct health damage
             CurrentHealth -= damageAmount;
+        }
+
+        if (damageAmount > 0)
+        {
+            if (DamageNumbersSystem.HasInstance)
+            {
+                Debug.Log($"[CombatantView] Requesting damage number for {damageAmount} at {transform.position}");
+                DamageNumbersSystem.Instance.Show(transform.position, $"-{damageAmount}", Color.red);
+            }
+            else
+            {
+                Debug.LogWarning("[CombatantView] DamageNumbersSystem.Instance is MISSING!");
+            }
         }
 
         // Clamp Health

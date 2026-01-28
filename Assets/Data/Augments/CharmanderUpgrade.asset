@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff1a15266a887cf488c58b56f6a3df0c, type: 3}
+  m_Name: CharmanderUpgrade
+  m_EditorClassIdentifier: 
+  augmentName: Dragon Awakening
+  description: Reduces Charmander's perk execute threshold from 25 to 15 stacks.
+  icon: {fileID: 21300000, guid: 1e5e1e7242da3e44685240b161403827, type: 3}
+  tier: 2
+  <Effect>k__BackingField:
+    rid: 4589123456789012345
+  references:
+    version: 2
+    RefIds:
+    - rid: 4589123456789012345
+      type: {class: UpgradePerkAugmentEffect, ns: , asm: Assembly-CSharp}
+      data:
+        OriginalPerk: {fileID: 11400000, guid: 7d393c1ea5a7bca47b6ff4245f2ef317, type: 2}
+        UpgradedPerk: {fileID: 11400000, guid: 8e404d2fb6b8cdb58c700535603f4281, type: 2}

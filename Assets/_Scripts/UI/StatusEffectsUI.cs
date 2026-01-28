@@ -8,13 +8,13 @@ public class StatusEffectsUI : MonoBehaviour
     private Dictionary<StatusEffectType, StatusEffectUI> statusEffectUIs = new();
     public void UpdateStatusEffectUI(StatusEffectType statusEffectType, int stackCount)
     {
-        if (this == null) return; // Safety check for destroyed UI components
+        if (this == null) return;
 
         if (stackCount == 0)
         {
              if(statusEffectUIs.ContainsKey(statusEffectType))
             {
-                StatusEffectUI statusEffectUI = statusEffectUIs[statusEffectType]; // Use a clear name
+                StatusEffectUI statusEffectUI = statusEffectUIs[statusEffectType];
                 statusEffectUIs.Remove(statusEffectType);
                 Destroy(statusEffectUI.gameObject);
             }
