@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "UnitedFights.sln"
+    "dotnet.defaultSolution": "UnitedFights.slnx"
 }
