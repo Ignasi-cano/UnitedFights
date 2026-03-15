@@ -110,6 +110,9 @@ public class EnemySystem : Singleton<EnemySystem>
                 ActionSystem.Instance.AddReaction(dealDamageGA);
             }
         }
+        
+        // Update intent UI for the next turn
+        attacker.UpdateIntent();
     }
     private IEnumerator KillEnemyPerformer(KillEnemyGA killEnemyGA)
     {

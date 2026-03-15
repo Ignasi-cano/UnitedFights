@@ -13,6 +13,8 @@ public class CardData : ScriptableObject
     [field: SerializeField] public Sprite Image {get;private set;}
     [field: SerializeField] public bool IsCursed { get; private set; }
     [field: SerializeField] public int Cost { get; private set; }
+    [field: SerializeField] public Sprite IntentSprite { get; private set; }
+    [field: SerializeField] public int IntentValue { get; private set; }
     [field: SerializeReference, SR] public Effect ManualTargetEffect {get; private set;} = null;
     [field: SerializeField] public List<AutoTargetEffect> OtherEffects { get; private set; }
     [field: SerializeReference, SR] public List<CardPassiveEffect> PassiveEffects { get; private set; } = new();
