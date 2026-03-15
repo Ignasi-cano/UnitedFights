@@ -74,11 +74,41 @@ public class EnemySystem : Singleton<EnemySystem>
         if (attacker == null) yield break; 
 
         attacker.transform.DOMoveX(attacker.transform.position.x + 1f, 0.25f);
-        HeroView targetHero = HeroSystem.Instance.GetRandomHeroView();
-        if (targetHero != null)
+        
+        List<CardData> pattern = attacker.EnemyData.AttackPattern;
+        
+        if (pattern != null && pattern.Count > 0)
         {
-            DealDamageGA dealDamageGA = new(attacker.AttackPower, new() { targetHero }, attackHeroGA.Caster);
-            ActionSystem.Instance.AddReaction(dealDamageGA);
+            // Perform card from pattern
+            CardData currentCard = pattern[attacker.PatternIndex % pattern.Count];
+            attacker.PatternIndex++;
+
+            if (currentCard.ManualTargetEffect != null)
+            {
+                HeroView targetHero = HeroSystem.Instance.GetRandomHeroView();
+                if (targetHero != null)
+                {
+                    PerformEffectsGA performEffectsGA = new(currentCard.ManualTargetEffect, new() { targetHero });
+                    ActionSystem.Instance.AddReaction(performEffectsGA);
+                }
+            }
+
+            foreach (var effectWrapper in currentCard.OtherEffects)
+            {
+                List<CombatantView> targets = effectWrapper.TargetMode.GetTargets();
+                PerformEffectsGA performEffectGA = new(effectWrapper.Effect, targets);
+                ActionSystem.Instance.AddReaction(performEffectGA);
+            }
+        }
+        else
+        {
+            // Fallback to basic attack
+            HeroView targetHero = HeroSystem.Instance.GetRandomHeroView();
+            if (targetHero != null)
+            {
+                DealDamageGA dealDamageGA = new(attacker.AttackPower, new() { targetHero }, attackHeroGA.Caster);
+                ActionSystem.Instance.AddReaction(dealDamageGA);
+            }
         }
     }
     private IEnumerator KillEnemyPerformer(KillEnemyGA killEnemyGA)
