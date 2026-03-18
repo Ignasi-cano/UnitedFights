@@ -556,8 +556,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8485f8dcf21d41747b9df977d3ce9877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusEffectUI
-  image: {fileID: 0}
-  stackCountText: {fileID: 0}
+  image: {fileID: 4613330476596940008}
+  stackCountText: {fileID: 4253863428867159737}
 --- !u!1001 &5651927338056695874
 PrefabInstance:
   m_ObjectHideFlags: 0
