@@ -7,6 +7,7 @@ public class HeroInstance
     public HeroData Data { get; private set; }
     public int CurrentHealth { get; set; }
     public int MaxHealthBonus { get; set; }
+    public SlotPosition Position { get; set; }
 
     public HeroInstance(HeroData data)
     {
