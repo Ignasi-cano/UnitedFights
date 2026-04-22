@@ -4,7 +4,7 @@ using System;
 
 public class MatchSetupSystem : MonoBehaviour
 {
-    [SerializeField] private HeroData heroData; // Re-added for fallback/testing
+    [SerializeField] private HeroData heroData; // Fallback/testing
     [SerializeField] private PerkData perkData;
     [SerializeField] private List<EnemyData> enemyDatas;
     [SerializeField] private MapEncounterDatabase encounterDatabase;
@@ -27,71 +27,109 @@ public class MatchSetupSystem : MonoBehaviour
                 if (normalBattleMusic != null) MusicManager.Instance.PlayMusic(normalBattleMusic);
             }
         }
-        // 1. Setup Hero
+
+        // 1. Setup Heroes from fixed slots
         List<HeroInstance> heroes = new List<HeroInstance>();
-        if (GameManager.Instance != null && GameManager.Instance.ActiveHeroes.Count > 0)
+
+        if (GameManager.Instance != null)
         {
-            heroes = GameManager.Instance.GetUniqueActiveHeroes();
+            heroes = GameManager.Instance.GetAllSlottedHeroes();
         }
         else if (heroData != null)
         {
-            heroes.Add(new HeroInstance(heroData));
+            // Fallback: put test hero in slot 0 and keep remaining slots empty
+            heroes = new List<HeroInstance>
+            {
+                new HeroInstance(heroData),
+                null,
+                null,
+                null
+            };
         }
 
-        if (heroes.Count == 0)
+        bool hasAtLeastOneHero = false;
+        foreach (var hero in heroes)
         {
-             Debug.LogError("[MatchSetupSystem] No HeroData found! Ensure GameManager has active heroes or Assign one in Inspector.");
-             return;
+            if (hero != null)
+            {
+                hasAtLeastOneHero = true;
+                break;
+            }
         }
 
-        Debug.Log($"[MatchSetupSystem] Total heroes in battle: {heroes.Count}");
+        if (!hasAtLeastOneHero)
+        {
+            Debug.LogError("[MatchSetupSystem] No HeroData found in slots! Ensure GameManager has slotted heroes or assign fallback heroData in Inspector.");
+            return;
+        }
+
+        Debug.Log($"[MatchSetupSystem] Total slot entries passed to battle: {heroes.Count}");
+        for (int i = 0; i < heroes.Count; i++)
+        {
+            string heroName = heroes[i] != null ? heroes[i].Data.name : "EMPTY";
+            Debug.Log($"[MatchSetupSystem] Slot {i}: {heroName}");
+        }
+
         HeroSystem.Instance.Setup(heroes);
 
         // 2. Setup Enemies from Map Node
         List<EnemyData> activeEnemies = new List<EnemyData>();
+
         if (MapSystem.Instance != null && MapSystem.Instance.CurrentNode != null && encounterDatabase != null)
         {
             var pool = encounterDatabase.GetEnemiesForNode(MapSystem.Instance.CurrentNode.NodeType);
             if (pool != null && pool.Count > 0)
             {
-                // Randomly pick 1 to 3 enemies from the pool
                 int count = UnityEngine.Random.Range(1, Mathf.Min(4, pool.Count + 1));
                 for (int i = 0; i < count; i++)
                 {
                     int randomIndex = UnityEngine.Random.Range(0, pool.Count);
                     activeEnemies.Add(pool[randomIndex]);
                 }
-                Debug.Log($"Randomly selected {activeEnemies.Count} enemies from pool of {pool.Count} for node: {MapSystem.Instance.CurrentNode.NodeType}");
+
+                Debug.Log($"[MatchSetupSystem] Randomly selected {activeEnemies.Count} enemies from pool of {pool.Count} for node: {MapSystem.Instance.CurrentNode.NodeType}");
             }
         }
 
         // Fallback to inspector list if no map pool was found
         if (activeEnemies.Count == 0 && enemyDatas != null && enemyDatas.Count > 0)
         {
-            activeEnemies = enemyDatas;
-            Debug.Log($"Falling back to Inspector enemy list ({activeEnemies.Count} enemies)");
+            activeEnemies = new List<EnemyData>(enemyDatas);
+            Debug.Log($"[MatchSetupSystem] Falling back to Inspector enemy list ({activeEnemies.Count} enemies)");
+        }
+
+        if (activeEnemies.Count == 0)
+        {
+            Debug.LogWarning("[MatchSetupSystem] No enemies found from encounterDatabase or fallback enemyDatas.");
         }
 
         EnemySystem.Instance.Setup(activeEnemies);
 
-        // 3. Setup Systems
-        List<CardData> combinedDeck = new List<CardData>(GameManager.Instance.MasterDeck);
-        
+        // 3. Setup Deck
+        List<CardData> combinedDeck = new List<CardData>();
+
+        if (GameManager.Instance != null)
+        {
+            combinedDeck = new List<CardData>(GameManager.Instance.MasterDeck);
+        }
+
+        Debug.Log($"[MatchSetupSystem] MasterDeck count before battle setup: {combinedDeck.Count}");
         CardSystem.Instance.Setup(combinedDeck);
-        
+
         // 4. Setup Perks
         if (GameManager.Instance != null)
         {
-            foreach (var perkData in GameManager.Instance.MasterPerks)
+            foreach (var ownedPerkData in GameManager.Instance.MasterPerks)
             {
-                PerkSystem.Instance.AddPerk(new Perk(perkData));
+                PerkSystem.Instance.AddPerk(new Perk(ownedPerkData));
             }
         }
-        else
+        else if (perkData != null)
         {
             PerkSystem.Instance.AddPerk(new Perk(perkData));
         }
-        
+
+        // 5. Start combat flow
         HeroTurnStartGA heroTurnStartGA = new();
         ActionSystem.Instance.Perform(heroTurnStartGA);
     }

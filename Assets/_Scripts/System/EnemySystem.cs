@@ -85,7 +85,7 @@ public class EnemySystem : Singleton<EnemySystem>
 
             if (currentCard.ManualTargetEffect != null)
             {
-                HeroView targetHero = HeroSystem.Instance.GetRandomHeroView();
+                HeroView targetHero = HeroSystem.Instance.GetRandomFrontlineHero();
                 if (targetHero != null)
                 {
                     PerformEffectsGA performEffectsGA = new(currentCard.ManualTargetEffect, new() { targetHero });
@@ -103,7 +103,7 @@ public class EnemySystem : Singleton<EnemySystem>
         else
         {
             // Fallback to basic attack
-            HeroView targetHero = HeroSystem.Instance.GetRandomHeroView();
+            HeroView targetHero = HeroSystem.Instance.GetRandomFrontlineHero();
             if (targetHero != null)
             {
                 DealDamageGA dealDamageGA = new(attacker.AttackPower, new() { targetHero }, attackHeroGA.Caster);

@@ -99,15 +99,15 @@ public class HeroSystem : Singleton<HeroSystem>
 
         for (int i = 0; i < HeroViews.Count; i++)
         {
-            if (i < heroesData.Count)
-            {
-                HeroViews[i].gameObject.SetActive(true);
-                HeroViews[i].Setup(heroesData[i]);
-            }
-            else
-            {
-                HeroViews[i].gameObject.SetActive(false);
-            }
+            if (i < heroesData.Count && heroesData[i] != null)
+{
+    HeroViews[i].gameObject.SetActive(true);
+    HeroViews[i].Setup(heroesData[i]);
+}
+else
+{
+    HeroViews[i].gameObject.SetActive(false);
+}
         }
     }
 

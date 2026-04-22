@@ -2087,7 +2087,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 928e45c15d4ab6f4ba1415d1db76d0a5, type: 2}
   - {fileID: 11400000, guid: 27484dd51e1ffc044a8e9dfc056d43c9, type: 2}
   encounterDatabase: {fileID: 11400000, guid: f9452a35708939e4c8473096df35b4ce, type: 2}
-  normalBattleMusic: {fileID: 8300000, guid: 344d8d4225ca9ab4f85b7ae31df8da83, type: 3}
+  normalBattleMusic: {fileID: 8300000, guid: 9cd26e1cee0ce614eab905eff7e47fad, type: 3}
   bossMusic: {fileID: 8300000, guid: 8664776350eac6e4cba045ec391b437b, type: 3}
 --- !u!1 &709236500
 GameObject:

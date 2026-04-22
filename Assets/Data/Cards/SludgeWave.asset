@@ -14,10 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Description>k__BackingField: Sludge Wave inflicts damage and has a 10% chance
     of poisoning the target.
-  <Mana>k__BackingField: 2
   <Image>k__BackingField: {fileID: 21300000, guid: 69ff909f600ffd1468a53add6b259bec, type: 3}
+  <OwnerHero>k__BackingField: {fileID: 0}
+  <Type>k__BackingField: 0
+  <Rarity>k__BackingField: 0
+  <HasDistanceKeyword>k__BackingField: 0
+  <Mana>k__BackingField: 2
   <IsCursed>k__BackingField: 0
   <Cost>k__BackingField: 300
+  <IntentSprite>k__BackingField: {fileID: 0}
+  <IntentValue>k__BackingField: 0
   <ManualTargetEffect>k__BackingField:
     rid: -2
   <OtherEffects>k__BackingField:
