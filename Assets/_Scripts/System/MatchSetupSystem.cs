@@ -13,8 +13,10 @@ public class MatchSetupSystem : MonoBehaviour
     [SerializeField] private AudioClip normalBattleMusic;
     [SerializeField] private AudioClip bossMusic;
 
-    private void Start()
+    private System.Collections.IEnumerator Start()
     {
+        yield return null; // Wait for all singletons to initialize
+
         // 0. Setup Music
         if (MusicManager.HasInstance && MapSystem.HasInstance && MapSystem.Instance.CurrentNode != null)
         {
@@ -60,7 +62,7 @@ public class MatchSetupSystem : MonoBehaviour
         if (!hasAtLeastOneHero)
         {
             Debug.LogError("[MatchSetupSystem] No HeroData found in slots! Ensure GameManager has slotted heroes or assign fallback heroData in Inspector.");
-            return;
+            yield break;
         }
 
         Debug.Log($"[MatchSetupSystem] Total slot entries passed to battle: {heroes.Count}");
@@ -69,9 +71,15 @@ public class MatchSetupSystem : MonoBehaviour
             string heroName = heroes[i] != null ? heroes[i].Data.name : "EMPTY";
             Debug.Log($"[MatchSetupSystem] Slot {i}: {heroName}");
         }
+        Debug.Log("[MatchSetupSystem] HeroSystem.HasInstance = " + HeroSystem.HasInstance);
+        Debug.Log("[MatchSetupSystem] HeroSystem.Instance null? " + (HeroSystem.Instance == null)); 
+        if (HeroSystem.Instance == null)
+        {
+            Debug.LogError("[MatchSetupSystem] HeroSystem.Instance is NULL in unitedfights scene.");
+            yield break;
+        }
 
-        HeroSystem.Instance.Setup(heroes);
-
+HeroSystem.Instance.Setup(heroes);
         // 2. Setup Enemies from Map Node
         List<EnemyData> activeEnemies = new List<EnemyData>();
 

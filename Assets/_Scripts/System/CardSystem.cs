@@ -117,8 +117,12 @@ public class CardSystem : Singleton<CardSystem>
     private IEnumerator DrawCard()
     {
         Card card = drawPile.Draw();
+        if (card == null) yield break;
+
         hand.Add(card);
-        CardView cardView = CardViewCreator.Instance.CreateCardView(card, drawPilePoint.position, drawPilePoint.rotation);
+        Vector3 spawnPos = drawPilePoint != null ? drawPilePoint.position : Vector3.zero;
+        Quaternion spawnRot = drawPilePoint != null ? drawPilePoint.rotation : Quaternion.identity;
+        CardView cardView = CardViewCreator.Instance.CreateCardView(card, spawnPos, spawnRot);
         
         ActionSystem.Instance.AddReaction(new CardDrawnGA(card));
 
@@ -139,11 +143,17 @@ public class CardSystem : Singleton<CardSystem>
     }
     private IEnumerator DiscardCard(CardView cardView)
     {
+        if (cardView == null) yield break;
+
         discardPile.Add(cardView.Card);
         cardView.transform.DOScale(Vector3.zero, 0.15f);
-        Tween tween = cardView.transform.DOMove(discardPilePoint.position, 0.15f);
+        
+        Vector3 targetPos = discardPilePoint != null ? discardPilePoint.position : cardView.transform.position;
+        Tween tween = cardView.transform.DOMove(targetPos, 0.15f);
         yield return tween.WaitForCompletion();
-        Destroy(cardView.gameObject);
+        
+        if (cardView != null && cardView.gameObject != null)
+            Destroy(cardView.gameObject);
     }
     public void AddCardToDeck(CardData cardData)
     {

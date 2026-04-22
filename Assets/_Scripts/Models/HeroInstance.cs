@@ -4,13 +4,13 @@ using UnityEngine;
 [Serializable]
 public class HeroInstance
 {
-    public HeroData Data { get; private set; }
-    public int CurrentHealth { get; set; }
-    public int MaxHealthBonus { get; set; }
-    public SlotPosition Position { get; set; }
+    [field: SerializeField] public HeroData Data { get; private set; }
+    [field: SerializeField] public int CurrentHealth { get; set; }
+    [field: SerializeField] public int MaxHealthBonus { get; set; }
+    [field: SerializeField] public SlotPosition Position { get; set; }
 
     // 1 = base obtenida, 2 = una copia extra, 3 = evoluciona
-    public int EvolutionCopies { get; private set; } = 1;
+    [field: SerializeField] public int EvolutionCopies { get; private set; } = 1;
 
     public HeroInstance(HeroData data)
     {
@@ -40,7 +40,10 @@ public class HeroInstance
     {
         if (evolvedData == null) return;
 
-        float healthPercent = GetMaxHealth() > 0 ? (float)CurrentHealth / GetMaxHealth() : 1f;
+        float healthPercent = GetMaxHealth() > 0
+            ? (float)CurrentHealth / GetMaxHealth()
+            : 1f;
+
         SlotPosition currentPosition = Position;
         int currentBonus = MaxHealthBonus;
 

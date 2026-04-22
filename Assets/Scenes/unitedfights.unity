@@ -2080,8 +2080,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6554cee5b2232d042b39163b267aa022, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  heroData: {fileID: 11400000, guid: 1cf1edc961d0cb94e929ec2ccb86e299, type: 2}
-  perkData: {fileID: 11400000, guid: fc9e9e7adf947aa46a1c09575503e7d6, type: 2}
+  heroData: {fileID: 0}
+  perkData: {fileID: 0}
   enemyDatas:
   - {fileID: 11400000, guid: de40b1cd87fef924abe42368beec2b20, type: 2}
   - {fileID: 11400000, guid: 928e45c15d4ab6f4ba1415d1db76d0a5, type: 2}

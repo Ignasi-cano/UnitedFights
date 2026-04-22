@@ -89,6 +89,13 @@ public class HeroSystem : Singleton<HeroSystem>
         {
             Debug.LogWarning("[HeroSystem] HeroViews list was EMPTY. Attempting to auto-find HeroView components in scene...");
             HeroViews = new List<HeroView>(FindObjectsByType<HeroView>(FindObjectsInactive.Include, FindObjectsSortMode.InstanceID));
+            HeroViews.Sort((a, b) => 
+            {
+                int pCompare = a.transform.parent == b.transform.parent ? 0 : 
+                               (a.transform.parent != null && b.transform.parent != null ? a.transform.parent.name.CompareTo(b.transform.parent.name) : 0);
+                if (pCompare != 0) return pCompare;
+                return a.transform.GetSiblingIndex().CompareTo(b.transform.GetSiblingIndex());
+            });
         }
 
         if (HeroViews == null || HeroViews.Count == 0)
