@@ -122,4 +122,79 @@ public class HeroSystem : Singleton<HeroSystem>
             }
         }
     }
+    public void HandleFrontlineDeath(HeroView deadHero)
+{
+    int index = HeroViews.IndexOf(deadHero);
+
+    // Solo reaccionamos si es frontline
+    if (index < 0 || index >= 2) return;
+
+    int preferredBackIndex = index + 2;
+
+    // 1. Intenta el de detrás directo
+    if (IsAlive(preferredBackIndex))
+    {
+        SwapHeroes(index, preferredBackIndex);
+        return;
+    }
+
+    // 2. Busca cualquier otro backline vivo
+    for (int i = 2; i < HeroViews.Count; i++)
+    {
+        if (IsAlive(i))
+        {
+            SwapHeroes(index, i);
+            return;
+        }
+    }
+}
+
+private bool IsAlive(int index)
+{
+    return HeroViews[index] != null &&
+           HeroViews[index].CurrentHealth > 0 &&
+           HeroViews[index].gameObject.activeSelf;
+}
+private void SwapHeroes(int a, int b)
+{
+    Debug.Log($"[HeroSystem] Swapping {HeroViews[a].name} with {HeroViews[b].name}");
+
+    // Intercambiar en la lista (ESTO ES LO IMPORTANTE)
+    var temp = HeroViews[a];
+    HeroViews[a] = HeroViews[b];
+    HeroViews[b] = temp;
+
+    // Intercambiar posiciones físicas
+    Vector3 posA = HeroViews[a].transform.position;
+    Vector3 posB = HeroViews[b].transform.position;
+
+    HeroViews[a].transform.position = posB;
+    HeroViews[b].transform.position = posA;
+}
+public HeroView GetRandomFrontlineHero()
+{
+    List<HeroView> frontline = new();
+
+    for (int i = 0; i < 2; i++)
+    {
+        if (IsAlive(i))
+            frontline.Add(HeroViews[i]);
+    }
+
+    if (frontline.Count > 0)
+        return frontline[Random.Range(0, frontline.Count)];
+
+    // fallback a backline
+    List<HeroView> backline = new();
+    for (int i = 2; i < HeroViews.Count; i++)
+    {
+        if (IsAlive(i))
+            backline.Add(HeroViews[i]);
+    }
+
+    if (backline.Count > 0)
+        return backline[Random.Range(0, backline.Count)];
+
+    return null;
+}
 }

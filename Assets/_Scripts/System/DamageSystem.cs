@@ -63,19 +63,19 @@ public class DamageSystem : MonoBehaviour
                     ActionSystem.Instance.AddReaction(killEnemyGA);
                 }
                 else
-                {
-                    // Check if entire team is defeated
-                    if (!HeroSystem.Instance.IsAnyHeroAlive)
-                    {
-                        Debug.Log("[DamageSystem] All heroes defeated! Game Over.");
-                        ScoreSystem.Instance.SaveFinalScore();
-                        UnityEngine.SceneManagement.SceneManager.LoadScene("GameOverScene");
-                    }
-                    else
-                    {
-                        Debug.Log($"[DamageSystem] Hero {target.gameObject.name} KO'd, but others still standing.");
-                    }
-                }
+{
+    if (target is HeroView heroView)
+    {
+        HeroSystem.Instance.HandleFrontlineDeath(heroView);
+    }
+
+    if (!HeroSystem.Instance.IsAnyHeroAlive)
+    {
+        Debug.Log("[DamageSystem] All heroes defeated! Game Over.");
+        ScoreSystem.Instance.SaveFinalScore();
+        UnityEngine.SceneManagement.SceneManager.LoadScene("GameOverScene");
+    }
+}
                 
             }
         }
