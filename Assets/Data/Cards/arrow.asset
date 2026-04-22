@@ -12,17 +12,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e85c6d01e82d8fd4db728c611fdc9ffc, type: 3}
   m_Name: arrow
   m_EditorClassIdentifier: 
-  <Description>k__BackingField: 'flechas '
-  <Mana>k__BackingField: 1
+  <Description>k__BackingField: Ranged Attack. Deals 5 Damage.
   <Image>k__BackingField: {fileID: 21300000, guid: 35903a503a79ff1488eb1935598de297, type: 3}
+  <OwnerHero>k__BackingField: {fileID: 0}
+  <Type>k__BackingField: 0
+  <Rarity>k__BackingField: 1
+  <HasDistanceKeyword>k__BackingField: 1
+  <Mana>k__BackingField: 1
+  <IsCursed>k__BackingField: 0
   <Cost>k__BackingField: 300
+  <IntentSprite>k__BackingField: {fileID: 21300000, guid: 0ffd33a04f835234b8842ea15303d2e6, type: 3}
+  <IntentValue>k__BackingField: 5
   <ManualTargetEffect>k__BackingField:
     rid: 8156335846497452119
   <OtherEffects>k__BackingField: []
+  <PassiveEffects>k__BackingField: []
   references:
     version: 2
     RefIds:
     - rid: 8156335846497452119
       type: {class: DealDamageEffect, ns: , asm: Assembly-CSharp}
       data:
-        damageAmount: 2
+        damageAmount: 5

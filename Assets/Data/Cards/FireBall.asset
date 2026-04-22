@@ -12,26 +12,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e85c6d01e82d8fd4db728c611fdc9ffc, type: 3}
   m_Name: FireBall
   m_EditorClassIdentifier: 
-  <Description>k__BackingField: 'Dels 5 dmg  and has a 10% chance of burning the
-    target. '
+  <Description>k__BackingField: Ranged Attack. Deals 5 Damage and applies 2 Burn
+    to an enemy
   <Image>k__BackingField: {fileID: 21300000, guid: 71eb318617482ac478cc7759da071747, type: 3}
-  <OwnerHero>k__BackingField: {fileID: 0}
+  <OwnerHero>k__BackingField: {fileID: 11400000, guid: 1cf1edc961d0cb94e929ec2ccb86e299, type: 2}
   <Type>k__BackingField: 0
   <Rarity>k__BackingField: 0
-  <HasDistanceKeyword>k__BackingField: 0
+  <HasDistanceKeyword>k__BackingField: 1
   <Mana>k__BackingField: 1
   <IsCursed>k__BackingField: 0
   <Cost>k__BackingField: 300
   <IntentSprite>k__BackingField: {fileID: 0}
   <IntentValue>k__BackingField: 0
   <ManualTargetEffect>k__BackingField:
-    rid: 8156335865886146844
+    rid: 5037484506289799249
   <OtherEffects>k__BackingField: []
   <PassiveEffects>k__BackingField: []
   references:
     version: 2
     RefIds:
-    - rid: 8156335865886146844
+    - rid: 5037484506289799249
+      type: {class: MultiEffect, ns: , asm: Assembly-CSharp}
+      data:
+        effects:
+        - rid: 5037484506289799250
+        - rid: 5037484506289799251
+    - rid: 5037484506289799250
       type: {class: DealDamageEffect, ns: , asm: Assembly-CSharp}
       data:
         damageAmount: 5
+    - rid: 5037484506289799251
+      type: {class: AddStatusEffectEffect, ns: , asm: Assembly-CSharp}
+      data:
+        statusEffectType: 1
+        stackCount: 2

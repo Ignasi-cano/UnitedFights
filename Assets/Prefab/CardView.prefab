@@ -1147,7 +1147,7 @@ MonoBehaviour:
   cardTypeText: {fileID: 7040008437483533734}
   ownerText: {fileID: 4773721137183703643}
   imageSR: {fileID: 6073031882952871686}
-  tintableBackgroundSR: {fileID: 6073031882952871686}
+  tintableBackgroundSR: {fileID: 5653414624523709269}
   typeBannerSR: {fileID: 0}
   wrapper: {fileID: 8936950027221950896}
   dropLayer:

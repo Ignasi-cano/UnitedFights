@@ -34,6 +34,7 @@ public class GameManager : PersistentSingleton<GameManager>
 
         if (Instance != this) return;
 
+        EnsureSlotArrays();
         MapSystem.OnNodeSelected += HandleNodeSelected;
 
         Debug.Log($"[GameManager] Awake on {gameObject.name}. Hero count: {(availableHeroes != null ? availableHeroes.Count : 0)}");
@@ -55,6 +56,20 @@ public class GameManager : PersistentSingleton<GameManager>
         }
     }
 
+    private void EnsureSlotArrays()
+    {
+        if (frontlineSlots == null || frontlineSlots.Length != 2)
+            frontlineSlots = new HeroInstance[2];
+
+        if (backlineSlots == null || backlineSlots.Length != 2)
+            backlineSlots = new HeroInstance[2];
+    }
+
+    private bool IsValidHeroInstance(HeroInstance hero)
+    {
+        return hero != null && hero.Data != null;
+    }
+
     public bool TryAddHero(HeroData heroData, bool includeStartingPerks = true)
     {
         if (heroData == null)
@@ -62,6 +77,8 @@ public class GameManager : PersistentSingleton<GameManager>
             Debug.LogWarning("[GameManager] TryAddHero failed: heroData is null.");
             return false;
         }
+
+        EnsureSlotArrays();
 
         // DUPLICATE PURCHASE: increase evolution counter, do not consume a slot
         HeroInstance existingHero = FindHeroInstanceByData(heroData);
@@ -114,24 +131,28 @@ public class GameManager : PersistentSingleton<GameManager>
     // 3 = Backline Right
     public List<HeroInstance> GetAllSlottedHeroes()
     {
+        EnsureSlotArrays();
+
         return new List<HeroInstance>
         {
-            frontlineSlots[0],
-            frontlineSlots[1],
-            backlineSlots[0],
-            backlineSlots[1]
+            IsValidHeroInstance(frontlineSlots[0]) ? frontlineSlots[0] : null,
+            IsValidHeroInstance(frontlineSlots[1]) ? frontlineSlots[1] : null,
+            IsValidHeroInstance(backlineSlots[0]) ? backlineSlots[0] : null,
+            IsValidHeroInstance(backlineSlots[1]) ? backlineSlots[1] : null
         };
     }
 
     // Returns only occupied slots, preserving slot order.
     public List<HeroInstance> GetOccupiedHeroes()
     {
+        EnsureSlotArrays();
+
         List<HeroInstance> result = new();
 
-        if (frontlineSlots[0] != null) result.Add(frontlineSlots[0]);
-        if (frontlineSlots[1] != null) result.Add(frontlineSlots[1]);
-        if (backlineSlots[0] != null) result.Add(backlineSlots[0]);
-        if (backlineSlots[1] != null) result.Add(backlineSlots[1]);
+        if (IsValidHeroInstance(frontlineSlots[0])) result.Add(frontlineSlots[0]);
+        if (IsValidHeroInstance(frontlineSlots[1])) result.Add(frontlineSlots[1]);
+        if (IsValidHeroInstance(backlineSlots[0])) result.Add(backlineSlots[0]);
+        if (IsValidHeroInstance(backlineSlots[1])) result.Add(backlineSlots[1]);
 
         return result;
     }
@@ -168,6 +189,7 @@ public class GameManager : PersistentSingleton<GameManager>
 
     public void SelectHero(HeroData heroData)
     {
+        EnsureSlotArrays();
         ClearAllHeroSlots();
         masterDeck.Clear();
         masterPerks.Clear();
@@ -268,28 +290,30 @@ public class GameManager : PersistentSingleton<GameManager>
     {
         if (heroInstance == null) return false;
 
-        if (frontlineSlots[0] == null)
+        EnsureSlotArrays();
+
+        if (!IsValidHeroInstance(frontlineSlots[0]))
         {
             frontlineSlots[0] = heroInstance;
             heroInstance.Position = SlotPosition.Frontline;
             return true;
         }
 
-        if (frontlineSlots[1] == null)
+        if (!IsValidHeroInstance(frontlineSlots[1]))
         {
             frontlineSlots[1] = heroInstance;
             heroInstance.Position = SlotPosition.Frontline;
             return true;
         }
 
-        if (backlineSlots[0] == null)
+        if (!IsValidHeroInstance(backlineSlots[0]))
         {
             backlineSlots[0] = heroInstance;
             heroInstance.Position = SlotPosition.Backline;
             return true;
         }
 
-        if (backlineSlots[1] == null)
+        if (!IsValidHeroInstance(backlineSlots[1]))
         {
             backlineSlots[1] = heroInstance;
             heroInstance.Position = SlotPosition.Backline;
@@ -301,6 +325,8 @@ public class GameManager : PersistentSingleton<GameManager>
 
     private void ClearAllHeroSlots()
     {
+        EnsureSlotArrays();
+
         frontlineSlots[0] = null;
         frontlineSlots[1] = null;
         backlineSlots[0] = null;
@@ -310,6 +336,8 @@ public class GameManager : PersistentSingleton<GameManager>
     private bool PlaceHeroInSpecificSlotIgnoringOccupancy(HeroInstance heroInstance, int slotIndex)
     {
         if (heroInstance == null) return false;
+
+        EnsureSlotArrays();
 
         switch (slotIndex)
         {

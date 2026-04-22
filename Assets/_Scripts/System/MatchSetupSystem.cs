@@ -1,6 +1,6 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
-using System;
 
 public class MatchSetupSystem : MonoBehaviour
 {
@@ -13,9 +13,10 @@ public class MatchSetupSystem : MonoBehaviour
     [SerializeField] private AudioClip normalBattleMusic;
     [SerializeField] private AudioClip bossMusic;
 
-    private System.Collections.IEnumerator Start()
+    private IEnumerator Start()
     {
-        yield return null; // Wait for all singletons to initialize
+        // Let the rest of the scene singletons/systems finish initializing first
+        yield return null;
 
         // 0. Setup Music
         if (MusicManager.HasInstance && MapSystem.HasInstance && MapSystem.Instance.CurrentNode != null)
@@ -39,7 +40,6 @@ public class MatchSetupSystem : MonoBehaviour
         }
         else if (heroData != null)
         {
-            // Fallback: put test hero in slot 0 and keep remaining slots empty
             heroes = new List<HeroInstance>
             {
                 new HeroInstance(heroData),
@@ -52,7 +52,7 @@ public class MatchSetupSystem : MonoBehaviour
         bool hasAtLeastOneHero = false;
         foreach (var hero in heroes)
         {
-            if (hero != null)
+            if (hero != null && hero.Data != null)
             {
                 hasAtLeastOneHero = true;
                 break;
@@ -68,18 +68,21 @@ public class MatchSetupSystem : MonoBehaviour
         Debug.Log($"[MatchSetupSystem] Total slot entries passed to battle: {heroes.Count}");
         for (int i = 0; i < heroes.Count; i++)
         {
-            string heroName = heroes[i] != null ? heroes[i].Data.name : "EMPTY";
+            string heroName = (heroes[i] != null && heroes[i].Data != null)
+                ? heroes[i].Data.name
+                : "EMPTY";
+
             Debug.Log($"[MatchSetupSystem] Slot {i}: {heroName}");
         }
-        Debug.Log("[MatchSetupSystem] HeroSystem.HasInstance = " + HeroSystem.HasInstance);
-        Debug.Log("[MatchSetupSystem] HeroSystem.Instance null? " + (HeroSystem.Instance == null)); 
+
         if (HeroSystem.Instance == null)
         {
-            Debug.LogError("[MatchSetupSystem] HeroSystem.Instance is NULL in unitedfights scene.");
+            Debug.LogError("[MatchSetupSystem] HeroSystem.Instance is NULL.");
             yield break;
         }
 
-HeroSystem.Instance.Setup(heroes);
+        HeroSystem.Instance.Setup(heroes);
+
         // 2. Setup Enemies from Map Node
         List<EnemyData> activeEnemies = new List<EnemyData>();
 
@@ -111,6 +114,12 @@ HeroSystem.Instance.Setup(heroes);
             Debug.LogWarning("[MatchSetupSystem] No enemies found from encounterDatabase or fallback enemyDatas.");
         }
 
+        if (EnemySystem.Instance == null)
+        {
+            Debug.LogError("[MatchSetupSystem] EnemySystem.Instance is NULL.");
+            yield break;
+        }
+
         EnemySystem.Instance.Setup(activeEnemies);
 
         // 3. Setup Deck
@@ -122,9 +131,22 @@ HeroSystem.Instance.Setup(heroes);
         }
 
         Debug.Log($"[MatchSetupSystem] MasterDeck count before battle setup: {combinedDeck.Count}");
+
+        if (CardSystem.Instance == null)
+        {
+            Debug.LogError("[MatchSetupSystem] CardSystem.Instance is NULL.");
+            yield break;
+        }
+
         CardSystem.Instance.Setup(combinedDeck);
 
         // 4. Setup Perks
+        if (PerkSystem.Instance == null)
+        {
+            Debug.LogError("[MatchSetupSystem] PerkSystem.Instance is NULL.");
+            yield break;
+        }
+
         if (GameManager.Instance != null)
         {
             foreach (var ownedPerkData in GameManager.Instance.MasterPerks)

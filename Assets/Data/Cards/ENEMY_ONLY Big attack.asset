@@ -10,37 +10,27 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e85c6d01e82d8fd4db728c611fdc9ffc, type: 3}
-  m_Name: Pay Day
-  m_EditorClassIdentifier: 
-  <Description>k__BackingField: Deals 10 Damage and gives 10 Gold
-  <Image>k__BackingField: {fileID: 21300000, guid: 694966f0f8b54c74db31b5a6eca4bccc, type: 3}
+  m_Name: ENEMY_ONLY Big attack
+  m_EditorClassIdentifier: Assembly-CSharp::CardData
+  <Description>k__BackingField: THIS CARD IS ONLY TO BE USED BY ENEMIES
+  <Image>k__BackingField: {fileID: 0}
   <OwnerHero>k__BackingField: {fileID: 0}
   <Type>k__BackingField: 0
   <Rarity>k__BackingField: 0
   <HasDistanceKeyword>k__BackingField: 0
-  <Mana>k__BackingField: 2
+  <Mana>k__BackingField: 0
   <IsCursed>k__BackingField: 0
   <Cost>k__BackingField: 0
-  <IntentSprite>k__BackingField: {fileID: 0}
-  <IntentValue>k__BackingField: 0
+  <IntentSprite>k__BackingField: {fileID: 21300000, guid: 0ffd33a04f835234b8842ea15303d2e6, type: 3}
+  <IntentValue>k__BackingField: 12
   <ManualTargetEffect>k__BackingField:
-    rid: 8156335990739304526
+    rid: 5037484506289799256
   <OtherEffects>k__BackingField: []
   <PassiveEffects>k__BackingField: []
   references:
     version: 2
     RefIds:
-    - rid: 8156335990739304526
-      type: {class: MultiEffect, ns: , asm: Assembly-CSharp}
-      data:
-        effects:
-        - rid: 8156335990739304527
-        - rid: 8156335990739304528
-    - rid: 8156335990739304527
+    - rid: 5037484506289799256
       type: {class: DealDamageEffect, ns: , asm: Assembly-CSharp}
       data:
-        damageAmount: 10
-    - rid: 8156335990739304528
-      type: {class: GiveGoldEffect, ns: , asm: Assembly-CSharp}
-      data:
-        amount: 10
+        damageAmount: 12

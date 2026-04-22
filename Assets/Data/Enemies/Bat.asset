@@ -13,5 +13,7 @@ MonoBehaviour:
   m_Name: Bat
   m_EditorClassIdentifier: 
   <Image>k__BackingField: {fileID: 21300000, guid: 3596ea073656cd24b88af1dc48ba393a, type: 3}
-  <Health>k__BackingField: 20
+  <Health>k__BackingField: 22
   <AttackPower>k__BackingField: 15
+  <AttackPattern>k__BackingField:
+  - {fileID: 11400000, guid: 07c0e70629df1de4e94bc01a45fabe2b, type: 2}
