@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e85c6d01e82d8fd4db728c611fdc9ffc, type: 3}
   m_Name: Squirtle Defend
   m_EditorClassIdentifier: Assembly-CSharp::CardData
-  <Description>k__BackingField: Charmander's Basic Defend. Give a character 5 Block.
+  <Description>k__BackingField: Give a character 5 Block.
   <Image>k__BackingField: {fileID: 21300000, guid: d6c9965a91e15bc4ebfa107e233d7802, type: 3}
   <OwnerHero>k__BackingField: {fileID: 11400000, guid: e882fa09d81bb584f9fcf6eaca9eb167, type: 2}
   <Type>k__BackingField: 1
