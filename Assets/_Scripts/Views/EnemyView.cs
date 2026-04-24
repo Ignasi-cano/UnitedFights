@@ -97,7 +97,7 @@ public class EnemyView : CombatantView
         if (nextCard != null)
         {
             int displayedDamage = CalculateDisplayedIntentDamage(nextCard.IntentValue);
-            ShowIntent(nextCard.IntentSprite, displayedDamage);
+            spawnedIntentUI.Set(nextCard.IntentSprite, displayedDamage);
             RefreshIntentTargetsAndLines(nextCard);
         }
         else
@@ -126,7 +126,6 @@ public class EnemyView : CombatantView
 
         return Mathf.Max(0, finalDamage);
     }
-
     private void ShowIntent(Sprite sprite, int value)
     {
         if (spawnedIntentUI != null)

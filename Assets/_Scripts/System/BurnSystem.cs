@@ -27,6 +27,10 @@ public class BurnSystem : MonoBehaviour
         }
 
         target.RemoveStatusEffect(StatusEffectType.BURN, 1);
+        if (target is EnemyView enemyView)
+        {
+            enemyView.UpdateIntent();
+        }
         yield return null; 
     }
 

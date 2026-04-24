@@ -98,26 +98,39 @@ public class EnemySystem : Singleton<EnemySystem>
 
                 if (targets.Count > 0)
                 {
-                    PerformEffectsGA performEffectsGA = new(currentCard.ManualTargetEffect, targets);
+                    PerformEffectsGA performEffectsGA = new(
+                        currentCard.ManualTargetEffect,
+                        targets,
+                        attacker
+                    );
+
                     ActionSystem.Instance.AddReaction(performEffectsGA);
                 }
             }
 
-            foreach (var effectWrapper in currentCard.OtherEffects)
+            if (currentCard.OtherEffects != null)
             {
-                if (effectWrapper == null || effectWrapper.Effect == null) continue;
+                foreach (var effectWrapper in currentCard.OtherEffects)
+                {
+                    if (effectWrapper == null || effectWrapper.Effect == null) continue;
 
-                List<CombatantView> targets = GetEnemyTargetsForEffect(
-                    effectWrapper.Effect,
-                    attacker,
-                    isManualEffect: false,
-                    targetMode: effectWrapper.TargetMode
-                );
+                    List<CombatantView> targets = GetEnemyTargetsForEffect(
+                        effectWrapper.Effect,
+                        attacker,
+                        isManualEffect: false,
+                        targetMode: effectWrapper.TargetMode
+                    );
 
-                if (targets.Count == 0) continue;
+                    if (targets.Count == 0) continue;
 
-                PerformEffectsGA performEffectGA = new(effectWrapper.Effect, targets);
-                ActionSystem.Instance.AddReaction(performEffectGA);
+                    PerformEffectsGA performEffectGA = new(
+                        effectWrapper.Effect,
+                        targets,
+                        attacker
+                    );
+
+                    ActionSystem.Instance.AddReaction(performEffectGA);
+                }
             }
         }
         else
@@ -134,7 +147,7 @@ public class EnemySystem : Singleton<EnemySystem>
                 DealDamageGA dealDamageGA = new(
                     attacker.AttackPower,
                     new List<CombatantView> { targetHero },
-                    attackHeroGA.Caster
+                    attacker
                 );
 
                 ActionSystem.Instance.AddReaction(dealDamageGA);

@@ -7,14 +7,31 @@ public class EffectSystem : MonoBehaviour
     {
         ActionSystem.AttachPerformer<PerformEffectsGA>(PerformEffectPerformer);
     }
+
     void OnDisable()
     {
         ActionSystem.DetachPerformer<PerformEffectsGA>();
     }
-    //performers
+
     private IEnumerator PerformEffectPerformer(PerformEffectsGA performEffectsGA)
     {
-        GameAction effectAction = performEffectsGA.Effect.GetGameAction(performEffectsGA.Targets, HeroSystem.Instance.MainHeroView);
+        if (performEffectsGA == null || performEffectsGA.Effect == null)
+        {
+            yield break;
+        }
+
+        CombatantView caster = performEffectsGA.Caster;
+
+        if (caster == null)
+        {
+            caster = HeroSystem.Instance.MainHeroView;
+        }
+
+        GameAction effectAction = performEffectsGA.Effect.GetGameAction(
+            performEffectsGA.Targets,
+            caster
+        );
+
         ActionSystem.Instance.AddReaction(effectAction);
         yield return null;
     }
