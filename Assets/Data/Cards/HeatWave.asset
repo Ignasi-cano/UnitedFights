@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e85c6d01e82d8fd4db728c611fdc9ffc, type: 3}
   m_Name: HeatWave
   m_EditorClassIdentifier: 
-  <Description>k__BackingField: Deals 5 Damage to ALL enemies and applies 10 Burn
-    to them.
+  <Description>k__BackingField: Deals {damage} Damage to ALL enemies and applies
+    10 Burn to them.
   <Image>k__BackingField: {fileID: 21300000, guid: 3acedfa7eda6a024ebd9c441690d4c31, type: 3}
   <OwnerHero>k__BackingField: {fileID: 0}
   <Type>k__BackingField: 0
@@ -23,7 +23,7 @@ MonoBehaviour:
   <IsCursed>k__BackingField: 0
   <Cost>k__BackingField: 300
   <IntentSprite>k__BackingField: {fileID: 0}
-  <IntentValue>k__BackingField: 0
+  <IntentValue>k__BackingField: 5
   <ManualTargetEffect>k__BackingField:
     rid: -2
   <OtherEffects>k__BackingField:

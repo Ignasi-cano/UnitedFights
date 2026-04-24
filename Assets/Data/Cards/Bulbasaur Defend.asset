@@ -22,7 +22,7 @@ MonoBehaviour:
   <IsCursed>k__BackingField: 0
   <Cost>k__BackingField: 0
   <IntentSprite>k__BackingField: {fileID: 0}
-  <IntentValue>k__BackingField: 0
+  <IntentValue>k__BackingField: 5
   <ManualTargetEffect>k__BackingField:
     rid: 5037484506289799247
   <OtherEffects>k__BackingField: []

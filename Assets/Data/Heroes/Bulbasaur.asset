@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Bulbasaur
   m_EditorClassIdentifier: 
   image: {fileID: 21300000, guid: 2a4a929984d38724fa44b92cbed17e55, type: 3}
-  health: 35
+  health: 50
   statusEffectUI: {fileID: 0}
   deck:
   - {fileID: 11400000, guid: 8e2b73024c879f04d9254e0a6c537385, type: 2}

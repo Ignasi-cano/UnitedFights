@@ -12,11 +12,7 @@ public class CardView : MonoBehaviour
 
     [Header("Sprites")]
     [SerializeField] private SpriteRenderer imageSR;
-
-    // This should be the cream/beige body of the card, NOT the blue mana orb.
     [SerializeField] private SpriteRenderer tintableBackgroundSR;
-
-    // Optional: assign if you also want the small type banner tinted
     [SerializeField] private SpriteRenderer typeBannerSR;
 
     [Header("Interaction")]
@@ -33,13 +29,77 @@ public class CardView : MonoBehaviour
         Card = card;
 
         title.text = card.Title;
-        description.text = card.Description;
+        description.text = GetDynamicDescription(card);
         mana.text = card.Mana.ToString();
         imageSR.sprite = card.Image;
 
         SetupTypeText();
         SetupOwnerText();
         ApplyOwnerTint();
+    }
+
+    public void RefreshDynamicText()
+    {
+        if (Card == null) return;
+
+        description.text = GetDynamicDescription(Card);
+        mana.text = Card.Mana.ToString();
+
+        SetupTypeText();
+        SetupOwnerText();
+        ApplyOwnerTint();
+    }
+
+    private string GetDynamicDescription(Card card)
+    {
+        if (card == null || card.Data == null)
+            return string.Empty;
+
+        string finalDescription = card.Description;
+
+        if (finalDescription.Contains("{damage}"))
+        {
+            int displayedDamage = CalculateDisplayedCardDamage(card.Data.IntentValue);
+            finalDescription = finalDescription.Replace("{damage}", displayedDamage.ToString());
+        }
+
+        return finalDescription;
+    }
+
+    private int CalculateDisplayedCardDamage(int baseDamage)
+    {
+        int finalDamage = baseDamage;
+
+        CombatantView caster = GetCurrentCardCaster();
+
+        if (caster != null && caster.GetStatusEffectStacks(StatusEffectType.BURN) > 0)
+        {
+            finalDamage = Mathf.FloorToInt(finalDamage * 0.5f);
+        }
+
+        return Mathf.Max(0, finalDamage);
+    }
+
+    private CombatantView GetCurrentCardCaster()
+    {
+        if (Card == null || Card.Data == null)
+            return null;
+
+        if (Card.Data.OwnerHero != null && HeroSystem.Instance != null)
+        {
+            foreach (HeroView heroView in HeroSystem.Instance.HeroViews)
+            {
+                if (heroView == null || !heroView.gameObject.activeSelf) continue;
+                if (heroView.HeroInstance == null || heroView.HeroInstance.Data == null) continue;
+
+                if (heroView.HeroInstance.Data == Card.Data.OwnerHero)
+                {
+                    return heroView;
+                }
+            }
+        }
+
+        return HeroSystem.Instance != null ? HeroSystem.Instance.MainHeroView : null;
     }
 
     private void SetupTypeText()
@@ -53,14 +113,9 @@ public class CardView : MonoBehaviour
     {
         if (ownerText == null || Card == null || Card.Data == null) return;
 
-        if (Card.Data.OwnerHero != null)
-        {
-            ownerText.text = Card.Data.OwnerHero.name.ToUpper();
-        }
-        else
-        {
-            ownerText.text = "BASIC";
-        }
+        ownerText.text = Card.Data.OwnerHero != null
+            ? Card.Data.OwnerHero.name.ToUpper()
+            : "BASIC";
     }
 
     private void ApplyOwnerTint()
@@ -69,45 +124,35 @@ public class CardView : MonoBehaviour
 
         Color tint = GetOwnerTint(Card.Data.OwnerHero);
 
-        // Only tint the selected background pieces
         if (tintableBackgroundSR != null)
-        {
             tintableBackgroundSR.color = tint;
-        }
 
         if (typeBannerSR != null)
-        {
             typeBannerSR.color = tint;
-        }
     }
 
     private Color GetOwnerTint(HeroData ownerHero)
     {
-        // Neutral fallback for basic / no owner
         if (ownerHero == null)
-        {
             return new Color(0.93f, 0.91f, 0.84f, 1f);
-        }
 
         string heroName = ownerHero.name.ToLower();
 
-        // Light tint only, so text and UI stay readable
         if (heroName.Contains("bulba") || heroName.Contains("ivy") || heroName.Contains("venu"))
-            return new Color(0.82f, 0.93f, 0.82f, 1f); // greenish
+            return new Color(0.82f, 0.93f, 0.82f, 1f);
 
         if (heroName.Contains("char") || heroName.Contains("flare") || heroName.Contains("fire"))
-            return new Color(0.96f, 0.84f, 0.80f, 1f); // warm red/orange
+            return new Color(0.96f, 0.84f, 0.80f, 1f);
 
         if (heroName.Contains("squirt") || heroName.Contains("wart") || heroName.Contains("blast"))
-            return new Color(0.82f, 0.89f, 0.97f, 1f); // blueish
+            return new Color(0.82f, 0.89f, 0.97f, 1f);
 
         if (heroName.Contains("pikachu") || heroName.Contains("raichu") || heroName.Contains("electric"))
-            return new Color(0.97f, 0.93f, 0.75f, 1f); // yellowish
+            return new Color(0.97f, 0.93f, 0.75f, 1f);
 
         if (heroName.Contains("gastly") || heroName.Contains("haunter") || heroName.Contains("gengar"))
-            return new Color(0.87f, 0.82f, 0.95f, 1f); // purpleish
+            return new Color(0.87f, 0.82f, 0.95f, 1f);
 
-        // Generic fallback by card type if no specific owner mapping fits
         switch (Card.Data.Type)
         {
             case CardType.ATTACK:
@@ -127,6 +172,9 @@ public class CardView : MonoBehaviour
     void OnMouseEnter()
     {
         if (!Interactions.Instance.PlayerCanHover()) return;
+
+        RefreshDynamicText();
+
         wrapper.SetActive(false);
         Vector3 pos = new(transform.position.x, -2, 0);
         CardViewHoverSystem.Instance.Show(Card, pos);
@@ -135,6 +183,7 @@ public class CardView : MonoBehaviour
     void OnMouseExit()
     {
         if (!Interactions.Instance.PlayerCanHover()) return;
+
         CardViewHoverSystem.Instance.Hide();
         wrapper.SetActive(true);
     }
@@ -142,6 +191,8 @@ public class CardView : MonoBehaviour
     void OnMouseDown()
     {
         if (!Interactions.Instance.PlayerCanInteract()) return;
+
+        RefreshDynamicText();
 
         if (Card.ManualTargetEffect != null)
         {
@@ -163,6 +214,7 @@ public class CardView : MonoBehaviour
     {
         if (!Interactions.Instance.PlayerCanInteract()) return;
         if (Card.ManualTargetEffect != null) return;
+
         transform.position = MouseUtil.GetMousePositionInWorldSpace(-1);
     }
 

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Charmander
   m_EditorClassIdentifier: 
   image: {fileID: 21300000, guid: c06a2d0e76b283b4ca7a26b3d613ef81, type: 3}
-  health: 30
+  health: 45
   statusEffectUI: {fileID: 0}
   deck:
   - {fileID: 11400000, guid: 7ebf2640c4526b44ab8855078ada94af, type: 2}

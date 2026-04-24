@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e85c6d01e82d8fd4db728c611fdc9ffc, type: 3}
   m_Name: FireBall
   m_EditorClassIdentifier: 
-  <Description>k__BackingField: Ranged Attack. Deals 5 Damage and applies 2 Burn
-    to an enemy
+  <Description>k__BackingField: Ranged Attack. Deals {damage} Damage and applies
+    2 Burn to an enemy
   <Image>k__BackingField: {fileID: 21300000, guid: 71eb318617482ac478cc7759da071747, type: 3}
   <OwnerHero>k__BackingField: {fileID: 11400000, guid: 1cf1edc961d0cb94e929ec2ccb86e299, type: 2}
   <Type>k__BackingField: 0
@@ -23,7 +23,7 @@ MonoBehaviour:
   <IsCursed>k__BackingField: 0
   <Cost>k__BackingField: 300
   <IntentSprite>k__BackingField: {fileID: 0}
-  <IntentValue>k__BackingField: 0
+  <IntentValue>k__BackingField: 5
   <ManualTargetEffect>k__BackingField:
     rid: 5037484506289799249
   <OtherEffects>k__BackingField: []

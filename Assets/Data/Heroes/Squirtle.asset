@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Squirtle
   m_EditorClassIdentifier: 
   image: {fileID: 21300000, guid: 089dc0b80e4fa61418a0b86ae7ff12ac, type: 3}
-  health: 40
+  health: 65
   statusEffectUI: {fileID: 0}
   deck:
   - {fileID: 11400000, guid: 8b2fc759108fe4b42b4375c429296d1e, type: 2}
