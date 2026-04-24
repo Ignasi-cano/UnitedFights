@@ -85,11 +85,11 @@ public class EnemySystem : Singleton<EnemySystem>
 
             if (currentCard.ManualTargetEffect != null)
             {
-                HeroView targetHero = HeroSystem.Instance.GetRandomFrontlineHero();
-                if (targetHero != null)
+                CombatantView targetHero = attacker.CurrentManualIntentTarget;
+
+                if (targetHero == null)
                 {
-                    PerformEffectsGA performEffectsGA = new(currentCard.ManualTargetEffect, new() { targetHero });
-                    ActionSystem.Instance.AddReaction(performEffectsGA);
+                    targetHero = HeroSystem.Instance.GetRandomFrontlineHero();
                 }
             }
 
@@ -102,12 +102,11 @@ public class EnemySystem : Singleton<EnemySystem>
         }
         else
         {
-            // Fallback to basic attack
-            HeroView targetHero = HeroSystem.Instance.GetRandomFrontlineHero();
-            if (targetHero != null)
+            CombatantView targetHero = attacker.CurrentManualIntentTarget;
+
+            if (targetHero == null)
             {
-                DealDamageGA dealDamageGA = new(attacker.AttackPower, new() { targetHero }, attackHeroGA.Caster);
-                ActionSystem.Instance.AddReaction(dealDamageGA);
+                targetHero = HeroSystem.Instance.GetRandomFrontlineHero();
             }
         }
         

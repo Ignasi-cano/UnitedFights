@@ -230,9 +230,11 @@ MonoBehaviour:
   healthText: {fileID: 1350060838464820049}
   spriteRenderer: {fileID: 4061179033157762232}
   statusEffectsUI: {fileID: 5340025155388224459}
-  intentUI: {fileID: 4162663561774070985, guid: f76960839ea84e34eb23a89c927178d4, type: 3}
-  intentLocalPosition: {x: -0.01, y: 1.76, z: 0}
-  forceIntentPositionOnSetup: 1
+  intentUIPrefab: {fileID: 4162663561774070985, guid: f76960839ea84e34eb23a89c927178d4, type: 3}
+  intentOffset: {x: 0, y: 1.5, z: 0}
+  targetLinePrefab: {fileID: 8526677950166035670, guid: c0e819176faeb2f419cf04999a77c6c8, type: 3}
+  lineStartOffset: {x: 0, y: 0.4, z: 0}
+  showTargetLines: 1
   legacyAttackText: {fileID: 5175821062032401672}
 --- !u!65 &4744316199116893859
 BoxCollider:
