@@ -15,6 +15,7 @@ public class CardSystem : Singleton<CardSystem>
     private readonly List<Card> drawPile = new();
     private readonly List<Card> discardPile = new();
     private readonly List<Card> hand = new();
+    private readonly List<Card> exilePile = new();
 
     void OnEnable()
     {
@@ -42,7 +43,98 @@ public class CardSystem : Singleton<CardSystem>
             drawPile.Add(card);
         }
     }
+    public List<CardData> GetDrawPileDataSortedByRarity()
+    {
+        List<CardData> cards = new();
 
+        foreach (Card card in drawPile)
+            cards.Add(card.Data);
+
+        cards.Sort((a, b) =>
+        {
+            int rarityCompare = a.Rarity.CompareTo(b.Rarity);
+            if (rarityCompare != 0) return rarityCompare;
+
+            return string.Compare(a.name, b.name, System.StringComparison.Ordinal);
+        });
+
+        return cards;
+    }
+    public List<CardData> GetDiscardPileDataInOrder()
+    {
+        List<CardData> cards = new();
+
+        foreach (Card card in discardPile)
+        cards.Add(card.Data);
+        return cards;
+    }
+    public void ExileCard(Card card)
+    {
+        if (card == null) return;
+
+        drawPile.Remove(card);
+        discardPile.Remove(card);
+        hand.Remove(card);
+
+        if (!exilePile.Contains(card))
+            exilePile.Add(card);
+    }
+    public void ExileCardsByData(CardData cardData)
+{
+    if (cardData == null) return;
+
+    ExileMatchingCardsFromPile(drawPile, cardData);
+    ExileMatchingCardsFromPile(discardPile, cardData);
+    ExileMatchingCardsFromPile(hand, cardData);
+}
+
+private void ExileMatchingCardsFromPile(List<Card> pile, CardData cardData)
+{
+    for (int i = pile.Count - 1; i >= 0; i--)
+    {
+        if (pile[i].Data == cardData)
+        {
+            Card card = pile[i];
+            pile.RemoveAt(i);
+
+            if (!exilePile.Contains(card))
+                exilePile.Add(card);
+        }
+    }
+}
+public void ExileCardsByOwner(HeroData ownerHero)
+{
+    if (ownerHero == null) return;
+
+    ExileCardsByOwnerFromPile(drawPile, ownerHero);
+    ExileCardsByOwnerFromPile(discardPile, ownerHero);
+    ExileCardsByOwnerFromPile(hand, ownerHero);
+}
+
+private void ExileCardsByOwnerFromPile(List<Card> pile, HeroData ownerHero)
+{
+    for (int i = pile.Count - 1; i >= 0; i--)
+    {
+        Card card = pile[i];
+
+        if (card.Data.OwnerHero == ownerHero)
+        {
+            pile.RemoveAt(i);
+
+            if (!exilePile.Contains(card))
+                exilePile.Add(card);
+        }
+    }
+}
+    public List<CardData> GetExilePileDataInOrder()
+    {
+        List<CardData> cards = new();
+
+        foreach (Card card in exilePile)
+            cards.Add(card.Data);
+
+        return cards;
+    }
     private IEnumerator DrawCardsPerformer(DrawCardsGA drawCardsGA)
     {
         int actualAmount = Mathf.Min(drawCardsGA.Amount, drawPile.Count);
