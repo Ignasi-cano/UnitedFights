@@ -18,6 +18,7 @@ public class CardListItemView : MonoBehaviour
 
     public void Setup(CardData data)
     {
+        ForceTMPMaterial();
         if (data == null) return;
 
         // Title
@@ -56,7 +57,19 @@ public class CardListItemView : MonoBehaviour
         if (backgroundImage != null)
             backgroundImage.color = GetOwnerTint(data.OwnerHero);
     }
+private void ForceTMPMaterial()
+{
+    foreach (var text in GetComponentsInChildren<TMPro.TMP_Text>(true))
+    {
+        if (text.fontSharedMaterial != null)
+        {
+            text.fontMaterial = text.fontSharedMaterial;
+        }
 
+        text.color = new Color(text.color.r, text.color.g, text.color.b, 1f);
+        text.enabled = true;
+    }
+}
     private Color GetRarityColor(CardRarity rarity)
     {
         return rarity switch

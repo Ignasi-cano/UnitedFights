@@ -8,22 +8,22 @@ public class CardPileViewerManager : MonoBehaviour
 
     public void OpenDrawPile()
     {
-        Open("Mazo de robo", CardSystem.Instance.GetDrawPileDataSortedByRarity());
+        Open("Draw Pile", CardSystem.Instance.GetDrawPileDataSortedByRarity());
     }
 
     public void OpenDiscardPile()
     {
-        Open("Pila de descarte", CardSystem.Instance.GetDiscardPileDataInOrder());
+        Open("Discard Pile", CardSystem.Instance.GetDiscardPileDataInOrder());
     }
 
     public void OpenExilePile()
     {
-        Open("Cartas exiliadas", CardSystem.Instance.GetExilePileDataInOrder());
+        Open("Exile Pile", CardSystem.Instance.GetExilePileDataInOrder());
     }
 
     public void OpenFullDeck()
     {
-        Open("Deck completo", new List<CardData>(GameManager.Instance.MasterDeck));
+        Open("Full Deck", new List<CardData>(GameManager.Instance.MasterDeck));
     }
 
     private void Open(string title, List<CardData> cards)
