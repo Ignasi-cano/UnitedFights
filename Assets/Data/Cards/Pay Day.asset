@@ -12,17 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e85c6d01e82d8fd4db728c611fdc9ffc, type: 3}
   m_Name: Pay Day
   m_EditorClassIdentifier: 
-  <Description>k__BackingField: Deals 10 Damage and gives 10 Gold
+  <Description>k__BackingField: Deals {damage} Damage and gives 10 Gold
   <Image>k__BackingField: {fileID: 21300000, guid: 694966f0f8b54c74db31b5a6eca4bccc, type: 3}
   <OwnerHero>k__BackingField: {fileID: 0}
   <Type>k__BackingField: 0
-  <Rarity>k__BackingField: 0
+  <Rarity>k__BackingField: 2
   <HasDistanceKeyword>k__BackingField: 0
   <Mana>k__BackingField: 2
   <IsCursed>k__BackingField: 0
   <Cost>k__BackingField: 0
   <IntentSprite>k__BackingField: {fileID: 0}
-  <IntentValue>k__BackingField: 0
+  <IntentValue>k__BackingField: 10
   <ManualTargetEffect>k__BackingField:
     rid: 8156335990739304526
   <OtherEffects>k__BackingField: []

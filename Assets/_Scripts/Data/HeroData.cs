@@ -11,6 +11,8 @@ public class HeroData : ScriptableObject
     [SerializeField] private List<CardData> deck;
     [SerializeField] private List<PerkData> startingPerks;
     [SerializeField] private HeroData nextEvolution;
+    [SerializeField] private HeroData previousEvolution;
+    public HeroData PreviousEvolution => previousEvolution;
 
     [field: SerializeField] public int Cost { get; private set; }
     public Sprite Image => image;

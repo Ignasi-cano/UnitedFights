@@ -13,8 +13,18 @@ MonoBehaviour:
   m_Name: CharmanderCardPool
   m_EditorClassIdentifier: Assembly-CSharp::CardPoolData
   ownerPools:
-  - Owner: {fileID: 0}
+  - Owner: {fileID: 11400000, guid: 1cf1edc961d0cb94e929ec2ccb86e299, type: 2}
     Basic: []
-    Common: []
-    Uncommon: []
+    Common:
+    - {fileID: 11400000, guid: e767ca9a60c604e428078711ebb6ee6b, type: 2}
+    - {fileID: 11400000, guid: 5b8fa26312e8d1847bd156ea3b66f6ae, type: 2}
+    Uncommon:
+    - {fileID: 11400000, guid: 38abf63fb66ca634e869b2a2b505e047, type: 2}
+    Rare: []
+  - Owner: {fileID: 11400000, guid: bab2422bb9eeb8f4b8d943cf30e9eb6a, type: 2}
+    Basic: []
+    Common:
+    - {fileID: 11400000, guid: 46e7ce6ed273b5f4a9b743dff8953046, type: 2}
+    Uncommon:
+    - {fileID: 11400000, guid: d5eb30fb87ed61240bd49bf7c88fbe6f, type: 2}
     Rare: []

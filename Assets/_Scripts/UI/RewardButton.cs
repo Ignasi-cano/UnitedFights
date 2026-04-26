@@ -1,27 +1,67 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class RewardButton : MonoBehaviour
 {
-    [SerializeField] private Image iconImage;
-    [SerializeField] private TMP_Text nameText;
-    [SerializeField] private TMP_Text descriptionText;
-    [SerializeField] private Button button;
+    [Header("Button")]
+    [SerializeField] private Button acceptButton;
 
-    public void Setup(Sprite icon, string name, string description, System.Action onClick)
+    [Header("Views")]
+    [SerializeField] private GameObject cardRewardRoot;
+    [SerializeField] private GameObject normalRewardRoot;
+    [SerializeField] private CardListItemView cardListItemView;
+    [SerializeField] private NonCardRewardView nonCardRewardView;
+
+    private System.Action storedRewardAction;
+
+    private void Awake()
     {
-        if (iconImage != null) 
+        if (acceptButton == null)
+            acceptButton = GetComponentInChildren<Button>();
+
+        if (acceptButton != null)
         {
-            iconImage.sprite = icon;
-            iconImage.gameObject.SetActive(icon != null);
-            if (icon == null) Debug.Log($"[RewardButton] Icon is null for {name}");
+            acceptButton.onClick.RemoveAllListeners();
+            acceptButton.onClick.AddListener(ClaimReward);
         }
-        
-        if (nameText != null) nameText.text = name;
-        if (descriptionText != null) descriptionText.text = description;
-        
-        button.onClick.RemoveAllListeners();
-        button.onClick.AddListener(() => onClick?.Invoke());
+    }
+
+    // Compatibility method for old scripts: AugmentSelectionUI, RandomEventUI, old RewardController.
+    public void Setup(Sprite icon, string title, string description, System.Action onClaim)
+    {
+        SetupNonCard(icon, title, description, onClaim);
+    }
+
+    public void SetupNonCard(Sprite icon, string title, string description, System.Action onClaim)
+    {
+        storedRewardAction = onClaim;
+
+        if (cardRewardRoot != null)
+            cardRewardRoot.SetActive(false);
+
+        if (normalRewardRoot != null)
+            normalRewardRoot.SetActive(true);
+
+        if (nonCardRewardView != null)
+            nonCardRewardView.Setup(icon, title, description);
+    }
+
+    public void SetupCard(CardData card, System.Action onClaim)
+    {
+        storedRewardAction = onClaim;
+
+        if (normalRewardRoot != null)
+            normalRewardRoot.SetActive(false);
+
+        if (cardRewardRoot != null)
+            cardRewardRoot.SetActive(true);
+
+        if (cardListItemView != null)
+            cardListItemView.Setup(card);
+    }
+
+    private void ClaimReward()
+    {
+        storedRewardAction?.Invoke();
     }
 }

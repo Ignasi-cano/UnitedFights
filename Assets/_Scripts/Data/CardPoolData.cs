@@ -19,35 +19,29 @@ public class CardPoolData : ScriptableObject
     public List<CardData> GetCards(HeroData owner, CardRarity rarity)
     {
         OwnerPool pool = ownerPools.Find(p => p.Owner == owner);
-
-        if (pool == null)
-        {
-            Debug.LogWarning($"[CardPoolData] No pool found for owner: {(owner != null ? owner.name : "BASIC")}");
-            return new List<CardData>();
-        }
+        if (pool == null) return new List<CardData>();
 
         return rarity switch
         {
-            CardRarity.Basic => pool.Basic,
-            CardRarity.Common => pool.Common,
-            CardRarity.Uncommon => pool.Uncommon,
-            CardRarity.Rare => pool.Rare,
+            CardRarity.Basic => new List<CardData>(pool.Basic),
+            CardRarity.Common => new List<CardData>(pool.Common),
+            CardRarity.Uncommon => new List<CardData>(pool.Uncommon),
+            CardRarity.Rare => new List<CardData>(pool.Rare),
             _ => new List<CardData>()
         };
     }
 
-    public List<CardData> GetAllCardsForOwner(HeroData owner)
+    public List<CardData> GetCardsForOwners(List<HeroData> owners, CardRarity rarity)
     {
-        OwnerPool pool = ownerPools.Find(p => p.Owner == owner);
-
-        if (pool == null)
-            return new List<CardData>();
-
         List<CardData> result = new();
-        result.AddRange(pool.Basic);
-        result.AddRange(pool.Common);
-        result.AddRange(pool.Uncommon);
-        result.AddRange(pool.Rare);
+
+        if (owners == null) return result;
+
+        foreach (HeroData owner in owners)
+        {
+            if (owner == null) continue;
+            result.AddRange(GetCards(owner, rarity));
+        }
 
         return result;
     }
