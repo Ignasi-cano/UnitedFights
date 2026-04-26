@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class RewardButton : MonoBehaviour
 {
@@ -12,7 +13,12 @@ public class RewardButton : MonoBehaviour
     [SerializeField] private CardListItemView cardListItemView;
     [SerializeField] private NonCardRewardView nonCardRewardView;
 
-    private System.Action storedRewardAction;
+    [Header("Shop Optional")]
+    [SerializeField] private GameObject priceRoot;
+    [SerializeField] private TMP_Text priceText;
+    [SerializeField] private Image coinIcon;
+
+    private System.Action storedAction;
 
     private void Awake()
     {
@@ -22,46 +28,77 @@ public class RewardButton : MonoBehaviour
         if (acceptButton != null)
         {
             acceptButton.onClick.RemoveAllListeners();
-            acceptButton.onClick.AddListener(ClaimReward);
+            acceptButton.onClick.AddListener(OnClick);
         }
     }
 
-    // Compatibility method for old scripts: AugmentSelectionUI, RandomEventUI, old RewardController.
-    public void Setup(Sprite icon, string title, string description, System.Action onClaim)
+    private void OnClick()
     {
-        SetupNonCard(icon, title, description, onClaim);
+        storedAction?.Invoke();
     }
 
-    public void SetupNonCard(Sprite icon, string title, string description, System.Action onClaim)
+    // Compatibility with old reward/event scripts
+    public void Setup(Sprite icon, string title, string description, System.Action action)
     {
-        storedRewardAction = onClaim;
-
-        if (cardRewardRoot != null)
-            cardRewardRoot.SetActive(false);
-
-        if (normalRewardRoot != null)
-            normalRewardRoot.SetActive(true);
-
-        if (nonCardRewardView != null)
-            nonCardRewardView.Setup(icon, title, description);
+        SetupNonCard(icon, title, description, action);
     }
 
-    public void SetupCard(CardData card, System.Action onClaim)
+    public void SetupCard(CardData card, System.Action action)
     {
-        storedRewardAction = onClaim;
+        storedAction = action;
 
-        if (normalRewardRoot != null)
-            normalRewardRoot.SetActive(false);
+        if (cardRewardRoot != null) cardRewardRoot.SetActive(true);
+        if (normalRewardRoot != null) normalRewardRoot.SetActive(false);
 
-        if (cardRewardRoot != null)
-            cardRewardRoot.SetActive(true);
+        HidePrice();
 
         if (cardListItemView != null)
             cardListItemView.Setup(card);
     }
 
-    private void ClaimReward()
+    public void SetupNonCard(Sprite icon, string title, string description, System.Action action)
     {
-        storedRewardAction?.Invoke();
+        storedAction = action;
+
+        if (cardRewardRoot != null) cardRewardRoot.SetActive(false);
+        if (normalRewardRoot != null) normalRewardRoot.SetActive(true);
+
+        HidePrice();
+
+        if (nonCardRewardView != null)
+            nonCardRewardView.Setup(icon, title, description);
+    }
+
+    public void SetupCardShop(CardData card, int price, System.Action action)
+    {
+        SetupCard(card, action);
+        ShowPrice(price);
+    }
+
+    public void SetupNonCardShop(Sprite icon, string title, string description, int price, System.Action action)
+    {
+        SetupNonCard(icon, title, description, action);
+        ShowPrice(price);
+    }
+
+    private void ShowPrice(int price)
+    {
+        if (priceRoot != null)
+            priceRoot.SetActive(true);
+
+        if (priceText != null)
+            priceText.text = price.ToString();
+
+        if (coinIcon != null)
+            coinIcon.gameObject.SetActive(true);
+    }
+
+    private void HidePrice()
+    {
+        if (priceRoot != null)
+            priceRoot.SetActive(false);
+
+        if (coinIcon != null)
+            coinIcon.gameObject.SetActive(false);
     }
 }

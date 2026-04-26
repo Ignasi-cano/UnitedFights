@@ -6870,6 +6870,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bab2422bb9eeb8f4b8d943cf30e9eb6a, type: 2}
   - {fileID: 11400000, guid: 1cf1edc961d0cb94e929ec2ccb86e299, type: 2}
   - {fileID: 11400000, guid: e882fa09d81bb584f9fcf6eaca9eb167, type: 2}
+  - {fileID: 11400000, guid: bc3302cd0e596ef48aaed8c1fa11934b, type: 2}
   frontlineSlots: []
   backlineSlots: []
 --- !u!4 &2147416874

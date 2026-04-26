@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e85c6d01e82d8fd4db728c611fdc9ffc, type: 3}
+  m_Name: Dragon Dance
+  m_EditorClassIdentifier: Assembly-CSharp::CardData
+  <Description>k__BackingField: Gain 1 Mana and Draw 1 card
+  <Image>k__BackingField: {fileID: 21300000, guid: 47af2175200ba3c4580fa4d06b7b1837, type: 3}
+  <OwnerHero>k__BackingField: {fileID: 11400000, guid: bc3302cd0e596ef48aaed8c1fa11934b, type: 2}
+  <Type>k__BackingField: 1
+  <Rarity>k__BackingField: 3
+  <HasDistanceKeyword>k__BackingField: 0
+  <Mana>k__BackingField: 0
+  <IsCursed>k__BackingField: 0
+  <Cost>k__BackingField: 500
+  <IntentSprite>k__BackingField: {fileID: 0}
+  <IntentValue>k__BackingField: 0
+  <ManualTargetEffect>k__BackingField:
+    rid: -2
+  <OtherEffects>k__BackingField:
+  - <TargetMode>k__BackingField:
+      rid: 5037484596515307609
+    <Effect>k__BackingField:
+      rid: 5037484596515307611
+  <PassiveEffects>k__BackingField: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 5037484596515307609
+      type: {class: NoTM, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 5037484596515307611
+      type: {class: MultiEffect, ns: , asm: Assembly-CSharp}
+      data:
+        effects:
+        - rid: 5037484596515307612
+        - rid: 5037484596515307613
+    - rid: 5037484596515307612
+      type: {class: AddManaEffect, ns: , asm: Assembly-CSharp}
+      data:
+        manaAmount: 1
+    - rid: 5037484596515307613
+      type: {class: DrawCardsEffect, ns: , asm: Assembly-CSharp}
+      data:
+        drawAmount: 1

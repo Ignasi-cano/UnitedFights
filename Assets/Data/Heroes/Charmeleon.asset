@@ -19,4 +19,5 @@ MonoBehaviour:
   startingPerks:
   - {fileID: 11400000, guid: 7d393c1ea5a7bca47b6ff4245f2ef317, type: 2}
   nextEvolution: {fileID: 11400000, guid: 6908b3d0fe7150949930a73a7bcd0aee, type: 2}
+  previousEvolution: {fileID: 11400000, guid: 1cf1edc961d0cb94e929ec2ccb86e299, type: 2}
   <Cost>k__BackingField: 0

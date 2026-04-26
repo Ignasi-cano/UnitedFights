@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e85c6d01e82d8fd4db728c611fdc9ffc, type: 3}
   m_Name: Acid
   m_EditorClassIdentifier: 
-  <Description>k__BackingField: Applies 3 Poison to the enemy.
+  <Description>k__BackingField: Apply 2 poison to an enemy.
   <Image>k__BackingField: {fileID: 21300000, guid: 26876625ca1f91f4fb5ff442db63bdec, type: 3}
   <OwnerHero>k__BackingField: {fileID: 11400000, guid: bab2422bb9eeb8f4b8d943cf30e9eb6a, type: 2}
   <Type>k__BackingField: 1
@@ -22,7 +22,7 @@ MonoBehaviour:
   <IsCursed>k__BackingField: 0
   <Cost>k__BackingField: 300
   <IntentSprite>k__BackingField: {fileID: 21300000, guid: 69ff909f600ffd1468a53add6b259bec, type: 3}
-  <IntentValue>k__BackingField: 3
+  <IntentValue>k__BackingField: 2
   <ManualTargetEffect>k__BackingField:
     rid: 8156336231121944657
   <OtherEffects>k__BackingField: []
@@ -39,4 +39,4 @@ MonoBehaviour:
       type: {class: AddStatusEffectEffect, ns: , asm: Assembly-CSharp}
       data:
         statusEffectType: 2
-        stackCount: 3
+        stackCount: 2

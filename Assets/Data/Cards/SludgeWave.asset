@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: SludgeWave
   m_EditorClassIdentifier: 
   <Description>k__BackingField: Deals {damage} Damage to ALL enemies and applies
-    3 Poison to them.
+    2 Poison to them.
   <Image>k__BackingField: {fileID: 21300000, guid: 69ff909f600ffd1468a53add6b259bec, type: 3}
-  <OwnerHero>k__BackingField: {fileID: 0}
+  <OwnerHero>k__BackingField: {fileID: 11400000, guid: bab2422bb9eeb8f4b8d943cf30e9eb6a, type: 2}
   <Type>k__BackingField: 0
-  <Rarity>k__BackingField: 0
+  <Rarity>k__BackingField: 1
   <HasDistanceKeyword>k__BackingField: 0
   <Mana>k__BackingField: 2
   <IsCursed>k__BackingField: 0
@@ -54,4 +54,4 @@ MonoBehaviour:
       type: {class: AddStatusEffectEffect, ns: , asm: Assembly-CSharp}
       data:
         statusEffectType: 2
-        stackCount: 3
+        stackCount: 2

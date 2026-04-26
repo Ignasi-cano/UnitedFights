@@ -23,7 +23,7 @@ MonoBehaviour:
   <IsCursed>k__BackingField: 0
   <Cost>k__BackingField: 300
   <IntentSprite>k__BackingField: {fileID: 0}
-  <IntentValue>k__BackingField: 5
+  <IntentValue>k__BackingField: 2
   <ManualTargetEffect>k__BackingField:
     rid: 5037484506289799249
   <OtherEffects>k__BackingField: []
@@ -40,7 +40,7 @@ MonoBehaviour:
     - rid: 5037484506289799250
       type: {class: DealDamageEffect, ns: , asm: Assembly-CSharp}
       data:
-        damageAmount: 5
+        damageAmount: 2
     - rid: 5037484506289799251
       type: {class: AddStatusEffectEffect, ns: , asm: Assembly-CSharp}
       data:
