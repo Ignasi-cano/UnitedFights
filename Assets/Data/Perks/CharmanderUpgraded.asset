@@ -12,11 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 831430b8fb16e7946b6bc4e8d923c605, type: 3}
   m_Name: CharmanderUpgraded
   m_EditorClassIdentifier: 
-  <Image>k__BackingField: {fileID: 21300000, guid: 847bd707a64f626449095b53ebdb64a5, type: 3}
+  <Name>k__BackingField: 
+  <Description>k__BackingField: 
+  <Image>k__BackingField: {fileID: 21300000, guid: ea2bdcc4367f86b4aae0e2dbfd100790, type: 3}
   <PerkCondition>k__BackingField:
     rid: 8156336055530291281
   <AutoTargetEffect>k__BackingField:
     rid: 8156336055530291278
+  <OnAddEffects>k__BackingField: []
   <Cost>k__BackingField: 0
   <UseAutoTarget>k__BackingField: 1
   <UseActionCasterAsTarget>k__BackingField: 0
