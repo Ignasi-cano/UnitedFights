@@ -9,6 +9,20 @@ public class EnemyBoardView : MonoBehaviour
     public List<EnemyView> EnemyViews { get; private set; } = new();
     public void AddEnemy(EnemyData enemyData)
     {
+        if (slots == null || slots.Count == 0)
+        {
+            Debug.LogWarning("[EnemyBoardView] 'slots' list is empty! Auto-populating from children...");
+            slots = new List<Transform>();
+            foreach (Transform child in transform) {
+                slots.Add(child);
+            }
+        }
+        if (EnemyViews.Count >= slots.Count)
+        {
+            Debug.LogWarning($"[EnemyBoardView] Not enough slots to add enemy {enemyData.name}. Max slots: {slots.Count}");
+            return;
+        }
+
         Transform slot = slots[EnemyViews.Count];
         EnemyView enemyView = EnemyViewCreator.Instance.CreateEnemyView(enemyData, slot.position, slot.rotation);
         enemyView.transform.parent = slot;

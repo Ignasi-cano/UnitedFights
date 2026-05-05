@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d75fcaf24585264ebf59c14f96b5855, type: 3}
+  m_Name: Rewards
+  m_EditorClassIdentifier: Assembly-CSharp::CardPoolData
+  ownerPools:
+  - Owner: {fileID: 11400000, guid: 1cf1edc961d0cb94e929ec2ccb86e299, type: 2}
+    Basic: []
+    Common:
+    - {fileID: 11400000, guid: e767ca9a60c604e428078711ebb6ee6b, type: 2}
+    - {fileID: 11400000, guid: 5b8fa26312e8d1847bd156ea3b66f6ae, type: 2}
+    Uncommon:
+    - {fileID: 11400000, guid: 38abf63fb66ca634e869b2a2b505e047, type: 2}
+    Rare:
+    - {fileID: 11400000, guid: 8cd561e98b608b448ac61c28b936ed3c, type: 2}
+  - Owner: {fileID: 11400000, guid: bab2422bb9eeb8f4b8d943cf30e9eb6a, type: 2}
+    Basic: []
+    Common:
+    - {fileID: 11400000, guid: 46e7ce6ed273b5f4a9b743dff8953046, type: 2}
+    - {fileID: 11400000, guid: a9b9cc2806988b54d9b3f6b4e33e6dad, type: 2}
+    Uncommon:
+    - {fileID: 11400000, guid: d5eb30fb87ed61240bd49bf7c88fbe6f, type: 2}
+    Rare: []
+  - Owner: {fileID: 11400000, guid: e882fa09d81bb584f9fcf6eaca9eb167, type: 2}
+    Basic: []
+    Common:
+    - {fileID: 11400000, guid: 66dac3fd33c56654a98f3d83e2f86314, type: 2}
+    Uncommon:
+    - {fileID: 11400000, guid: 355ec2a7ac050a548993acec3fb70a3f, type: 2}
+    Rare: []

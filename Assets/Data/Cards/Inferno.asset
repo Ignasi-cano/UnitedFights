@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e85c6d01e82d8fd4db728c611fdc9ffc, type: 3}
+  m_Name: Inferno
+  m_EditorClassIdentifier: Assembly-CSharp::CardData
+  <Description>k__BackingField: Apply 20 Burn to an enemy
+  <Image>k__BackingField: {fileID: 21300000, guid: 8abc9aedfeda2394da6e178b91c700e3, type: 3}
+  <OwnerHero>k__BackingField: {fileID: 11400000, guid: 1cf1edc961d0cb94e929ec2ccb86e299, type: 2}
+  <Type>k__BackingField: 1
+  <Rarity>k__BackingField: 3
+  <HasDistanceKeyword>k__BackingField: 0
+  <Mana>k__BackingField: 3
+  <IsCursed>k__BackingField: 0
+  <Cost>k__BackingField: 0
+  <IntentSprite>k__BackingField: {fileID: 0}
+  <IntentValue>k__BackingField: 0
+  <ManualTargetEffect>k__BackingField:
+    rid: 5037484596515307614
+  <OtherEffects>k__BackingField: []
+  <PassiveEffects>k__BackingField: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 5037484596515307614
+      type: {class: AddStatusEffectEffect, ns: , asm: Assembly-CSharp}
+      data:
+        statusEffectType: 1
+        stackCount: 20

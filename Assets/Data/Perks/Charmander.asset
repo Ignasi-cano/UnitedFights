@@ -13,12 +13,13 @@ MonoBehaviour:
   m_Name: Charmander
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Hell's Fire
-  <Description>k__BackingField: Execute on 25 burn stacks
-  <Image>k__BackingField: {fileID: 21300000, guid: 847bd707a64f626449095b53ebdb64a5, type: 3}
+  <Description>k__BackingField: Execute enemies with 25 burn stacks or more
+  <Image>k__BackingField: {fileID: 21300000, guid: 3acedfa7eda6a024ebd9c441690d4c31, type: 3}
   <PerkCondition>k__BackingField:
     rid: 8156336055530291281
   <AutoTargetEffect>k__BackingField:
     rid: 8156336055530291278
+  <OnAddEffects>k__BackingField: []
   <Cost>k__BackingField: 0
   <UseAutoTarget>k__BackingField: 1
   <UseActionCasterAsTarget>k__BackingField: 0

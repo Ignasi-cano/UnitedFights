@@ -5,9 +5,19 @@ public class GameManager : PersistentSingleton<GameManager>
 {
     [SerializeField] private List<HeroData> availableHeroes = new List<HeroData>();
     public List<HeroData> AvailableHeroes => availableHeroes;
-    [SerializeField] private List<HeroInstance> activeHeroes = new List<HeroInstance>();
-    public List<HeroInstance> ActiveHeroes => activeHeroes;
-    public const int MAX_HEROES = 3;
+
+    [Header("Team Slots")]
+    [SerializeField] private HeroInstance[] frontlineSlots = new HeroInstance[2];
+    [SerializeField] private HeroInstance[] backlineSlots = new HeroInstance[2];
+
+    public HeroInstance[] FrontlineSlots => frontlineSlots;
+    public HeroInstance[] BacklineSlots => backlineSlots;
+
+    // Compatibility property for old code that still expects a flat list
+    public List<HeroInstance> ActiveHeroes => GetOccupiedHeroes();
+
+    public const int MAX_HEROES = 4;
+    public const int MAX_PERKS = 10;
 
     // Master list of cards that persists between scenes
     private List<CardData> masterDeck = new List<CardData>();
@@ -15,201 +25,196 @@ public class GameManager : PersistentSingleton<GameManager>
 
     private List<PerkData> masterPerks = new List<PerkData>();
     public List<PerkData> MasterPerks => masterPerks;
-    public const int MAX_PERKS = 10;
 
     private List<AugmentEffect> activeAugments = new();
 
     protected override void Awake()
     {
         base.Awake();
-        
-        // If we were destroyed by the Singleton pattern, don't continue
+
         if (Instance != this) return;
 
+        EnsureSlotArrays();
         MapSystem.OnNodeSelected += HandleNodeSelected;
 
         Debug.Log($"[GameManager] Awake on {gameObject.name}. Hero count: {(availableHeroes != null ? availableHeroes.Count : 0)}");
 
         // Ensure we have at least one hero if none selected (for testing)
-        if (activeHeroes.Count == 0 && availableHeroes != null && availableHeroes.Count > 0)
+        if (GetOccupiedHeroes().Count == 0 && availableHeroes != null && availableHeroes.Count > 0)
         {
             HeroData defaultHeroData = availableHeroes[0];
-            HeroInstance defaultHero = new HeroInstance(defaultHeroData);
-            activeHeroes.Add(defaultHero);
-            if (defaultHeroData.Deck != null) masterDeck.AddRange(defaultHeroData.Deck);
-            if (defaultHeroData.StartingPerks != null) masterPerks.AddRange(defaultHeroData.StartingPerks);
+            TryAddHero(defaultHeroData, true);
             Debug.Log($"[GameManager] Added default hero: {defaultHeroData.name} and their cards/perks to Master Deck.");
         }
     }
 
+    private void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            MapSystem.OnNodeSelected -= HandleNodeSelected;
+        }
+    }
+
+    private void EnsureSlotArrays()
+    {
+        if (frontlineSlots == null || frontlineSlots.Length != 2)
+            frontlineSlots = new HeroInstance[2];
+
+        if (backlineSlots == null || backlineSlots.Length != 2)
+            backlineSlots = new HeroInstance[2];
+    }
+
+    private bool IsValidHeroInstance(HeroInstance hero)
+    {
+        return hero != null && hero.Data != null;
+    }
+
     public bool TryAddHero(HeroData heroData, bool includeStartingPerks = true)
     {
-        // Check if we already have this hero type to avoid duplicate decks
-        bool alreadyOwned = activeHeroes.Exists(h => h != null && h.Data.name == heroData.name);
+        if (heroData == null)
+        {
+            Debug.LogWarning("[GameManager] TryAddHero failed: heroData is null.");
+            return false;
+        }
+
+        EnsureSlotArrays();
+
+        // DUPLICATE PURCHASE: increase evolution counter, do not consume a slot
+        HeroInstance existingHero = FindHeroInstanceByData(heroData);
+        if (existingHero != null)
+        {
+            existingHero.AddCopy();
+
+            Debug.Log($"[GameManager] Duplicate purchased for {heroData.name}. Copies: {existingHero.EvolutionCopies}/3");
+
+            TryEvolveHero(existingHero, includeStartingPerks);
+            return true;
+        }
+
+        // NEW HERO: must fit in a slot
+        if (GetOccupiedHeroes().Count >= MAX_HEROES)
+        {
+            Debug.LogWarning($"[GameManager] Cannot add {heroData.name}: team is full ({MAX_HEROES}/{MAX_HEROES}).");
+            return false;
+        }
 
         HeroInstance heroInstance = new HeroInstance(heroData);
-        activeHeroes.Add(heroInstance);
-        Debug.Log($"[GameManager] Hero added to collection: {heroData.name}. Total owned: {activeHeroes.Count}");
-        
-        // Add hero cards and perks to the master lists ONLY if it's the first one of its kind
-        if (!alreadyOwned)
+
+        if (!TryPlaceHeroInFirstFreeSlot(heroInstance))
         {
-            if (heroData.Deck != null)
-            {
-                masterDeck.AddRange(heroData.Deck);
-                Debug.Log($"[GameManager] First time owning {heroData.name}. Cards added to Master Deck.");
-            }
-             if (includeStartingPerks && heroData.StartingPerks != null)
-            {
-                masterPerks.AddRange(heroData.StartingPerks);
-                Debug.Log($"[GameManager] First time owning {heroData.name}. Perks added to Master Perks.");
-            }
+            Debug.LogWarning($"[GameManager] Could not place hero {heroData.name} in any slot.");
+            return false;
         }
-        else
+
+        Debug.Log($"[GameManager] New hero added to team: {heroData.name}");
+
+        if (heroData.Deck != null)
         {
-            Debug.Log($"[GameManager] Already owned {heroData.name}. Cards/Perks NOT added to Master lists.");
-            
-            // NEW: Check for evolution if we now have 3 of these
-            CheckEvolution(heroData);
+            masterDeck.AddRange(heroData.Deck);
+            Debug.Log($"[GameManager] Added {heroData.name} cards to Master Deck.");
         }
-        
+
+        if (includeStartingPerks && heroData.StartingPerks != null)
+        {
+            masterPerks.AddRange(heroData.StartingPerks);
+            Debug.Log($"[GameManager] Added {heroData.name} perks to Master Perks.");
+        }
+
         return true;
     }
 
-    public List<HeroInstance> GetUniqueActiveHeroes()
+    // Returns exactly 4 entries, preserving slot order:
+    // 0 = Frontline Left
+    // 1 = Frontline Right
+    // 2 = Backline Left
+    // 3 = Backline Right
+    public List<HeroInstance> GetAllSlottedHeroes()
     {
-        Dictionary<string, (HeroInstance instance, int tier)> uniqueLineages = new();
+        EnsureSlotArrays();
 
-        foreach (var hero in activeHeroes)
+        return new List<HeroInstance>
         {
-            if (hero == null || hero.Data == null) continue;
+            IsValidHeroInstance(frontlineSlots[0]) ? frontlineSlots[0] : null,
+            IsValidHeroInstance(frontlineSlots[1]) ? frontlineSlots[1] : null,
+            IsValidHeroInstance(backlineSlots[0]) ? backlineSlots[0] : null,
+            IsValidHeroInstance(backlineSlots[1]) ? backlineSlots[1] : null
+        };
+    }
 
-            string finalID = GetFinalEvolutionID(hero.Data);
-            int tier = GetEvolutionTier(hero.Data);
-
-            if (!uniqueLineages.ContainsKey(finalID) || tier > uniqueLineages[finalID].tier)
-            {
-                uniqueLineages[finalID] = (hero, tier);
-            }
-        }
+    // Returns only occupied slots, preserving slot order.
+    public List<HeroInstance> GetOccupiedHeroes()
+    {
+        EnsureSlotArrays();
 
         List<HeroInstance> result = new();
-        foreach (var val in uniqueLineages.Values)
-        {
-            result.Add(val.instance);
-        }
+
+        if (IsValidHeroInstance(frontlineSlots[0])) result.Add(frontlineSlots[0]);
+        if (IsValidHeroInstance(frontlineSlots[1])) result.Add(frontlineSlots[1]);
+        if (IsValidHeroInstance(backlineSlots[0])) result.Add(backlineSlots[0]);
+        if (IsValidHeroInstance(backlineSlots[1])) result.Add(backlineSlots[1]);
+
         return result;
     }
 
-    private string GetFinalEvolutionID(HeroData data)
+    // Kept for temporary compatibility with code that still calls it.
+    public List<HeroInstance> GetUniqueActiveHeroes()
     {
-        HeroData current = data;
-        while (current.NextEvolution != null)
-        {
-            current = current.NextEvolution;
-        }
-        return current.name;
-    }
-
-    private int GetEvolutionTier(HeroData data)
-    {
-        // Simple tier: how many evolutions AFTER this one? 
-        // We want the HIGHEST tier to have 0 steps remaining.
-        // Actually, let's count steps from this to final. 
-        // The more steps, the LOWER the tier.
-        int steps = 0;
-        HeroData current = data;
-        while (current.NextEvolution != null)
-        {
-            current = current.NextEvolution;
-            steps++;
-        }
-        // Tier 0 = Final Form, Tier 1 = Middle, Tier 2 = Base.
-        // We want to pick the SMALLEST 'steps'.
-        return -steps; // -0 is highest, -1 is lower, -2 is base.
-    }
-
-    private void CheckEvolution(HeroData baseData)
-    {
-        if (baseData.NextEvolution == null) return;
-
-        // 1. Count instances of this exact hero data
-        List<HeroInstance> matches = activeHeroes.FindAll(h => h.Data == baseData);
-        
-        if (matches.Count >= 3)
-        {
-            Debug.Log($"[GameManager] {baseData.name} Evolution Triggered! (3/3 owned)");
-
-            // 2. Remove 3 instances of the base hero
-            for (int i = 0; i < 3; i++)
-            {
-                activeHeroes.Remove(matches[i]);
-            }
-
-            // 3. Remove 1 set of cards/perks of the base hero 
-            // (Since only the first one added cards, and we are replacing it with a better version)
-            int removedCards = 0;
-            if (baseData.Deck != null)
-            {
-                foreach (var card in baseData.Deck)
-                {
-                    if (masterDeck.Remove(card)) removedCards++;
-                }
-            }
-
-            int removedPerks = 0;
-            if (baseData.StartingPerks != null)
-            {
-                foreach (var perk in baseData.StartingPerks)
-                {
-                    if (masterPerks.Remove(perk)) removedPerks++;
-                }
-            }
-            
-            Debug.Log($"[GameManager] Deck cleanup for {baseData.name} complete: Removed {removedCards} cards and {removedPerks} perks.");
-
-            // 4. Add the evolved hero
-            Debug.Log($"[GameManager] Evolving {baseData.name} -> {baseData.NextEvolution.name}");
-            TryAddHero(baseData.NextEvolution);
-        }
+        return GetOccupiedHeroes();
     }
 
     public void AddCardToMasterDeck(CardData card)
     {
+        if (card == null) return;
+
         masterDeck.Add(card);
         Debug.Log($"[GameManager] Card added to Master Deck: {card.name}");
     }
 
     public void AddPerkToMasterPerks(PerkData perk)
     {
+        if (perk == null) return;
+
         masterPerks.Add(perk);
         Debug.Log($"[GameManager] Perk added to Master Perks: {perk.name}");
     }
 
     public void RemoveCardFromMasterDeck(CardData card)
     {
+        if (card == null) return;
+
         masterDeck.Remove(card);
         Debug.Log($"[GameManager] Card removed from Master Deck: {card.name}");
     }
 
     public void SelectHero(HeroData heroData)
     {
-        activeHeroes.Clear();
+        EnsureSlotArrays();
+        ClearAllHeroSlots();
         masterDeck.Clear();
         masterPerks.Clear();
-        
+
+        if (heroData == null)
+        {
+            Debug.LogWarning("[GameManager] SelectHero called with null HeroData.");
+            return;
+        }
+
         HeroInstance heroInstance = new HeroInstance(heroData);
-        activeHeroes.Add(heroInstance);
+        PlaceHeroInSpecificSlotIgnoringOccupancy(heroInstance, 0);
+
         if (heroData.Deck != null) masterDeck.AddRange(heroData.Deck);
         if (heroData.StartingPerks != null) masterPerks.AddRange(heroData.StartingPerks);
-        
-        Debug.Log($"Hero selected and set as active: {heroData.name}. Initial cards and perks added to Master lists.");
+
+        Debug.Log($"[GameManager] Hero selected and set as active: {heroData.name}. Initial cards and perks added to Master lists.");
     }
 
     public void AddAugment(AugmentEffect effect)
     {
+        if (effect == null) return;
+
         activeAugments.Add(effect);
-        effect.Execute(); // Perform initial execution
+        effect.Execute();
         Debug.Log($"[GameManager] Augment added: {effect.GetType().Name}");
     }
 
@@ -218,6 +223,147 @@ public class GameManager : PersistentSingleton<GameManager>
         foreach (var augment in activeAugments)
         {
             augment.OnNodeEntry(node);
+        }
+    }
+
+    private HeroInstance FindHeroInstanceByData(HeroData heroData)
+    {
+        foreach (var hero in GetOccupiedHeroes())
+        {
+            if (hero != null && hero.Data == heroData)
+                return hero;
+        }
+
+        return null;
+    }
+
+    private void TryEvolveHero(HeroInstance heroInstance, bool includeStartingPerks = true)
+    {
+        if (heroInstance == null || heroInstance.Data == null) return;
+        if (heroInstance.EvolutionCopies < 3) return;
+        if (heroInstance.Data.NextEvolution == null) return;
+
+        HeroData baseData = heroInstance.Data;
+        HeroData evolvedData = baseData.NextEvolution;
+
+        Debug.Log($"[GameManager] Evolution triggered: {baseData.name} -> {evolvedData.name}");
+
+        // Remove old deck/cards from base form
+        int removedCards = 0;
+        if (baseData.Deck != null)
+        {
+            foreach (var card in baseData.Deck)
+            {
+                if (masterDeck.Remove(card)) removedCards++;
+            }
+        }
+
+        int removedPerks = 0;
+        if (baseData.StartingPerks != null)
+        {
+            foreach (var perk in baseData.StartingPerks)
+            {
+                if (masterPerks.Remove(perk)) removedPerks++;
+            }
+        }
+
+        Debug.Log($"[GameManager] Removed base package for {baseData.name}: {removedCards} cards, {removedPerks} perks.");
+
+        // Evolve the same unit in place
+        heroInstance.EvolveTo(evolvedData, preserveHealthPercent: true);
+
+        // Add evolved package
+        if (evolvedData.Deck != null)
+        {
+            masterDeck.AddRange(evolvedData.Deck);
+        }
+
+        if (includeStartingPerks && evolvedData.StartingPerks != null)
+        {
+            masterPerks.AddRange(evolvedData.StartingPerks);
+        }
+
+        Debug.Log($"[GameManager] {baseData.name} evolved in place into {evolvedData.name}");
+    }
+
+    private bool TryPlaceHeroInFirstFreeSlot(HeroInstance heroInstance)
+    {
+        if (heroInstance == null) return false;
+
+        EnsureSlotArrays();
+
+        if (!IsValidHeroInstance(frontlineSlots[0]))
+        {
+            frontlineSlots[0] = heroInstance;
+            heroInstance.Position = SlotPosition.Frontline;
+            return true;
+        }
+
+        if (!IsValidHeroInstance(frontlineSlots[1]))
+        {
+            frontlineSlots[1] = heroInstance;
+            heroInstance.Position = SlotPosition.Frontline;
+            return true;
+        }
+
+        if (!IsValidHeroInstance(backlineSlots[0]))
+        {
+            backlineSlots[0] = heroInstance;
+            heroInstance.Position = SlotPosition.Backline;
+            return true;
+        }
+
+        if (!IsValidHeroInstance(backlineSlots[1]))
+        {
+            backlineSlots[1] = heroInstance;
+            heroInstance.Position = SlotPosition.Backline;
+            return true;
+        }
+
+        return false;
+    }
+
+    private void ClearAllHeroSlots()
+    {
+        EnsureSlotArrays();
+
+        frontlineSlots[0] = null;
+        frontlineSlots[1] = null;
+        backlineSlots[0] = null;
+        backlineSlots[1] = null;
+    }
+
+    private bool PlaceHeroInSpecificSlotIgnoringOccupancy(HeroInstance heroInstance, int slotIndex)
+    {
+        if (heroInstance == null) return false;
+
+        EnsureSlotArrays();
+
+        switch (slotIndex)
+        {
+            case 0:
+                frontlineSlots[0] = heroInstance;
+                heroInstance.Position = SlotPosition.Frontline;
+                return true;
+
+            case 1:
+                frontlineSlots[1] = heroInstance;
+                heroInstance.Position = SlotPosition.Frontline;
+                return true;
+
+            case 2:
+                backlineSlots[0] = heroInstance;
+                heroInstance.Position = SlotPosition.Backline;
+                return true;
+
+            case 3:
+                backlineSlots[1] = heroInstance;
+                heroInstance.Position = SlotPosition.Backline;
+                return true;
+
+            default:
+                Debug.LogWarning($"[GameManager] Invalid slot index: {slotIndex}");
+                return false;
         }
     }
 }

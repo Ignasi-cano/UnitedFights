@@ -13,18 +13,19 @@ MonoBehaviour:
   m_Name: Charmander
   m_EditorClassIdentifier: 
   image: {fileID: 21300000, guid: c06a2d0e76b283b4ca7a26b3d613ef81, type: 3}
-  health: 30
+  health: 45
   statusEffectUI: {fileID: 0}
   deck:
+  - {fileID: 11400000, guid: 7ebf2640c4526b44ab8855078ada94af, type: 2}
+  - {fileID: 11400000, guid: 7ebf2640c4526b44ab8855078ada94af, type: 2}
+  - {fileID: 11400000, guid: 7ebf2640c4526b44ab8855078ada94af, type: 2}
+  - {fileID: 11400000, guid: 7ebf2640c4526b44ab8855078ada94af, type: 2}
+  - {fileID: 11400000, guid: 65fdae0f800769841a6a90399cae1778, type: 2}
+  - {fileID: 11400000, guid: 65fdae0f800769841a6a90399cae1778, type: 2}
+  - {fileID: 11400000, guid: 65fdae0f800769841a6a90399cae1778, type: 2}
+  - {fileID: 11400000, guid: 65fdae0f800769841a6a90399cae1778, type: 2}
+  - {fileID: 11400000, guid: e767ca9a60c604e428078711ebb6ee6b, type: 2}
   - {fileID: 11400000, guid: 0355dfca51c0c784fba73632fe6def34, type: 2}
-  - {fileID: 11400000, guid: 0355dfca51c0c784fba73632fe6def34, type: 2}
-  - {fileID: 11400000, guid: 355ec2a7ac050a548993acec3fb70a3f, type: 2}
-  - {fileID: 11400000, guid: 355ec2a7ac050a548993acec3fb70a3f, type: 2}
-  - {fileID: 11400000, guid: 355ec2a7ac050a548993acec3fb70a3f, type: 2}
-  - {fileID: 11400000, guid: 5b8fa26312e8d1847bd156ea3b66f6ae, type: 2}
-  - {fileID: 11400000, guid: 5b8fa26312e8d1847bd156ea3b66f6ae, type: 2}
-  - {fileID: 11400000, guid: 5b8fa26312e8d1847bd156ea3b66f6ae, type: 2}
-  - {fileID: 11400000, guid: 5b8fa26312e8d1847bd156ea3b66f6ae, type: 2}
   startingPerks:
   - {fileID: 11400000, guid: 7d393c1ea5a7bca47b6ff4245f2ef317, type: 2}
   nextEvolution: {fileID: 11400000, guid: 498fe09ceaecb8f488156b39ec687dd4, type: 2}

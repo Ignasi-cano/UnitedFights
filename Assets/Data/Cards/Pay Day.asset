@@ -12,13 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e85c6d01e82d8fd4db728c611fdc9ffc, type: 3}
   m_Name: Pay Day
   m_EditorClassIdentifier: 
-  <Description>k__BackingField: dels damage and gives you money
-  <Mana>k__BackingField: 2
+  <Description>k__BackingField: Deals {damage} Damage and gives 10 Gold
   <Image>k__BackingField: {fileID: 21300000, guid: 694966f0f8b54c74db31b5a6eca4bccc, type: 3}
+  <OwnerHero>k__BackingField: {fileID: 11400000, guid: e882fa09d81bb584f9fcf6eaca9eb167, type: 2}
+  <Type>k__BackingField: 0
+  <Rarity>k__BackingField: 2
+  <HasDistanceKeyword>k__BackingField: 0
+  <Mana>k__BackingField: 2
+  <IsCursed>k__BackingField: 0
   <Cost>k__BackingField: 0
+  <IntentSprite>k__BackingField: {fileID: 0}
+  <IntentValue>k__BackingField: 10
   <ManualTargetEffect>k__BackingField:
     rid: 8156335990739304526
   <OtherEffects>k__BackingField: []
+  <PassiveEffects>k__BackingField: []
   references:
     version: 2
     RefIds:
@@ -31,8 +39,8 @@ MonoBehaviour:
     - rid: 8156335990739304527
       type: {class: DealDamageEffect, ns: , asm: Assembly-CSharp}
       data:
-        damageAmount: 5
+        damageAmount: 10
     - rid: 8156335990739304528
       type: {class: GiveGoldEffect, ns: , asm: Assembly-CSharp}
       data:
-        amount: 100
+        amount: 10

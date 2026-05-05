@@ -297,14 +297,14 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 476596447}
   m_Enabled: 1
-  serializedVersion: 11
+  serializedVersion: 12
   m_Type: 1
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
-  m_CookieSize: 10
+  m_CookieSize2D: {x: 10, y: 10}
   m_Shadows:
     m_Type: 2
     m_Resolution: -1
@@ -381,17 +381,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Version: 3
   m_UsePipelineSettings: 1
   m_AdditionalLightsShadowResolutionTier: 2
-  m_LightLayerMask: 1
-  m_RenderingLayers: 1
   m_CustomShadowLayers: 0
-  m_ShadowLayerMask: 1
-  m_ShadowRenderingLayers: 1
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+  m_RenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_ShadowRenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_Version: 4
+  m_LightLayerMask: 1
+  m_ShadowLayerMask: 1
+  m_RenderingLayers: 1
+  m_ShadowRenderingLayers: 1
 --- !u!1 &542669096
 GameObject:
   m_ObjectHideFlags: 0
@@ -544,26 +550,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rewardsContainer: {fileID: 414748765}
-  rewardButtonPrefab: {fileID: 5578488364950593395, guid: da91311da943d79428f9845481078663, type: 3}
+  rewardButtonPrefab: {fileID: 6043750667157517107, guid: 80a6afaeba536f84e81c6d3c13771a39, type: 3}
   cardCount: 3
   goldAmount: 50
   perkChance: 0.1
-  goldIcon: {fileID: 0}
+  goldIcon: {fileID: 21300000, guid: 1e5e1e7242da3e44685240b161403827, type: 3}
   perkIcon: {fileID: 0}
-  cardPool:
-  - {fileID: 11400000, guid: 0b8f8d8208932eb438b316ab8c2b8163, type: 2}
-  - {fileID: 11400000, guid: 8c786ef41fecbf24aa47c4b3e7057da6, type: 2}
-  - {fileID: 11400000, guid: 46e7ce6ed273b5f4a9b743dff8953046, type: 2}
-  - {fileID: 11400000, guid: 550bb47f9ee028c469ae6779d557f4a2, type: 2}
-  - {fileID: 11400000, guid: d652ffcf4ea65ac4ab1dd0abb5a63786, type: 2}
-  - {fileID: 11400000, guid: e767ca9a60c604e428078711ebb6ee6b, type: 2}
-  - {fileID: 11400000, guid: 5b8fa26312e8d1847bd156ea3b66f6ae, type: 2}
-  - {fileID: 11400000, guid: 355ec2a7ac050a548993acec3fb70a3f, type: 2}
-  - {fileID: 11400000, guid: a9b9cc2806988b54d9b3f6b4e33e6dad, type: 2}
-  - {fileID: 11400000, guid: 0355dfca51c0c784fba73632fe6def34, type: 2}
+  cardPoolData: {fileID: 11400000, guid: 918ef965be2ec864cb52cfa192c30296, type: 2}
   perkPool:
   - {fileID: 11400000, guid: 9767c9007c2d4ce46bdcbce9366bf4ce, type: 2}
   - {fileID: 11400000, guid: fc9e9e7adf947aa46a1c09575503e7d6, type: 2}
+  commonChance: 0.65
+  uncommonChance: 0.25
+  rareChance: 0.1
 --- !u!1 &842330802
 GameObject:
   m_ObjectHideFlags: 0
@@ -950,6 +949,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0

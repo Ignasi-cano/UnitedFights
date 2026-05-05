@@ -13,5 +13,8 @@ MonoBehaviour:
   m_Name: Suspenso
   m_EditorClassIdentifier: 
   <Image>k__BackingField: {fileID: 21300000, guid: 2750e25f3ace56c4a9162a0019d1194f, type: 3}
-  <Health>k__BackingField: 100
-  <AttackPower>k__BackingField: 25
+  <Health>k__BackingField: 75
+  <AttackPower>k__BackingField: 15
+  <AttackPattern>k__BackingField:
+  - {fileID: 11400000, guid: 7327daef734b56c4d9a04ad6a333297b, type: 2}
+  - {fileID: 11400000, guid: 4b161635551ed0d4ead074080f692cf2, type: 2}

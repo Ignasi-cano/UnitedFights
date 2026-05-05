@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e85c6d01e82d8fd4db728c611fdc9ffc, type: 3}
+  m_Name: Drain Life
+  m_EditorClassIdentifier: Assembly-CSharp::CardData
+  <Description>k__BackingField: Deals {damage} Damage to an enemy. Heals a random
+    ally 10 HP
+  <Image>k__BackingField: {fileID: 21300000, guid: 00634c49f11fc5e4c9b443c2ce4498c6, type: 3}
+  <OwnerHero>k__BackingField: {fileID: 11400000, guid: bab2422bb9eeb8f4b8d943cf30e9eb6a, type: 2}
+  <Type>k__BackingField: 0
+  <Rarity>k__BackingField: 2
+  <HasDistanceKeyword>k__BackingField: 0
+  <Mana>k__BackingField: 2
+  <IsCursed>k__BackingField: 0
+  <Cost>k__BackingField: 0
+  <IntentSprite>k__BackingField: {fileID: 0}
+  <IntentValue>k__BackingField: 5
+  <ManualTargetEffect>k__BackingField:
+    rid: 5037484506289799255
+  <OtherEffects>k__BackingField:
+  - <TargetMode>k__BackingField:
+      rid: 5037484506289799253
+    <Effect>k__BackingField:
+      rid: 5037484506289799254
+  <PassiveEffects>k__BackingField: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 5037484506289799253
+      type: {class: RandomHeroTM, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 5037484506289799254
+      type: {class: HealEffect, ns: , asm: Assembly-CSharp}
+      data:
+        amount: 10
+    - rid: 5037484506289799255
+      type: {class: DealDamageEffect, ns: , asm: Assembly-CSharp}
+      data:
+        damageAmount: 5

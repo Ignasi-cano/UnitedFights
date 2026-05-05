@@ -1094,7 +1094,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.0000166893, y: 0.00036349468}
+  m_AnchoredPosition: {x: 0.0000166893, y: 0.000029579098}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &387867617
@@ -2029,7 +2029,7 @@ MonoBehaviour:
   overlay: {fileID: 1840466086}
   database: {fileID: 11400000, guid: 936559d5a58f58d4bb577b2241066a6c, type: 2}
   cardsContainer: {fileID: 1916831300}
-  cardPrefab: {fileID: 5578488364950593395, guid: da91311da943d79428f9845481078663, type: 3}
+  cardPrefab: {fileID: 6043750667157517107, guid: 80a6afaeba536f84e81c6d3c13771a39, type: 3}
 --- !u!222 &1032786879
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3561,7 +3561,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 304806621}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.9999893
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

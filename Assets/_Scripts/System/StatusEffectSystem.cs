@@ -15,8 +15,16 @@ public class StatusEffectSystem : MonoBehaviour
     {
         foreach (var target in addStatusEffectGa.Targets)
         {
+            if (target == null) continue;
+
             target.AddStatusEffect(addStatusEffectGa.StatusEffectType, addStatusEffectGa.StackCount);
-            yield return null; //add vfx for adding status effects
+
+            if (target is EnemyView enemyView)
+            {
+                enemyView.UpdateIntent();
+            }
+
+            yield return null;
         }
     }
 }

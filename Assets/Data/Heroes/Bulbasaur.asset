@@ -13,17 +13,19 @@ MonoBehaviour:
   m_Name: Bulbasaur
   m_EditorClassIdentifier: 
   image: {fileID: 21300000, guid: 2a4a929984d38724fa44b92cbed17e55, type: 3}
-  health: 35
+  health: 50
   statusEffectUI: {fileID: 0}
   deck:
-  - {fileID: 11400000, guid: 0b8f8d8208932eb438b316ab8c2b8163, type: 2}
-  - {fileID: 11400000, guid: 0b8f8d8208932eb438b316ab8c2b8163, type: 2}
-  - {fileID: 11400000, guid: 0b8f8d8208932eb438b316ab8c2b8163, type: 2}
+  - {fileID: 11400000, guid: 8e2b73024c879f04d9254e0a6c537385, type: 2}
+  - {fileID: 11400000, guid: 8e2b73024c879f04d9254e0a6c537385, type: 2}
+  - {fileID: 11400000, guid: 8e2b73024c879f04d9254e0a6c537385, type: 2}
+  - {fileID: 11400000, guid: 8e2b73024c879f04d9254e0a6c537385, type: 2}
   - {fileID: 11400000, guid: 32b92a0b77fb7af4ea9bac1163d03b79, type: 2}
-  - {fileID: 11400000, guid: 32b92a0b77fb7af4ea9bac1163d03b79, type: 2}
-  - {fileID: 11400000, guid: 32b92a0b77fb7af4ea9bac1163d03b79, type: 2}
-  - {fileID: 11400000, guid: d652ffcf4ea65ac4ab1dd0abb5a63786, type: 2}
-  - {fileID: 11400000, guid: d652ffcf4ea65ac4ab1dd0abb5a63786, type: 2}
+  - {fileID: 11400000, guid: 51abd90b1d8f3c34cab4101c41941f14, type: 2}
+  - {fileID: 11400000, guid: 51abd90b1d8f3c34cab4101c41941f14, type: 2}
+  - {fileID: 11400000, guid: 51abd90b1d8f3c34cab4101c41941f14, type: 2}
+  - {fileID: 11400000, guid: 51abd90b1d8f3c34cab4101c41941f14, type: 2}
+  - {fileID: 11400000, guid: a9b9cc2806988b54d9b3f6b4e33e6dad, type: 2}
   startingPerks:
   - {fileID: 11400000, guid: c127b16752d05a64ead2c5143d83d9d7, type: 2}
   nextEvolution: {fileID: 11400000, guid: 5087f02d559070a45a431003f32f74b9, type: 2}

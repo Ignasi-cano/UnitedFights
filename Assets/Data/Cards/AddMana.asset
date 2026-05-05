@@ -12,10 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e85c6d01e82d8fd4db728c611fdc9ffc, type: 3}
   m_Name: AddMana
   m_EditorClassIdentifier: 
-  <Description>k__BackingField: Gain 3 mana
+  <Description>k__BackingField: Refill your mana back to 3.
+  <Image>k__BackingField: {fileID: 21300000, guid: 5d973116ad3cb4a48913634d2357a84f, type: 3}
+  <OwnerHero>k__BackingField: {fileID: 0}
+  <Type>k__BackingField: 1
+  <Rarity>k__BackingField: 0
+  <HasDistanceKeyword>k__BackingField: 0
   <Mana>k__BackingField: 1
-  <Image>k__BackingField: {fileID: 21300000, guid: 7ab74e659e1f0a34d9cfec21c478fc12, type: 3}
+  <IsCursed>k__BackingField: 0
   <Cost>k__BackingField: 300
+  <IntentSprite>k__BackingField: {fileID: 0}
+  <IntentValue>k__BackingField: 0
   <ManualTargetEffect>k__BackingField:
     rid: -2
   <OtherEffects>k__BackingField:
@@ -23,6 +30,7 @@ MonoBehaviour:
       rid: 8156335865886146849
     <Effect>k__BackingField:
       rid: 8156335865886146850
+  <PassiveEffects>k__BackingField: []
   references:
     version: 2
     RefIds:

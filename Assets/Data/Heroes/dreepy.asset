@@ -17,13 +17,14 @@ MonoBehaviour:
   statusEffectUI: {fileID: 0}
   deck:
   - {fileID: 11400000, guid: 8336d12aad2c36b4090ff1850134d877, type: 2}
-  - {fileID: 11400000, guid: 8336d12aad2c36b4090ff1850134d877, type: 2}
-  - {fileID: 11400000, guid: 8336d12aad2c36b4090ff1850134d877, type: 2}
+  - {fileID: 11400000, guid: 550bb47f9ee028c469ae6779d557f4a2, type: 2}
+  - {fileID: 11400000, guid: 550bb47f9ee028c469ae6779d557f4a2, type: 2}
   - {fileID: 11400000, guid: d652ffcf4ea65ac4ab1dd0abb5a63786, type: 2}
   - {fileID: 11400000, guid: d652ffcf4ea65ac4ab1dd0abb5a63786, type: 2}
   - {fileID: 11400000, guid: 0b8f8d8208932eb438b316ab8c2b8163, type: 2}
   - {fileID: 11400000, guid: 0b8f8d8208932eb438b316ab8c2b8163, type: 2}
-  - {fileID: 11400000, guid: 0b8f8d8208932eb438b316ab8c2b8163, type: 2}
+  - {fileID: 11400000, guid: 6a4309c67594d3444af9ef8b0472fb26, type: 2}
   startingPerks: []
   nextEvolution: {fileID: 11400000, guid: 5dfa97c359aaee648b15be7ba5d90a74, type: 2}
+  previousEvolution: {fileID: 0}
   <Cost>k__BackingField: 0
