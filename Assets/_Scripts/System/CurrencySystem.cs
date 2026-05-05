@@ -77,7 +77,7 @@ public class CurrencySystem : PersistentSingleton<CurrencySystem>
 
     private void SyncGoldToFirebase()
     {
-        if (ScoreManager.Instance != null && AuthManager.Instance.IsLoggedIn)
+        if (ScoreManager.Instance != null && AuthManager.Instance != null && AuthManager.Instance.IsLoggedIn)
         {
             string userId = AuthManager.Instance.CurrentUser.UserId;
             ScoreManager.Instance.AddToInventory(userId, "Currency", "Gold", gold);

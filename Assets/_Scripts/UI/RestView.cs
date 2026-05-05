@@ -4,7 +4,18 @@ using System.Collections.Generic;
 
 public class RestView : MonoBehaviour
 {
-    public static RestView Instance { get; private set; }
+    public static RestView Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = Object.FindAnyObjectByType<RestView>(FindObjectsInactive.Include);
+            }
+            return _instance;
+        }
+    }
+    private static RestView _instance;
 
     [SerializeField] private Button restButton;
     [SerializeField] private Button closeButton;
@@ -14,7 +25,13 @@ public class RestView : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        _instance = this;
+
         gameObject.SetActive(false); // Hide by default
 
         if (restButton != null)

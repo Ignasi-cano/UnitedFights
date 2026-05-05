@@ -14,7 +14,14 @@ public class ShopSystem : Singleton<ShopSystem>
                 // NEW: Sync hero to Firebase Inventory
                 if (AuthManager.Instance != null && AuthManager.Instance.IsLoggedIn)
                 {
-                    ScoreManager.Instance.AddToInventory(AuthManager.Instance.CurrentUser.UserId, "Hero", hero.name);
+                    if (ScoreManager.Instance != null)
+                    {
+                        ScoreManager.Instance.AddToInventory(AuthManager.Instance.CurrentUser.UserId, "Hero", hero.name);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("[ShopSystem] ScoreManager instance missing, could not sync hero to cloud.");
+                    }
                 }
                 
                 return true;
@@ -50,11 +57,18 @@ public class ShopSystem : Singleton<ShopSystem>
             // 2. If it's an "Instant" perk (like HP), apply it immediately to HeroInstance data
             if (perkData.PerkCondition is InstantPerkCondition)
             {
-                perkData.AutoTargetEffect.Effect.ApplyToInstances(GameManager.Instance.ActiveHeroes);
+                if (perkData.AutoTargetEffect != null && perkData.AutoTargetEffect.Effect != null)
+                {
+                    perkData.AutoTargetEffect.Effect.ApplyToInstances(GameManager.Instance.ActiveHeroes);
+                }
+                else
+                {
+                    Debug.LogWarning($"[ShopSystem] Perk {perkData.Name} is Instant but has no AutoTargetEffect/Effect assigned.");
+                }
             }
 
             // 3. Add to live system if we are in a scene that has one (optional/safety)
-            if (PerkSystem.HasInstance)
+            if (PerkSystem.Instance != null)
             {
                 PerkSystem.Instance.AddPerk(new Perk(perkData));
             }
@@ -85,6 +99,10 @@ public class ShopSystem : Singleton<ShopSystem>
             });
             return false; // Return false so the shop doesn't mark it as sold immediately
         }
-        return false;
+        else
+        {
+            Debug.LogError("[ShopSystem] CardSelectionUI instance not found in scene!");
+            return false;
+        }
     }
 }

@@ -25,7 +25,10 @@ public class Perk
         {
             foreach (var effect in data.OnAddEffects)
             {
-                effect.GetGameAction(new List<CombatantView>(), HeroSystem.Instance.MainHeroView);
+                if (HeroSystem.Instance != null && HeroSystem.Instance.MainHeroView != null)
+                {
+                    effect.GetGameAction(new List<CombatantView>(), HeroSystem.Instance.MainHeroView);
+                }
             }
         }
 
