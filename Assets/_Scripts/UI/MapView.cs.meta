@@ -1,2 +1,22 @@
 fileFormatVersion: 2
 guid: e20297d61a3d7a24c96a4e957cf628fc
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - nodePrefab: {instanceID: 0}
+  - nodesContainer: {instanceID: 0}
+  - linesContainer: {instanceID: 0}
+  - linePrefab: {instanceID: 0}
+  - combatIcon: {instanceID: 0}
+  - eliteIcon: {fileID: 21300000, guid: c3e2b88e05623a647bbe3f31168f7cd3, type: 3}
+  - restIcon: {fileID: 21300000, guid: 4f5f272921c94ad4cafd2e28fdd92809, type: 3}
+  - shopIcon: {instanceID: 0}
+  - treasureIcon: {fileID: 21300000, guid: 3f22f140a6e98b541958a7e6028ebbef, type: 3}
+  - bossIcon: {fileID: 21300000, guid: d8de450f1e6eece459eb367d4b46feae, type: 3}
+  - augmentIcon: {fileID: 21300000, guid: ee2ad7df08dcfc6438023196409de1a0, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
