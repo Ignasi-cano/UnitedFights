@@ -5160,8 +5160,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CuriousFactAI
   chatBubble: {fileID: 1985226793}
   chatText: {fileID: 1071539577}
-  apiKey: AIzaSyCqpqHR43dtsdKgFwpKWbaNmvIlMTRxLSY
-  model: gemini-2.5-flash-lite
+  apiKey: AIzaSyB1SUMu9lpeq-dAPTGRuU66jrAbOAz-MGQ
+  model: gemini-2.0-flash-lite
 --- !u!114 &1791308312
 MonoBehaviour:
   m_ObjectHideFlags: 0
