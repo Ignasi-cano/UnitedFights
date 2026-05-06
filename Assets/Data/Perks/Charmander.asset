@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Hell's Fire
   <Description>k__BackingField: Execute enemies with 25 burn stacks or more
-  <Image>k__BackingField: {fileID: 21300000, guid: 3acedfa7eda6a024ebd9c441690d4c31, type: 3}
+  <Image>k__BackingField: {fileID: 21300000, guid: ea2bdcc4367f86b4aae0e2dbfd100790, type: 3}
   <PerkCondition>k__BackingField:
     rid: 8156336055530291281
   <AutoTargetEffect>k__BackingField:

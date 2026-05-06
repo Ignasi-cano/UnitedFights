@@ -5,12 +5,29 @@ using System.Collections.Generic;
 
 public class ShopView : MonoBehaviour
 {
-    public static ShopView Instance { get; private set; }
+    public static ShopView Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = Object.FindAnyObjectByType<ShopView>(FindObjectsInactive.Include);
+            }
+            return _instance;
+        }
+    }
+    private static ShopView _instance;
 
     private void Awake()
     {
-        Instance = this;
-        gameObject.SetActive(false); // Hide by default
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        _instance = this;
+        
+        gameObject.SetActive(false); // Hide by default at start
         
         if (closeButton != null)
         {
@@ -102,13 +119,18 @@ public class ShopView : MonoBehaviour
             ClearContainer(container);
         }
 
-        if (heroPool == null || cardPool == null || perkPool == null) return;
+        if (heroPool == null) heroPool = new List<HeroData>();
+        if (cardPool == null) cardPool = new List<CardData>();
+        if (perkPool == null) perkPool = new List<PerkData>();
+
+        Debug.Log($"[ShopView] Populating shop. Pools: {heroPool.Count} Heroes, {cardPool.Count} Cards, {perkPool.Count} Perks.");
 
         // 2. Perform Random Selection
         // Pick 3 Random Heroes (if available)
         List<HeroData> selectedHeroes = GetRandomSubset(heroPool, 3);
         foreach (var hero in selectedHeroes)
         {
+            if (hero == null) continue;
             CreateShopItem(cardPrefab, hero.Image, hero.name, hero.Cost, heroContainer, () => ShopSystem.Instance.BuyHero(hero));
         }
 
@@ -116,6 +138,7 @@ public class ShopView : MonoBehaviour
         List<CardData> selectedCards = GetRandomSubset(cardPool, 5);
         foreach (var card in selectedCards)
         {
+            if (card == null) continue;
             CreateShopItem(cardPrefab, card.Image, card.name, card.Cost, cardContainer, () => ShopSystem.Instance.BuyCard(card));
         }
 
@@ -123,17 +146,21 @@ public class ShopView : MonoBehaviour
         List<PerkData> selectedPerks = GetRandomSubset(perkPool, 2);
         foreach (var perk in selectedPerks)
         {
+            if (perk == null) continue;
             CreateShopItem(itemPrefab, perk.Image, perk.name, perk.Cost, perkContainer, () => ShopSystem.Instance.BuyPerk(perk));
         }
 
         // 3. Add Fixed Services (Card Removal)
         if (removalServiceIcon != null)
         {
-            ShopItemUI serviceUI = null;
-            serviceUI = CreateShopItem(itemPrefab, removalServiceIcon, "Remove Card", removalServiceCost, perkContainer, () => 
+            CreateShopItem(itemPrefab, removalServiceIcon, "Remove Card", removalServiceCost, perkContainer, () => 
             {
+                // We don't have a direct reference to the UI here easily with the bridge, 
+                // but ShopSystem handles the selection UI. 
                 ShopSystem.Instance.BuyCardRemoval(removalServiceCost, () => {
-                    if (serviceUI != null) serviceUI.SetSold();
+                    // Refreshing the shop is a simple way to mark items as sold if they are fixed
+                    // or we could just ignore SetSold for the service in the bridge.
+                    PopulateShop(); 
                 });
                 return false; // Deferred purchase
             });
@@ -168,17 +195,16 @@ public class ShopView : MonoBehaviour
         }
     }
 
-    private ShopItemUI CreateShopItem(GameObject prefab, Sprite icon, string name, int cost, Transform parent, System.Func<bool> onBuy)
+    private void CreateShopItem(GameObject prefab, Sprite icon, string name, int cost, Transform parent, System.Func<bool> onBuy)
     {
-        if (parent == null || prefab == null) return null;
+        if (parent == null || prefab == null) return;
         GameObject itemObj = Instantiate(prefab, parent);
-        
-        // Use GetComponentInChildren to be more resilient to different prefab structures
+
         ShopItemUI itemUI = itemObj.GetComponentInChildren<ShopItemUI>();
-        
+        RewardButton rewardUI = itemObj.GetComponentInChildren<RewardButton>();
+
         if (itemUI != null)
         {
-            Debug.Log($"[ShopView] Spawning item: {name}");
             itemUI.Setup(icon, name, cost, () =>
             {
                 if (onBuy.Invoke())
@@ -187,12 +213,21 @@ public class ShopView : MonoBehaviour
                 }
             });
         }
+        else if (rewardUI != null)
+        {
+            rewardUI.SetupNonCardShop(icon, name, "Shop Item", cost, () =>
+            {
+                if (onBuy.Invoke())
+                {
+                    Button btn = rewardUI.GetComponentInChildren<Button>();
+                    if (btn != null) btn.interactable = false;
+                }
+            });
+        }
         else
         {
-            Debug.LogError($"[ShopView] Prefab {prefab.name} is missing ShopItemUI component!");
+            Debug.LogError($"[ShopView] Prefab {prefab.name} is missing both ShopItemUI and RewardButton components!");
         }
-
-        return itemUI;
     }
 
     public void CloseShop()
