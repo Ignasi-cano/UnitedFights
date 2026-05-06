@@ -10,7 +10,7 @@ public class RestView : MonoBehaviour
         {
             if (_instance == null)
             {
-                _instance = Object.FindAnyObjectByType<RestView>(FindObjectsInactive.Include);
+                _instance = Object.FindObjectOfType<RestView>(true);
             }
             return _instance;
         }
@@ -18,6 +18,7 @@ public class RestView : MonoBehaviour
     private static RestView _instance;
 
     [SerializeField] private Button restButton;
+    [SerializeField] private Button formationButton;
     [SerializeField] private Button closeButton;
     [SerializeField] private GameObject restEffectVFX; // Optional visual fluff
 
@@ -37,8 +38,23 @@ public class RestView : MonoBehaviour
         if (restButton != null)
             restButton.onClick.AddListener(OnRestClicked);
 
+        if (formationButton != null)
+            formationButton.onClick.AddListener(OnFormationClicked);
+
         if (closeButton != null)
             closeButton.onClick.AddListener(CloseRest);
+    }
+
+    private void OnFormationClicked()
+    {
+        if (FormationView.Instance != null)
+        {
+            FormationView.Instance.OpenFormation();
+        }
+        else
+        {
+            Debug.LogError("[RestView] FormationView Instance not found in scene.");
+        }
     }
 
     public void OpenRest()

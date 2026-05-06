@@ -333,37 +333,48 @@ public class GameManager : PersistentSingleton<GameManager>
         backlineSlots[1] = null;
     }
 
+    public void SwapHeroSlots(int slotIndex1, int slotIndex2)
+    {
+        EnsureSlotArrays();
+
+        HeroInstance hero1 = GetHeroAtSlot(slotIndex1);
+        HeroInstance hero2 = GetHeroAtSlot(slotIndex2);
+
+        SetHeroAtSlot(slotIndex1, hero2);
+        SetHeroAtSlot(slotIndex2, hero1);
+
+        Debug.Log($"[GameManager] Swapped slots {slotIndex1} and {slotIndex2}");
+    }
+
+    public HeroInstance GetHeroAtSlot(int index)
+    {
+        EnsureSlotArrays();
+        if (index < 2) return frontlineSlots[index];
+        if (index < 4) return backlineSlots[index - 2];
+        return null;
+    }
+
+    private void SetHeroAtSlot(int index, HeroInstance hero)
+    {
+        EnsureSlotArrays();
+        if (index < 2)
+        {
+            frontlineSlots[index] = hero;
+            if (hero != null) hero.Position = SlotPosition.Frontline;
+        }
+        else if (index < 4)
+        {
+            backlineSlots[index - 2] = hero;
+            if (hero != null) hero.Position = SlotPosition.Backline;
+        }
+    }
+
     private bool PlaceHeroInSpecificSlotIgnoringOccupancy(HeroInstance heroInstance, int slotIndex)
     {
         if (heroInstance == null) return false;
 
-        EnsureSlotArrays();
-
-        switch (slotIndex)
-        {
-            case 0:
-                frontlineSlots[0] = heroInstance;
-                heroInstance.Position = SlotPosition.Frontline;
-                return true;
-
-            case 1:
-                frontlineSlots[1] = heroInstance;
-                heroInstance.Position = SlotPosition.Frontline;
-                return true;
-
-            case 2:
-                backlineSlots[0] = heroInstance;
-                heroInstance.Position = SlotPosition.Backline;
-                return true;
-
-            case 3:
-                backlineSlots[1] = heroInstance;
-                heroInstance.Position = SlotPosition.Backline;
-                return true;
-
-            default:
-                Debug.LogWarning($"[GameManager] Invalid slot index: {slotIndex}");
-                return false;
-        }
+        SetHeroAtSlot(slotIndex, heroInstance);
+        return true;
     }
+
 }
