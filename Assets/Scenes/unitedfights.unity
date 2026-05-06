@@ -2424,7 +2424,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -99
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: b9d85e6c0b4568b4ba85a1c163d4d7ae, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 046fb0fbddd5bec49b2c4a0d1f4c7b73, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -2934,11 +2934,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   apiKey: f4a170886e491c42edb21d0d7fe64c7c
   city: Barcelona
-  clearBackground: {fileID: 21300000, guid: 60747668c97210741872d0ee2f182511, type: 3}
-  cloudyBackground: {fileID: 21300000, guid: 37240b56835f5ed4997081e6f20c2e07, type: 3}
-  rainyBackground: {fileID: 21300000, guid: 86334bdcc29536f459dec61c56e81dca, type: 3}
-  snowyBackground: {fileID: 21300000, guid: d88c0c650fe809941922046580d6f4d1, type: 3}
-  defaultBackground: {fileID: 21300000, guid: e2ee753008dc37643b45db7d12ca0e5e, type: 3}
+  clearBackground: {fileID: 21300000, guid: 24c5fe497d299914795b270a6a8a7a5a, type: 3}
+  cloudyBackground: {fileID: 21300000, guid: 3c9e997721597534c8d7d9c2e888d8e8, type: 3}
+  rainyBackground: {fileID: 21300000, guid: b6183ec759cd0834e9bb76eec7a111a9, type: 3}
+  snowyBackground: {fileID: 21300000, guid: 0dc2d53d9460f004796afa7e7435909c, type: 3}
+  defaultBackground: {fileID: 21300000, guid: 046fb0fbddd5bec49b2c4a0d1f4c7b73, type: 3}
   backgroundRenderer: {fileID: 749865727}
   useFixedScale: 1
   globalBackgroundScale: {x: 21, y: 17}
